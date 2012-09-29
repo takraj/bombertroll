@@ -1,4 +1,4 @@
 bombertroll
 ===========
 
-A bomberman style game in html5.
+A classic bomber style game in html5.
