@@ -10,8 +10,10 @@
 				Sorry, your browser doesn't support html5 canvas.
 			</canvas>
 			
-			<h3>jaws log</h3>
-			<div id="jaws-log"></div>
+			<div style="visibility: hidden;">
+				<h3>jaws log</h3>
+				<div id="jaws-log"></div>
+			</div>
 		<center>
 		
 		<script src="jquery.js"></script>
@@ -20,12 +22,18 @@
 		<script src="classes/airplane.js"></script>
 		<script src="classes/building.js"></script>
 		<script src="classes/explosion.js"></script>
+		<script src="classes/cloud.js"></script>
 		<script src="classes/colorstring.js"></script>
+		<script src="classes/anim_button.js"></script>
 		<script src="classes/text.js"></script>
+		<script src="screens/menu.js"></script>
+		<script src="screens/gameplay.js"></script>
+		<script src="screens/help.js"></script>
+		<script src="screens/highscores.js"></script>
 		<script src="game.js"></script>
 		
 		<script>
-			jaws.start(BomberTroll, {fps: 30});
+			jaws.start(PreloadGame, {fps: 30});
 		</script>
 	</body>
 </html>
