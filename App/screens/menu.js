@@ -14,8 +14,9 @@
 		this.previousUpdateTime = new Date().getTime();
 		this.currentUpdateTime = this.previousUpdateTime;
 		
+		this.clouds = new Array();
 		for (var i = 0; i < 20; i++) {
-			this.clouds[this.clouds.length] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * jaws.context.canvas.height);
+			this.clouds[i] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * jaws.context.canvas.height);
 		}
 		
 		$('#game_canvas').unbind('click');

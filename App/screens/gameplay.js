@@ -33,8 +33,9 @@
 		this.background = backgrounds[Math.round(Math.random() * (backgrounds.length - 1))];
 		this.backgroundSprite = new jaws.Sprite({image: this.background.file, x: 0, y: 0, scale: 1, anchor: "top_left"});
 		
+		this.clouds = new Array();
 		for (var i = 0; i < 6; i++) {
-			this.clouds[this.clouds.length] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * 100);
+			this.clouds[i] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * 100);
 		}
 		
 		this.airplane = new Airplane(0, 15, 200 + ((player.currentLevel - 1) * player.currentLevel), player, this)
