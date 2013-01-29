@@ -103,9 +103,9 @@ function Bomb(x, y, airplane) {
 	
 	this.fallState = Math.min((this.y - this.startY) / 300.0, 1);
 	
-	this.draw = function() {
-		this.sprite.x = this.x;
-		this.sprite.y = this.y;
+	this.draw = function() {	
+		this.sprite.x = this.x + (this.width / 2);
+		this.sprite.y = this.y + (this.height / 2);
 		this.sprite.angle = (1-this.fallState) * (this.go_right ? -90.0 : 90.0);
 		this.sprite.draw();
 	}
