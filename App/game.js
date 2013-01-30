@@ -12,6 +12,8 @@
 var player = new Player();
 var backgrounds = new Array();
 var isLoaded = false;
+var soundsLoaded = false;
+var soundsEnabled = true;
 
 /*
 *	Game States
@@ -23,6 +25,15 @@ function PreloadGame() {
 		jaws.assets.add("images/bomba.png");
 		jaws.assets.add("images/airplane.png");
 		jaws.assets.add("images/cloud-th.png");
+		
+		// --- Load Sounds ---
+		
+		console.log("Loading sounds...");
+		soundsLoaded = true;		// this will become false if any of the sounds below cannot be loaded
+		InitSound("menu_music");
+		InitSound("ingame_music");
+		
+		// -------------------
 		
 		backgrounds[backgrounds.length] = new Background("backgrounds/day1.jpg", true);
 		backgrounds[backgrounds.length] = new Background("backgrounds/day2.jpg", true);
@@ -106,4 +117,43 @@ function Background(file, isDaytime) {
 	this.file = file;
 	this.isDaytime = isDaytime;
 	jaws.assets.add(file);
+}
+
+function InitSound(html_id) {
+	console.log("Loading sound " + html_id);
+	if (!! document.getElementById(html_id).currentSrc) {
+		jaws.assets.add(document.getElementById(html_id).currentSrc);
+		console.log(document.getElementById(html_id).currentSrc + " is loaded");
+	} else {
+		soundsLoaded = false;
+		console.warn(document.getElementById(html_id).currentSrc + " is not loaded");
+	}
+}
+
+function PlaySound(html_id) {
+	if (soundsLoaded && (!! document.getElementById(html_id)) && soundsEnabled) {
+		document.getElementById(html_id).play();
+		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
+	}
+}
+
+function StopSound(html_id) {
+	if (soundsLoaded && (!! document.getElementById(html_id))) {
+		document.getElementById(html_id).pause();
+		console.log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
+	}
+}
+
+function StopBackgroundSounds() {
+	StopSound("menu_music");
+	StopSound("ingame_music");
+}
+
+function DisableSounds() {
+	soundsEnabled = false;
+	StopBackgroundSounds();
+}
+
+function EnableSounds() {
+	soundsEnabled = true;
 }

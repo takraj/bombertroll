@@ -66,6 +66,9 @@
 				jaws.start(HighScoresScreen, {fps: 30});
 			}
 		});
+		
+		StopBackgroundSounds();
+		PlaySound("menu_music");
 	}
 	
 	this.update = function() {

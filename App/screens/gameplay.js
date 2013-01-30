@@ -24,6 +24,9 @@
 	this.setup = function() {
 		player = new Player();
 		this.initLevel();
+		
+		StopBackgroundSounds();
+		PlaySound("ingame_music");
 	}
 	
 	this.initLevel = function() {	

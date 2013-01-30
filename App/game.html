@@ -7,18 +7,42 @@
 	<body>
 		<center>
 			<canvas id="game_canvas" width="800" height="480" style="border: 1px solid black">
-				Sorry, your browser doesn't support html5 canvas.
+				A böngésződ nem támogatja a canvas elemet.
 			</canvas>
 			
 			<div style="visibility: hidden;">
 				<h3>jaws log</h3>
 				<div id="jaws-log"></div>
 			</div>
-		<center>
+		</center>
+		
+		<!-- PRELOAD SCREEN SCRIPT -->
+		<script>
+			function preloadInfo(str) {
+				document.getElementById("game_canvas").getContext("2d").fillStyle = "rgb(0,0,0)";
+				document.getElementById("game_canvas").getContext("2d").fillRect(0, 0, 800, 480);
+				
+				document.getElementById("game_canvas").getContext("2d").fillStyle = "rgb(255,255,255)";
+				document.getElementById("game_canvas").getContext("2d").font = "32px Helvetica";
+				document.getElementById("game_canvas").getContext("2d").fillText("Szkriptek betöltése... " + str, 200, 272);
+			}
+		</script>
+		
+		<script>
+			preloadInfo("JQuery");
+		</script>
 		
 		<script src="jquery.js"></script>
+		
+		<script>
+			preloadInfo("Jaws Engine");
+		</script>
 		<script src="jaws.js"></script>
 		
+		
+		<script>
+			preloadInfo("Játékelemek");
+		</script>
 		<script src="classes/airplane.js"></script>
 		<script src="classes/building.js"></script>
 		<script src="classes/explosion.js"></script>
@@ -30,10 +54,32 @@
 		<script src="screens/gameplay.js"></script>
 		<script src="screens/help.js"></script>
 		<script src="screens/highscores.js"></script>
+		
+		<script>
+			preloadInfo("Alaplogika");
+		</script>
 		<script src="game.js"></script>
 		
 		<script>
-			jaws.start(PreloadGame, {fps: 30});
+			preloadInfo("...pillanat...");
+		</script>
+		<audio loop="loop" preload="none" id="menu_music">
+			<source src="music/menu.mp3" type="audio/mpeg">
+			<source src="music/menu.ogg" type="audio/ogg">
+			A böngésződ nem támogatja a hangfájlok lejátszását.
+		</audio>
+		
+		<audio loop="loop" preload="none" id="ingame_music">
+			<source src="music/ingame.mp3" type="audio/mpeg">
+			<source src="music/ingame.ogg" type="audio/ogg">
+		</audio>
+		
+		<script>		
+			window.onload = function() {
+				jaws.start(PreloadGame, {fps: 30});
+			};
+			
+			window.onunload = function() {};
 		</script>
 	</body>
 </html>
