@@ -11,6 +11,12 @@
 	this.state_gameover = false;
 	this.state_nextlevel = false;
 	
+	// control buttons
+	
+	this.pauseButton = new PauseButton(jaws.context.canvas.width - 30, jaws.context.canvas.height - 18, 20, 16);
+	
+	// texts
+	
 	this.textPaused = new Text(150, 300, "Egy pillanatra megálltam!", 32, "rgb(255, 255, 255)");
 	this.textPausedHint = new Text(300, 330, "...de kattintásra vagy a 'P' billentyűre folytatom!", 12, "rgb(255, 255, 255)");
 	
@@ -19,6 +25,8 @@
 	
 	this.textNextLevel = new Text(150, 300, "Sikeres küldetés!", 32, "rgb(255, 255, 255)");
 	this.textNextLevelHint = new Text(300, 330, "Kattints a követekző szintre lépéshez!", 12, "rgb(255, 255, 255)");
+	
+	// other
 	
 	this.clouds = new Array();
 	this.background = backgrounds[Math.round(Math.random() * (backgrounds.length - 1))];
@@ -57,17 +65,33 @@
 		this.levelText = new Text(jaws.context.canvas.width - 80, 30, "" + player.currentLevel + ". szint", 16, "rgb(0, 0, 0)");
 		this.scoreText = new Text(20, 30, "Pontszám: " + player.currentScore, 16, "rgb(0, 0, 0)");
 		
-		$('#game_canvas').unbind('click');
+		// local event handlers
+		
+		var offset = $('#game_canvas').offset();
 		var _BomberTrollInstance = this;
-		$("#game_canvas").click(function() {
+		
+		$('#game_canvas').unbind('click');
+		$("#game_canvas").click(function(e) {
 			if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
+			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+				_BomberTrollInstance.isPaused = true;
 			} else {
 				if (_BomberTrollInstance.airplane != null) {
 					_BomberTrollInstance.airplane.dropBomb();
 				}
 			}
 		});
+		
+		$('#game_canvas').unbind('mousemove');
+		$("#game_canvas").mousemove(function(e) {
+			if (_BomberTrollInstance.pauseButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+				_BomberTrollInstance.pauseButton.hover = true;
+			} else {
+				_BomberTrollInstance.pauseButton.hover = false;
+			}
+		});
+		
 		$(document).keyup(function(e) {
 			if (e.keyCode == 27) {
 				// escape
@@ -264,6 +288,12 @@
 			this.textNextLevel.draw();
 			this.textNextLevelHint.draw();
 		}
+		
+		// control buttons
+		
+		this.pauseButton.draw();
+		
+		// scoreboard
 		
 		this.scoreText.str = "Pontszám: " + player.currentScore;
 		this.scoreText.draw();
