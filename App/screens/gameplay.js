@@ -13,7 +13,9 @@
 	
 	// control buttons
 	
-	this.pauseButton = new PauseButton(jaws.context.canvas.width - 30, jaws.context.canvas.height - 18, 20, 16);
+	this.pauseButton = new PauseButton(jaws.context.canvas.width - 30, jaws.context.canvas.height - 16, 14, 14);
+	this.backButton = new BackButton(jaws.context.canvas.width - 60, jaws.context.canvas.height - 16, 14, 14);
+	this.muteButton = new MuteButton(16, jaws.context.canvas.height - 16, 14, 14);
 	
 	// texts
 	
@@ -72,11 +74,21 @@
 		
 		$('#game_canvas').unbind('click');
 		$("#game_canvas").click(function(e) {
-			if (_BomberTrollInstance.isPaused) {
+			var lastMouseX = e.pageX - offset.left;
+			var lastMouseY = e.pageY - offset.top;
+		
+			if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				// same as escape
+				$(document).unbind('keyup');
+				player = new Player();
+				jaws.start(MenuScreen, {fps: 30});
+			} else if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
-			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.isPaused = true;
-			} else {
+			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				soundsEnabled = !soundsEnabled;
+			}  else {
 				if (_BomberTrollInstance.airplane != null) {
 					_BomberTrollInstance.airplane.dropBomb();
 				}
@@ -85,10 +97,25 @@
 		
 		$('#game_canvas').unbind('mousemove');
 		$("#game_canvas").mousemove(function(e) {
-			if (_BomberTrollInstance.pauseButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			var lastMouseX = e.pageX - offset.left;
+			var lastMouseY = e.pageY - offset.top;
+			
+			if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.pauseButton.hover = true;
 			} else {
 				_BomberTrollInstance.pauseButton.hover = false;
+			}
+			
+			if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				_BomberTrollInstance.backButton.hover = true;
+			} else {
+				_BomberTrollInstance.backButton.hover = false;
+			}
+			
+			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				_BomberTrollInstance.muteButton.hover = true;
+			} else {
+				_BomberTrollInstance.muteButton.hover = false;
 			}
 		});
 		
@@ -292,6 +319,8 @@
 		// control buttons
 		
 		this.pauseButton.draw();
+		this.backButton.draw();
+		this.muteButton.draw();
 		
 		// scoreboard
 		

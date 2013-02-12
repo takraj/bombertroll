@@ -1,4 +1,4 @@
-﻿function PauseButton(x, y, width, height) {
+﻿function BackButton(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
@@ -15,7 +15,11 @@
 		} else {
 			jaws.context.fillStyle = "rgba(255,255,255, 0.5)";
 		}
-		jaws.context.fillRect(this.x, this.y, (this.width / 3.0), this.height);
-		jaws.context.fillRect(this.x + ((this.width * 2.0) / 3.0), this.y, (this.width / 3.0), this.height);
+		
+		jaws.context.beginPath();
+		jaws.context.moveTo(this.x, this.y + (this.height / 2.0));
+		jaws.context.lineTo(this.x + this.width, this.y);
+		jaws.context.lineTo(this.x + this.width, this.y + this.height);
+		jaws.context.fill();
 	}
 }
