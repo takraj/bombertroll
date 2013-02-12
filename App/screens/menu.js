@@ -10,6 +10,8 @@
 	this.helpButton = new AnimatedButton(500, 260, 250, 40, "Játékszabályok");
 	this.highscoresButton = new AnimatedButton(500, 320, 250, 40, "Legjobbak listája");
 	
+	this.muteButton = new MuteButton(16, jaws.context.canvas.height - 16, 14, 14);
+	
 	this.setup = function() {	
 		this.previousUpdateTime = new Date().getTime();
 		this.currentUpdateTime = this.previousUpdateTime;
@@ -27,43 +29,59 @@
 		
 		// for menu animations
 		$('#game_canvas').mousemove(function(e) {
-			if (_BomberTrollInstance.newGameButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			var lastMouseX = e.pageX - offset.left;
+			var lastMouseY = e.pageY - offset.top;
+		
+			if (_BomberTrollInstance.newGameButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.newGameButton.hover = true;
 			} else {
 				_BomberTrollInstance.newGameButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.helpButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			if (_BomberTrollInstance.helpButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.helpButton.hover = true;
 			} else {
 				_BomberTrollInstance.helpButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.highscoresButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			if (_BomberTrollInstance.highscoresButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.highscoresButton.hover = true;
 			} else {
 				_BomberTrollInstance.highscoresButton.hover = false;
+			}
+			
+			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				_BomberTrollInstance.muteButton.hover = true;
+			} else {
+				_BomberTrollInstance.muteButton.hover = false;
 			}
 		});
 		
 		// for menu selections
 		$('#game_canvas').click(function(e) {
-			if (_BomberTrollInstance.newGameButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			var lastMouseX = e.pageX - offset.left;
+			var lastMouseY = e.pageY - offset.top;
+		
+			if (_BomberTrollInstance.newGameButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
-				jaws.start(BomberTroll, {fps: 30});
+				jaws.start(ModeSelectScreen, {fps: 30});
 			}
 			
-			if (_BomberTrollInstance.helpButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			if (_BomberTrollInstance.helpButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				jaws.start(HelpScreen, {fps: 30});
 			}
 			
-			if (_BomberTrollInstance.highscoresButton.isInnerPoint(e.pageX - offset.left, e.pageY - offset.top)) {
+			if (_BomberTrollInstance.highscoresButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				jaws.start(HighScoresScreen, {fps: 30});
+			}
+			
+			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				soundsEnabled ? DisableSounds() : EnableSounds();
 			}
 		});
 		
@@ -109,6 +127,8 @@
 		this.newGameButton.draw();
 		this.helpButton.draw();
 		this.highscoresButton.draw();
+		
+		this.muteButton.draw();
 		
 		this.textTitle.draw();
 		this.textAuthor.draw();

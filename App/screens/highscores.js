@@ -26,12 +26,7 @@
 		$('#game_canvas').unbind('click');
 		$("#game_canvas").click(function() {
 			$('#game_canvas').unbind('click');
-			 answer = confirm("Szeretnél új játékot kezdeni?");
-			 if (answer == true) {
-				jaws.start(BomberTroll, {fps: 30});
-			 } else {
-				jaws.start(MenuScreen, {fps: 30});
-			}
+			jaws.start(MenuScreen, {fps: 30});
 		});
 		
 		player = new Player();

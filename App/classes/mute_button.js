@@ -22,8 +22,8 @@
 		jaws.context.lineTo(this.x + (this.width / 4.0), this.y + (this.height / 3.0));
 		
 		// membrán
-		jaws.context.lineTo(this.x + this.width, this.y);
-		jaws.context.lineTo(this.x + this.width, this.y + this.height);
+		jaws.context.lineTo(this.x + this.width * 0.8, this.y);
+		jaws.context.lineTo(this.x + this.width * 0.8, this.y + this.height);
 		
 		// mágnes alsó része
 		jaws.context.lineTo(this.x + (this.width / 4.0), this.y + (2 * this.height / 3.0));

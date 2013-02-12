@@ -100,6 +100,7 @@ function Bomb(x, y, airplane) {
 	this.width = 11;
 	this.height = 30;
 	this.velocity = 100;
+	this.hvelocity = (isHardMode ? airplane.velocity : 0);
 	
 	this.fallState = Math.min((this.y - this.startY) / 300.0, 1);
 	
@@ -111,7 +112,16 @@ function Bomb(x, y, airplane) {
 	}
 	
 	this.step = function(diff)
-	{
+	{		
+		if (this.hvelocity > 0) {
+			if (this.go_right) {
+				this.x += this.hvelocity * (diff/900);
+			} else {
+				this.x -= this.hvelocity * (diff/900);
+			}
+			this.hvelocity -= 100 * (diff/1000);
+		}
+		
 		this.y += this.velocity * (diff/1000);
 		this.velocity += 100 * (diff/1000);
 		this.fallState = Math.min((this.y - this.startY) / 300.0, 1);

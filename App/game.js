@@ -14,6 +14,7 @@ var backgrounds = new Array();
 var isLoaded = false;
 var soundsLoaded = false;
 var soundsEnabled = true;
+var isHardMode = false;
 
 /*
 *	Game States
@@ -38,9 +39,11 @@ function PreloadGame() {
 		backgrounds[backgrounds.length] = new Background("backgrounds/day1.jpg", true);
 		backgrounds[backgrounds.length] = new Background("backgrounds/day2.jpg", true);
 		backgrounds[backgrounds.length] = new Background("backgrounds/day3.jpg", true);
+		backgrounds[backgrounds.length] = new Background("backgrounds/day4.jpg", true);
 		backgrounds[backgrounds.length] = new Background("backgrounds/night1.jpg", false);
 		backgrounds[backgrounds.length] = new Background("backgrounds/night2.jpg", false);
 		backgrounds[backgrounds.length] = new Background("backgrounds/night3.jpg", false);
+		backgrounds[backgrounds.length] = new Background("backgrounds/night4.jpg", false);
 		
 		jaws.assets.loadAll({onfinish: function() {
 			isLoaded = true;

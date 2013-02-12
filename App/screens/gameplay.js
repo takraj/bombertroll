@@ -28,6 +28,8 @@
 	this.textNextLevel = new Text(150, 300, "Sikeres küldetés!", 32, "rgb(255, 255, 255)");
 	this.textNextLevelHint = new Text(300, 330, "Kattints a követekző szintre lépéshez!", 12, "rgb(255, 255, 255)");
 	
+	this.hardModeHint = new Text(jaws.context.canvas.width / 2.0 - 30, jaws.context.canvas.height - 5, "-- nehéz mód --", 12, "rgba(255, 255, 255, 0.5)");
+	
 	// other
 	
 	this.clouds = new Array();
@@ -82,13 +84,13 @@
 				$(document).unbind('keyup');
 				player = new Player();
 				jaws.start(MenuScreen, {fps: 30});
+			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+				soundsEnabled ? DisableSounds() : EnableSounds();
 			} else if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
 			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.isPaused = true;
-			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
-				soundsEnabled = !soundsEnabled;
-			}  else {
+			} else {
 				if (_BomberTrollInstance.airplane != null) {
 					_BomberTrollInstance.airplane.dropBomb();
 				}
@@ -321,6 +323,12 @@
 		this.pauseButton.draw();
 		this.backButton.draw();
 		this.muteButton.draw();
+		
+		// hint
+		
+		if (isHardMode) {
+			this.hardModeHint.draw();
+		}
 		
 		// scoreboard
 		
