@@ -73,18 +73,25 @@
 	
 	this.update = function() {
 		this.currentUpdateTime = new Date().getTime();
-		var diff = this.currentUpdateTime - this.previousUpdateTime;
+		var big_diff = this.currentUpdateTime - this.previousUpdateTime;
+		var diff = 100;
 		
-		for (var i = 0; i < this.clouds.length; i++) {
-			this.clouds[i].step(diff);
+		while (big_diff > 0) {
+			if (big_diff < diff) {
+				diff = big_diff;
+			}
+			big_diff -= diff;
+		
+			for (var i = 0; i < this.clouds.length; i++) {
+				this.clouds[i].step(diff);
+			}
+			
+			this.newGameButton.step(diff);
+			this.helpButton.step(diff);
+			this.highscoresButton.step(diff);
 		}
 		
-		this.newGameButton.step(diff);
-		this.helpButton.step(diff);
-		this.highscoresButton.step(diff);
-		
 		this.previousUpdateTime = this.currentUpdateTime;
-		jaws.log(diff, false);
 	}
 	
 	this.draw = function() {
