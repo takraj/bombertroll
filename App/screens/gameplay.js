@@ -34,7 +34,23 @@
 	// other
 	
 	this.clouds = new Array();
-	this.background = backgrounds[Math.round(Math.random() * (backgrounds.length - 1))];
+	
+	// ---- Background Selector ----
+	
+	if (previousBackground < 0) {
+		previousBackground = Math.round(Math.random() * (backgrounds.length - 1));
+	}
+	if (backgrounds.length > 1) {
+		newBg = previousBackground;
+		while (newBg == previousBackground) {
+			newBg = Math.round(Math.random() * 10000000) % backgrounds.length;
+		}
+		this.background = backgrounds[newBg];
+		previousBackground = newBg;
+	}
+	
+	// ---- end of selector ----
+	
 	this.backgroundSprite = null;
 
 	/* Called once. Put your one-time initializing here. */
@@ -136,6 +152,18 @@
 				// p
 				if (!_BomberTrollInstance.state_gameover && !_BomberTrollInstance.state_nextlevel) {
 					_BomberTrollInstance.isPaused = !_BomberTrollInstance.isPaused;
+				}
+			}
+			
+			if (e.keyCode == 77) {
+				// m
+				soundsEnabled ? DisableSounds() : EnableSounds();
+			}
+			
+			if (e.keyCode == 13) {
+				// enter
+				if (_BomberTrollInstance.airplane != null) {
+					_BomberTrollInstance.airplane.dropBomb();
 				}
 			}
 		});

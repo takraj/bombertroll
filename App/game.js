@@ -15,6 +15,7 @@ var isLoaded = false;
 var soundsLoaded = false;
 var soundsEnabled = true;
 var isHardMode = false;
+var previousBackground = -1;
 
 /*
 *	Game States
