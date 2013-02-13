@@ -6,6 +6,7 @@
 	this.scoreText;
 	this.levelText;
 	this.explosions;
+	this.flyingTexts;
 	this.isPaused = false;
 	this.stillAlive = true;
 	this.state_gameover = false;
@@ -60,6 +61,7 @@
 		this.airplane = new Airplane(0, 15, 200 + ((player.currentLevel - 1) * player.currentLevel), player, this)
 		this.buildings = new Array();
 		this.explosions = new Array();
+		this.flyingTexts = new Array();
 		
 		for (var i = 0; i < 16; i++) {
 			// az épület max magassága 16 egység, max szórása lefelé 6 egység
@@ -137,6 +139,8 @@
 				}
 			}
 		});
+		
+		player.currentScore *= (player.currentLevel-1);
 	}
 	
 	/* Called each gametick. Put your gamelogic here. */
@@ -235,6 +239,17 @@
 				}
 			}
 			
+			// frissíti a repülő szövegeket
+			for (var i = 0; i < this.flyingTexts.length; i++) {
+				if (this.flyingTexts[i] != null) {
+					if (!this.flyingTexts[i].isDead()) {
+						this.flyingTexts[i].step(diff);
+					} else {
+						this.flyingTexts[i] = null;
+					}
+				}
+			}
+			
 			// frissíti a felhőket
 			for (var i = 0; i < this.clouds.length; i++) {
 				this.clouds[i].step(diff);
@@ -266,12 +281,14 @@
 		
 		if (isHardMode && !this.state_gameover && !this.state_nextlevel) {
 			if (player.currentScore > 0) {
-				player.currentScore -= Math.floor(player.scoretimer / 1000);
+				player.currentScore -= player.currentLevel * Math.floor(player.scoretimer / 1000);
 				player.scoretimer %= 1000;
 			} else {
 				player.scoretimer = 0;
 				player.currentScore = 0;
 			}
+		} else {
+			player.scoretimer = 0;
 		}
 		
 		this.previousUpdateTime = this.currentUpdateTime;
@@ -308,6 +325,13 @@
 		for (var i = 0; i < this.explosions.length; i++) {
 			if (this.explosions[i] != null) {
 				this.explosions[i].draw();
+			}
+		}
+		
+		// kirajzolja a repülő pontokat
+		for (var i = 0; i < this.flyingTexts.length; i++) {
+			if (this.flyingTexts[i] != null) {
+				this.flyingTexts[i].draw();
 			}
 		}
 		
@@ -365,5 +389,9 @@
 	
 	this.addExplosion = function(obj) {
 		this.explosions[this.explosions.length] = new Explosion(obj);
+	}
+	
+	this.addFlyingText = function(obj, str, isRedNotGreen) {
+		this.flyingTexts[this.flyingTexts.length] = new FlyingText(obj, str, isRedNotGreen);
 	}
 }

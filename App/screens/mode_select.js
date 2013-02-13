@@ -1,7 +1,9 @@
 ﻿function ModeSelectScreen() {
 	this.textTitle = new Text(100, 70, "Könnyű vagy Nehéz játékot szeretnél?", 32, "rgb(255, 255, 255)");
-	this.textHardModeHint1 = new Text(150, 150, "Nehéz módban nincs negatív pontszám, de a bomba sem függőlegesen esik,", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint2 = new Text(150, 166, "továbbá minden másodpercben 1-el csökken a pontszámod.", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint1 = new Text(150, 150, "Nehéz módban nincs negatív pontszám és a bomba sem függőlegesen esik, továbbá", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint2 = new Text(150, 166, "minden másodpercben az aktuális szint számával csökken a pontszámod. Cserébe", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint3 = new Text(150, 182, "ez utóbbi minden szintlépéskor megszorzódik az előző szint számával, félredobás", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint4 = new Text(150, 198, "esetén pedig azonnal megfeleződik.", 12, "rgb(255, 255, 255)");
 	
 	this.easyButton = new SolidButton(100, 320, 190, 40, "Könnyűt");
 	this.hardButton = new SolidButton(300, 320, 190, 40, "Nehezet");
@@ -78,6 +80,8 @@
 		this.textTitle.draw();
 		this.textHardModeHint1.draw();
 		this.textHardModeHint2.draw();
+		this.textHardModeHint3.draw();
+		this.textHardModeHint4.draw();
 		
 		this.easyButton.draw();
 		this.hardButton.draw();

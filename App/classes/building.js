@@ -99,6 +99,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
+		scene.addFlyingText(this, "+5 pont", false);
 		this.building.baseElement = null;
 		this.building = null;
 		this.player.currentScore += 5;
@@ -189,6 +190,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
+		scene.addFlyingText(this, "+5 pont", false);
 		this.parentElement.childElement = null;
 		this.parentElement.tryDestroy(scene);
 		this.parentElement = null;
@@ -259,6 +261,7 @@ function RoofElement(parentElement) {
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
+		scene.addFlyingText(this, "+5 pont", false);
 		this.parentElement.childElement = null;
 		this.parentElement.tryDestroy(scene);
 		this.parentElement = null;
