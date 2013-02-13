@@ -64,9 +64,10 @@ function Player() {
 	this.currentScore = 0;
 	this.currentLevel = 1;		// range = 1..12
 	this.highscores = new Array();
+	this.scoretimer = 0;
 	
 	for (var i = 0; i < 10; i++) {
-		this.highscores[i] = new HighScoreItem("- senki -", 0);
+		this.highscores[i] = new HighScoreItem("- senki -", 0, 1, false);
 	}
 	
 	if (localStorage['highscores'] == null) {
@@ -97,7 +98,7 @@ function Player() {
 		if (this.highscores.length > 0) {
 			return this.highscores[this.highscores.length-1];
 		} else {
-			return new HighScoreItem("- senki -", 0);
+			return new HighScoreItem("- senki -", 0, 1, false);
 		}
 	}
 	
@@ -106,14 +107,16 @@ function Player() {
 		if (this.highscores.length > 0) {
 			return this.highscores[0];
 		} else {
-			return new HighScoreItem("- senki -", 0);
+			return new HighScoreItem("- senki -", 0, 1, false);
 		}
 	}
 }
 
-function HighScoreItem(name, score) {
+function HighScoreItem(name, score, level, mode) {
 	this.name = name;
 	this.score = score;
+	this.level = level;
+	this.mode = mode;
 }
 
 function Background(file, isDaytime) {

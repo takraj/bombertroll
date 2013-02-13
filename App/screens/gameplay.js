@@ -121,6 +121,7 @@
 			}
 		});
 		
+		$(document).unbind('keyup');
 		$(document).keyup(function(e) {
 			if (e.keyCode == 27) {
 				// escape
@@ -149,6 +150,8 @@
 		
 		var big_diff = this.currentUpdateTime - this.previousUpdateTime;
 		var diff = 100;
+		
+		player.scoretimer += big_diff;
 		
 		while (big_diff > 0) {
 			if (big_diff < diff) {
@@ -191,7 +194,6 @@
 					}
 					
 					if (allDestroyed) {
-						this.airplane.stopped = true;
 						this.state_nextlevel = true;
 						
 						$('#game_canvas').unbind('click');
@@ -262,11 +264,25 @@
 			}
 		}
 		
+		if (isHardMode && !this.state_gameover && !this.state_nextlevel) {
+			if (player.currentScore > 0) {
+				player.currentScore -= Math.floor(player.scoretimer / 1000);
+				player.scoretimer %= 1000;
+			} else {
+				player.scoretimer = 0;
+				player.currentScore = 0;
+			}
+		}
+		
 		this.previousUpdateTime = this.currentUpdateTime;
 	}
 	
 	/* Called each gametick after update(). Put your drawing here. */
 	this.draw = function() {
+		if (this.airplane != null) {
+			this.airplane.stopped = this.isPaused || this.state_nextlevel;
+		}
+	
 		jaws.clear();
 		
 		this.backgroundSprite.draw();

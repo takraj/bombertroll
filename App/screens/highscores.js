@@ -11,16 +11,20 @@
 				answer = window.prompt("Biztos van...\nMi a neved?", "");
 			}
 			
-			player.addHighScore(new HighScoreItem(answer, player.currentScore));
+			player.addHighScore(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
 		}
 		
-		this.textHSList[0] = new Text(200, 130, "Név", 12, "rgb(255, 255, 255)");
-		this.textHSList[1] = new Text(500, 130, "Pontszám", 12, "rgb(255, 255, 255)");
+		this.textHSList[0] = new Text(150, 130, "Név", 12, "rgb(255, 255, 255)");
+		this.textHSList[1] = new Text(450, 130, "Pontszám", 12, "rgb(255, 255, 255)");
+		this.textHSList[2] = new Text(550, 130, "Szint", 12, "rgb(255, 255, 255)");
+		this.textHSList[3] = new Text(650, 130, "Játékmód", 12, "rgb(255, 255, 255)");
 		
 		for (var i = 0; i < player.highscores.length; i++) {
-			this.textHSList[1 + (i * 3) + 1] = new Text(170, 160 + (i * 20), "" + (i+1) + ".", 12, "rgb(175, 175, 175)");
-			this.textHSList[1 + (i * 3) + 2] = new Text(200, 160 + (i * 20), player.highscores[i].name, 12, "rgb(255, 255, 255)");
-			this.textHSList[1 + (i * 3) + 3] = new Text(500, 160 + (i * 20), player.highscores[i].score, 12, "rgb(255, 255, 255)");
+			this.textHSList[3 + (i * 5) + 1] = new Text(120, 160 + (i * 20), "" + (i+1) + ".", 12, "rgb(175, 175, 175)");
+			this.textHSList[3 + (i * 5) + 2] = new Text(150, 160 + (i * 20), player.highscores[i].name, 12, "rgb(255, 255, 255)");
+			this.textHSList[3 + (i * 5) + 3] = new Text(450, 160 + (i * 20), player.highscores[i].score, 12, "rgb(255, 255, 255)");
+			this.textHSList[3 + (i * 5) + 4] = new Text(550, 160 + (i * 20), player.highscores[i].level, 12, "rgb(255, 255, 255)");
+			this.textHSList[3 + (i * 5) + 5] = new Text(650, 160 + (i * 20), (player.highscores[i].mode ? "Nehéz" : "Könnyű"), 12, "rgb(255, 255, 255)");
 		}
 		
 		$('#game_canvas').unbind('click');

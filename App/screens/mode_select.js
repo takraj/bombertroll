@@ -1,7 +1,7 @@
 ﻿function ModeSelectScreen() {
 	this.textTitle = new Text(100, 70, "Könnyű vagy Nehéz játékot szeretnél?", 32, "rgb(255, 255, 255)");
 	this.textHardModeHint1 = new Text(150, 150, "Nehéz módban nincs negatív pontszám, de a bomba sem függőlegesen esik,", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint2 = new Text(150, 166, "továbbá minden másodpercben 5-tel csökken a pontszámod.", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint2 = new Text(150, 166, "továbbá minden másodpercben 1-el csökken a pontszámod.", 12, "rgb(255, 255, 255)");
 	
 	this.easyButton = new SolidButton(100, 320, 190, 40, "Könnyűt");
 	this.hardButton = new SolidButton(300, 320, 190, 40, "Nehezet");
@@ -61,10 +61,6 @@
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				jaws.start(MenuScreen, {fps: 30});
-			}
-			
-			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
-				soundsEnabled ? DisableSounds() : EnableSounds();
 			}
 		});
 		
