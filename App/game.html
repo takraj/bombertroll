@@ -80,6 +80,16 @@
 			<source src="music/ingame.ogg" type="audio/ogg">
 		</audio>
 		
+		<audio loop="loop" preload="none" id="landing_music">
+			<source src="music/landing.mp3" type="audio/mpeg">
+			<source src="music/landing.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="none" id="crashed_music">
+			<source src="music/crashed.mp3" type="audio/mpeg">
+			<source src="music/crashed.ogg" type="audio/ogg">
+		</audio>
+		
 		<script>		
 			window.onload = function() {
 				jaws.start(PreloadGame, {fps: 30});

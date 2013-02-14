@@ -34,6 +34,8 @@ function PreloadGame() {
 		soundsLoaded = true;		// this will become false if any of the sounds below cannot be loaded
 		InitSound("menu_music");
 		InitSound("ingame_music");
+		InitSound("landing_music");
+		InitSound("crashed_music");
 		
 		// -------------------
 		
@@ -131,6 +133,9 @@ function InitSound(html_id) {
 	if (!! document.getElementById(html_id).currentSrc) {
 		jaws.assets.add(document.getElementById(html_id).currentSrc);
 		console.log(document.getElementById(html_id).currentSrc + " is loaded");
+		document.getElementById(html_id).addEventListener("pause", function() {
+			this.currentTime = 0;
+		});
 	} else {
 		soundsLoaded = false;
 		console.warn(document.getElementById(html_id).currentSrc + " is not loaded");
