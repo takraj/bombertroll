@@ -63,6 +63,7 @@
 			
 			if (this.bomb.y >= jaws.context.canvas.height - 20) {
 				this.scene.addExplosion(this.bomb);
+				PlaySound("bomb_explosion");
 				if (isHardMode) {
 					scene.addFlyingText(this.bomb, (-1 * Math.ceil(this.player.currentScore / 2.0)) + " pont", true);
 					this.player.currentScore = Math.floor(this.player.currentScore / 2);

@@ -94,11 +94,14 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 		if (Math.random() > 0.1) {
 			this.destroy(scene);
 			this.player.currentScore += 12;
+		} else {
+			PlaySound("building_collapse");
 		}
 	}
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
+		PlaySound("building_collapse");
 		scene.addFlyingText(this, "+5 pont", false);
 		this.building.baseElement = null;
 		this.building = null;
@@ -185,6 +188,8 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 		if (Math.random() > 0.1) {
 			this.destroy(scene);
 			this.player.currentScore += 12;
+		} else {
+			PlaySound("building_collapse");
 		}
 	}
 	

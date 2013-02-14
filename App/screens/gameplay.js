@@ -57,9 +57,6 @@
 	this.setup = function() {
 		player = new Player();
 		this.initLevel();
-		
-		StopBackgroundSounds();
-		PlaySound("ingame_music");
 	}
 	
 	this.initLevel = function() {	
@@ -169,6 +166,10 @@
 		});
 		
 		player.currentScore *= (player.currentLevel-1);
+		
+		// music
+		StopBackgroundSounds();
+		PlaySound("ingame_music");
 	}
 	
 	/* Called each gametick. Put your gamelogic here. */
@@ -200,6 +201,7 @@
 						if (this.buildings[i].isCollision(this.airplane.bomb.x, this.airplane.bomb.y, this.airplane.bomb.width, this.airplane.bomb.height)) {
 							this.buildings[i].doDestroyByBomb(this);
 							this.addExplosion(this.airplane.bomb);
+							PlaySound("bomb_explosion");
 							this.airplane.bomb = null;
 							break;
 						}
@@ -210,6 +212,9 @@
 				for (var i = 0; i < this.buildings.length; i++) {
 					if (this.buildings[i].isCollision(this.airplane.x, this.airplane.y, this.airplane.width, this.airplane.height)) {
 						this.addExplosion(this.airplane);
+						StopBackgroundSounds();
+						PlaySound("plane_explosion");
+						PlaySound("plane_crash");
 						this.airplane = null;
 						break;
 					}
@@ -252,6 +257,8 @@
 					
 					if (allDestroyed) {
 						this.airplane.speedup = true;
+						StopBackgroundSounds();
+						PlaySound("landing_music");
 					}
 				}
 			}
@@ -296,6 +303,9 @@
 				if (noExplosionsRunning) {
 					this.stillAlive = false;
 					this.state_gameover = true;
+					
+					StopBackgroundSounds();
+					PlaySound("crashed_music");
 					
 					$('#game_canvas').unbind('click');
 					var _BomberTrollInstance = this;

@@ -85,8 +85,10 @@
 			}
 		});
 		
-		StopBackgroundSounds();
-		PlaySound("menu_music");
+		if (!isPlaying("menu_music")) {
+			StopBackgroundSounds();
+			PlaySound("menu_music");
+		}
 	}
 	
 	this.update = function() {

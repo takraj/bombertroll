@@ -37,6 +37,12 @@ function PreloadGame() {
 		InitSound("landing_music");
 		InitSound("crashed_music");
 		
+		InitSound("bomb_explosion");
+		InitSound("bomb_falling");
+		InitSound("building_collapse");
+		InitSound("plane_crash");
+		InitSound("plane_explosion");
+		
 		// -------------------
 		
 		backgrounds[backgrounds.length] = new Background("backgrounds/day1.jpg", true);
@@ -142,8 +148,17 @@ function InitSound(html_id) {
 	}
 }
 
+function isPlaying(html_id) {
+	if (soundsLoaded && (!! document.getElementById(html_id)) && soundsEnabled) {
+		return !document.getElementById(html_id).paused;
+	} else {
+		return false;
+	}
+}
+
 function PlaySound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id)) && soundsEnabled) {
+		StopSound(html_id);
 		document.getElementById(html_id).play();
 		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
 	}
@@ -159,11 +174,22 @@ function StopSound(html_id) {
 function StopBackgroundSounds() {
 	StopSound("menu_music");
 	StopSound("ingame_music");
+	StopSound("landing_music");
+	StopSound("crashed_music");
+}
+
+function StopAllSounds() {
+	StopBackgroundSounds();
+	StopSound("bomb_explosion");
+	StopSound("bomb_falling");
+	StopSound("building_collapse");
+	StopSound("plane_crash");
+	StopSound("plane_explosion");
 }
 
 function DisableSounds() {
 	soundsEnabled = false;
-	StopBackgroundSounds();
+	StopAllSounds();
 }
 
 function EnableSounds() {
