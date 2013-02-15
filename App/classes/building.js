@@ -93,7 +93,6 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	this.tryDestroy = function(scene) {
 		if (Math.random() > 0.1) {
 			this.destroy(scene);
-			this.player.currentScore += 12;
 		} else {
 			PlaySound("building_collapse");
 		}
@@ -102,10 +101,14 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
 		PlaySound("building_collapse");
-		scene.addFlyingText(this, "+5 pont", false);
+		var addpoints = 18;
+		if (isHardMode) {
+			addpoints += (this.player.currentLevel-1);
+		}
+		scene.addFlyingText(this, "+"+addpoints+" pont", false);
+		this.player.currentScore += addpoints;
 		this.building.baseElement = null;
 		this.building = null;
-		this.player.currentScore += 5;
 	}
 
 	// Rajzoló függvény
@@ -187,7 +190,6 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	this.tryDestroy = function(scene) {
 		if (Math.random() > 0.1) {
 			this.destroy(scene);
-			this.player.currentScore += 12;
 		} else {
 			PlaySound("building_collapse");
 		}
@@ -195,11 +197,15 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
-		scene.addFlyingText(this, "+5 pont", false);
+		var addpoints = 15;
+		if (isHardMode) {
+			addpoints += (this.player.currentLevel-1);
+		}
+		scene.addFlyingText(this, "+"+addpoints+" pont", false);
+		this.player.currentScore += addpoints;
 		this.parentElement.childElement = null;
 		this.parentElement.tryDestroy(scene);
 		this.parentElement = null;
-		this.player.currentScore += 5;
 	}
 
 	// Rajzoló függvény
@@ -266,11 +272,15 @@ function RoofElement(parentElement) {
 	
 	this.destroy = function(scene) {
 		scene.addExplosion(this);
-		scene.addFlyingText(this, "+5 pont", false);
+		var addpoints = 5;
+		if (isHardMode) {
+			addpoints += (this.player.currentLevel-1);
+		}
+		scene.addFlyingText(this, "+"+addpoints+" pont", false);
+		this.player.currentScore += addpoints;
 		this.parentElement.childElement = null;
 		this.parentElement.tryDestroy(scene);
 		this.parentElement = null;
-		this.player.currentScore += 5;
 	}
 
 	// Rajzoló függvény

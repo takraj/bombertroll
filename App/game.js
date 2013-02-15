@@ -9,13 +9,16 @@
 /*               & Angus Ager    */
 /*********************************/
 
+var offset = $('#game_canvas').offset();
 var player = new Player();
 var backgrounds = new Array();
 var isLoaded = false;
+var isStarted = false;
 var soundsLoaded = false;
 var soundsEnabled = true;
 var isHardMode = false;
 var previousBackground = -1;
+var soundsWerePlayingBeforePause = new Array();
 
 /*
 *	Game States
@@ -43,6 +46,10 @@ function PreloadGame() {
 		InitSound("plane_crash");
 		InitSound("plane_explosion");
 		
+		$("audio").bind("pause", function() {
+			this.currentTime = 0;
+		});
+		
 		// -------------------
 		
 		backgrounds[backgrounds.length] = new Background("backgrounds/day1.jpg", true);
@@ -60,7 +67,9 @@ function PreloadGame() {
 	}
 	
 	this.update = function() {
-		if (isLoaded) {
+		if (isLoaded && !isStarted) {
+			isStarted = true;
+			LoadMuteState();
 			jaws.start(MenuScreen, {fps: 30});
 		}
 	}
@@ -73,16 +82,32 @@ function Player() {
 	this.currentScore = 0;
 	this.currentLevel = 1;		// range = 1..12
 	this.highscores = new Array();
+	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -10000, 1, false);
 	this.scoretimer = 0;
 	
 	for (var i = 0; i < 10; i++) {
-		this.highscores[i] = new HighScoreItem("- senki -", 0, 1, false);
+		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 1000 * (i+1), 1, false);
 	}
 	
 	if (localStorage['highscores'] == null) {
 		localStorage['highscores'] = JSON.stringify(this.highscores);
 	} else {
 		this.highscores = JSON.parse(localStorage['highscores']);
+	}
+	
+	if (localStorage['negativeRecord'] == null) {
+		localStorage['negativeRecord'] = JSON.stringify(this.negativeRecord);
+	} else {
+		this.negativeRecord = JSON.parse(localStorage['negativeRecord']);
+	}
+	
+	this.getNegativeRecord = function() {
+		return this.negativeRecord;
+	}
+	
+	this.setNegativeRecord = function(item) {
+		this.negativeRecord = item;
+		localStorage['negativeRecord'] = JSON.stringify(this.negativeRecord);
 	}
 	
 	// eleve rendezetten, ez sokat segít
@@ -134,14 +159,26 @@ function Background(file, isDaytime) {
 	jaws.assets.add(file);
 }
 
+// --- SOUND MANAGEMENT --- //
+
+function SaveMuteState() {
+	localStorage['muteState'] = JSON.stringify(!soundsEnabled);
+	console.log("Mute state saved as " + !soundsEnabled);
+}
+
+function LoadMuteState() {
+	if (localStorage['muteState'] == null) {
+		SaveMuteState();
+	}
+	soundsEnabled = !JSON.parse(localStorage['muteState']);
+	console.log("Mute state loaded as " + !soundsEnabled);
+}
+
 function InitSound(html_id) {
 	console.log("Loading sound " + html_id);
 	if (!! document.getElementById(html_id).currentSrc) {
 		jaws.assets.add(document.getElementById(html_id).currentSrc);
 		console.log(document.getElementById(html_id).currentSrc + " is loaded");
-		document.getElementById(html_id).addEventListener("pause", function() {
-			this.currentTime = 0;
-		});
 	} else {
 		soundsLoaded = false;
 		console.warn(document.getElementById(html_id).currentSrc + " is not loaded");
@@ -160,6 +197,7 @@ function PlaySound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		StopSound(html_id);
 		document.getElementById(html_id).play();
+		document.getElementById(html_id).muted = !soundsEnabled;
 		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
 	}
 }
@@ -167,14 +205,14 @@ function PlaySound(html_id) {
 function MuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = true;
-		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
+		console.log("Sound " + document.getElementById(html_id).currentSrc + " is muted");
 	}
 }
 
 function UnmuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = false;
-		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
+		console.log("Sound " + document.getElementById(html_id).currentSrc + " is unmuted");
 	}
 }
 
@@ -183,6 +221,39 @@ function StopSound(html_id) {
 		document.getElementById(html_id).pause();
 		console.log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
 	}
+}
+
+function _RegisterAndPauseSound(html_id) {
+	if (isPlaying(html_id)) {
+		soundsWerePlayingBeforePause[soundsWerePlayingBeforePause.length] = html_id;
+		StopSound(html_id);
+	}
+}
+
+function PauseAllSounds() {
+	soundsWerePlayingBeforePause = new Array();
+	$("audio").unbind("pause");
+	
+	_RegisterAndPauseSound("menu_music");
+	_RegisterAndPauseSound("ingame_music");
+	_RegisterAndPauseSound("landing_music");
+	_RegisterAndPauseSound("crashed_music");
+	_RegisterAndPauseSound("bomb_explosion");
+	_RegisterAndPauseSound("bomb_falling");
+	_RegisterAndPauseSound("building_collapse");
+	_RegisterAndPauseSound("plane_crash");
+	_RegisterAndPauseSound("plane_explosion");
+}
+
+function ContinueAllSounds() {
+	for (i=0; i<soundsWerePlayingBeforePause.length; i++) {
+		PlaySound(soundsWerePlayingBeforePause[i]);
+	}
+	
+	soundsWerePlayingBeforePause = new Array();
+	$("audio").bind("pause", function() {
+		this.currentTime = 0;
+	});
 }
 
 function StopBackgroundSounds() {
@@ -203,6 +274,7 @@ function StopAllSounds() {
 
 function DisableSounds() {
 	soundsEnabled = false;
+	SaveMuteState();
 	
 	MuteSound("menu_music");
 	MuteSound("ingame_music");
@@ -218,6 +290,7 @@ function DisableSounds() {
 
 function EnableSounds() {
 	soundsEnabled = true;
+	SaveMuteState();
 	
 	UnmuteSound("menu_music");
 	UnmuteSound("ingame_music");

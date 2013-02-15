@@ -25,7 +25,6 @@
 		$('#game_canvas').unbind('mousemove');
 		
 		var _BomberTrollInstance = this;
-		var offset = $('#game_canvas').offset();
 		
 		// for menu animations
 		$('#game_canvas').mousemove(function(e) {
@@ -89,6 +88,8 @@
 			StopBackgroundSounds();
 			PlaySound("menu_music");
 		}
+		
+		offset = $('#game_canvas').offset();
 	}
 	
 	this.update = function() {

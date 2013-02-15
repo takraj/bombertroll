@@ -20,6 +20,7 @@
 	this.dropBomb = function() {
 		if ((this.bomb == null) && (!this.stopped)) {
 			this.bomb = new Bomb(((2 * this.x) + this.width) / 2.0, this.y + this.height, this);
+			PlaySound("bomb_falling");
 		}
 	}
 	
@@ -63,6 +64,7 @@
 			
 			if (this.bomb.y >= jaws.context.canvas.height - 20) {
 				this.scene.addExplosion(this.bomb);
+				StopSound("bomb_falling");
 				PlaySound("bomb_explosion");
 				if (isHardMode) {
 					scene.addFlyingText(this.bomb, (-1 * Math.ceil(this.player.currentScore / 2.0)) + " pont", true);

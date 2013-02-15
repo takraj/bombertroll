@@ -25,6 +25,7 @@
 	
 	this.textGameOver = new Text(150, 300, "Vége a játéknak!", 32, "rgb(255, 255, 255)");
 	this.textHighScoreHint = new Text(300, 330, "...de bekerültél a legjobbak közé!", 12, "rgb(255, 255, 255)");
+	this.textNegativeRecordHint = new Text(300, 330, "...és megdöntötted a negatív rekordot!", 12, "rgb(255, 255, 255)");
 	
 	this.textNextLevel = new Text(150, 300, "Sikeres küldetés!", 32, "rgb(255, 255, 255)");
 	this.textNextLevelHint = new Text(300, 330, "Kattints a követekző szintre lépéshez!", 12, "rgb(255, 255, 255)");
@@ -57,6 +58,7 @@
 	this.setup = function() {
 		player = new Player();
 		this.initLevel();
+		offset = $('#game_canvas').offset();
 	}
 	
 	this.initLevel = function() {	
@@ -85,8 +87,6 @@
 		this.scoreText = new Text(20, 30, "Pontszám: " + player.currentScore, 16, "rgb(0, 0, 0)");
 		
 		// local event handlers
-		
-		var offset = $('#game_canvas').offset();
 		var _BomberTrollInstance = this;
 		
 		$('#game_canvas').unbind('click');
@@ -98,13 +98,17 @@
 				// same as escape
 				$(document).unbind('keyup');
 				player = new Player();
+				ContinueAllSounds();
+				StopAllSounds();
 				jaws.start(MenuScreen, {fps: 30});
 			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			} else if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
+				ContinueAllSounds();
 			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				_BomberTrollInstance.isPaused = true;
+				PauseAllSounds();
 			} else {
 				if (_BomberTrollInstance.airplane != null) {
 					_BomberTrollInstance.airplane.dropBomb();
@@ -138,17 +142,20 @@
 		
 		$(document).unbind('keyup');
 		$(document).keyup(function(e) {
-			if (e.keyCode == 27) {
+			if ((e.keyCode == 27) && !_BomberTrollInstance.state_gameover) {
 				// escape
 				$(document).unbind('keyup');
 				player = new Player();
+				ContinueAllSounds();
+				StopAllSounds();
 				jaws.start(MenuScreen, {fps: 30});
 			}
 			
-			if (e.keyCode == 80) {
+			if ((e.keyCode == 80) && !_BomberTrollInstance.state_gameover && !_BomberTrollInstance.state_endgame) {
 				// p
 				if (!_BomberTrollInstance.state_gameover && !_BomberTrollInstance.state_nextlevel) {
 					_BomberTrollInstance.isPaused = !_BomberTrollInstance.isPaused;
+					_BomberTrollInstance.isPaused ? PauseAllSounds() : ContinueAllSounds();
 				}
 			}
 			
@@ -157,7 +164,7 @@
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			}
 			
-			if (e.keyCode == 13) {
+			if ((e.keyCode == 13) && !_BomberTrollInstance.state_gameover && !_BomberTrollInstance.state_endgame) {
 				// enter
 				if (_BomberTrollInstance.airplane != null) {
 					_BomberTrollInstance.airplane.dropBomb();
@@ -165,7 +172,9 @@
 			}
 		});
 		
-		player.currentScore *= (player.currentLevel-1);
+		if (isHardMode) {
+			player.currentScore *= 2;
+		}
 		
 		// music
 		StopBackgroundSounds();
@@ -201,6 +210,7 @@
 						if (this.buildings[i].isCollision(this.airplane.bomb.x, this.airplane.bomb.y, this.airplane.bomb.width, this.airplane.bomb.height)) {
 							this.buildings[i].doDestroyByBomb(this);
 							this.addExplosion(this.airplane.bomb);
+							StopSound("bomb_falling");
 							PlaySound("bomb_explosion");
 							this.airplane.bomb = null;
 							break;
@@ -231,13 +241,28 @@
 					}
 					
 					if (allDestroyed) {
+						// set mission accomplished screen
 						this.state_nextlevel = true;
 						
 						$('#game_canvas').unbind('click');
 						var _BomberTrollInstance = this;
-						$("#game_canvas").click(function() {
-							$('#game_canvas').unbind('click');
-							_BomberTrollInstance.nextLevel();
+						$("#game_canvas").click(function(e) {
+							var lastMouseX = e.pageX - offset.left;
+							var lastMouseY = e.pageY - offset.top;
+						
+							if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+								// same as escape
+								$(document).unbind('keyup');
+								player = new Player();
+								ContinueAllSounds();
+								StopAllSounds();
+								jaws.start(MenuScreen, {fps: 30});
+							} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+								soundsEnabled ? DisableSounds() : EnableSounds();
+							} else {
+								$('#game_canvas').unbind('click');
+								_BomberTrollInstance.nextLevel();
+							}
 						});
 					} else {
 						this.addExplosion(this.airplane);
@@ -309,9 +334,16 @@
 					
 					$('#game_canvas').unbind('click');
 					var _BomberTrollInstance = this;
-					$("#game_canvas").click(function() {
-						$('#game_canvas').unbind('click');
-						_BomberTrollInstance.endgame();
+					$("#game_canvas").click(function(e) {
+						var lastMouseX = e.pageX - offset.left;
+						var lastMouseY = e.pageY - offset.top;
+					
+						if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+							soundsEnabled ? DisableSounds() : EnableSounds();
+						} else {
+							$('#game_canvas').unbind('click');
+							_BomberTrollInstance.endgame();
+						}
 					});
 				}
 			}
@@ -387,6 +419,8 @@
 			
 			if (player.currentScore > player.getLowestHighscore().score) {
 				this.textHighScoreHint.draw();
+			} else if (player.currentScore < player.getNegativeRecord().score) {
+				this.textNegativeRecordHint.draw();
 			}
 		} else if (this.state_nextlevel) {
 			// next level splash screen
@@ -398,8 +432,14 @@
 		
 		// control buttons
 		
-		this.pauseButton.draw();
-		this.backButton.draw();
+		if (!this.state_nextlevel && !this.state_gameover) {
+			this.pauseButton.draw();
+		}
+		
+		if (!this.state_gameover) {
+			this.backButton.draw();
+		}
+		
 		this.muteButton.draw();
 		
 		// hint
@@ -411,8 +451,14 @@
 		// scoreboard
 		
 		this.scoreText.str = "Pontszám: " + player.currentScore;
-		this.scoreText.draw();
-		this.levelText.draw();
+		
+		if (!this.state_nextlevel && !this.state_gameover && !this.isPaused && this.background.isDaytime) {
+			this.scoreText.draw();
+			this.levelText.draw();
+		} else {
+			this.scoreText.drawWithColor("rgb(200, 200, 200)");
+			this.levelText.drawWithColor("rgb(200, 200, 200)");
+		}
 	}
 	
 	this.endgame = function() {

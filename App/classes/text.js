@@ -5,9 +5,13 @@
 	this.size = size;
 	this.color = color;
 	
-	this.draw = function() {
-		jaws.context.fillStyle = this.color;
+	this.drawWithColor = function(color) {
+		jaws.context.fillStyle = color;
 		jaws.context.font = "" + this.size + "px Helvetica";
 		jaws.context.fillText(this.str, this.x, this.y);
+	}
+	
+	this.draw = function() {
+		this.drawWithColor(this.color);
 	}
 }

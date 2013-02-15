@@ -10,7 +10,8 @@
 	this.rules[this.rules.length] = "Ha a bomba ráesik egy házra, akkor abban jelentős kárt tesz vagy teljesen";
 	this.rules[this.rules.length] = "le is rombolhatja. A cél az, hogy a játékos minden házat leromboljon anélkül,";
 	this.rules[this.rules.length] = "hogy bármelyikbe is beleütközzön a repülőgépével. A sikeres rombolás értéke";
-	this.rules[this.rules.length] = "emeletenként +5 pont, a mellédobás értéke -500 pont.";
+	this.rules[this.rules.length] = "emeletenként +15 pont, továbbá egy tető +5, míg egy alagsor +18 pontot ér.";
+	this.rules[this.rules.length] = "A sikertelenség, vagyis a mellédobás értéke -500 pont könnyű játékmód esetén.";
 	this.rules[this.rules.length] = "";
 	this.rules[this.rules.length] = "A házak minden pályán véletlenszerűen generálódnak, maximális magasságukat";
 	this.rules[this.rules.length] = "a 14. szinten érhetik el legkorábban. A játék rendelkezik egy speciális nehéz";
@@ -32,6 +33,7 @@
 		$("#game_canvas").click(function() {
 			jaws.start(MenuScreen, {fps: 30});
 		});
+		offset = $('#game_canvas').offset();
 	}
 	
 	this.update = function() {
