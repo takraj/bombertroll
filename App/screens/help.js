@@ -37,7 +37,7 @@
 		$("#game_canvas").click(function() {
 			if (_BomberTrollInstance.isActiveScreen) {
 				_BomberTrollInstance.isActiveScreen = false;
-				jaws.start(MenuScreen, {fps: 30});
+				jaws.switchGameState(MenuScreen, {fps: 30});
 			}
 		});
 		offset = $('#game_canvas').offset();

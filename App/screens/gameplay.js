@@ -93,11 +93,8 @@
 		var _BomberTrollInstance = this;
 		
 		$('#game_canvas').unbind('click');
-		$("#game_canvas").click(function(e) {
-			var lastMouseX = e.pageX - offset.left;
-			var lastMouseY = e.pageY - offset.top;
-		
-			if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+		$("#game_canvas").click(function() {		
+			if (_BomberTrollInstance.backButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				// same as escape
 				$(document).unbind('keyup');
 				player = new Player();
@@ -105,14 +102,14 @@
 				StopAllSounds();
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.start(MenuScreen, {fps: 30});
+					jaws.switchGameState(MenuScreen, {fps: 30});
 				}
-			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			} else if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			} else if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
 				ContinueAllSounds();
-			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.isPaused = true;
 				PauseAllSounds();
 			} else {
@@ -123,23 +120,20 @@
 		});
 		
 		$('#game_canvas').unbind('mousemove');
-		$("#game_canvas").mousemove(function(e) {
-			var lastMouseX = e.pageX - offset.left;
-			var lastMouseY = e.pageY - offset.top;
-			
-			if (_BomberTrollInstance.pauseButton.isInnerPoint(lastMouseX, lastMouseY)) {
+		$("#game_canvas").mousemove(function() {			
+			if (_BomberTrollInstance.pauseButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.pauseButton.hover = true;
 			} else {
 				_BomberTrollInstance.pauseButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.backButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.backButton.hover = true;
 			} else {
 				_BomberTrollInstance.backButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.muteButton.hover = true;
 			} else {
 				_BomberTrollInstance.muteButton.hover = false;
@@ -147,7 +141,7 @@
 		});
 		
 		$(document).unbind('keyup');
-		$(document).keyup(function(e) {
+		$(document).keyup(function() {
 			if ((e.keyCode == 27) && !_BomberTrollInstance.state_gameover) {
 				// escape
 				$(document).unbind('keyup');
@@ -156,7 +150,7 @@
 				StopAllSounds();
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.start(MenuScreen, {fps: 30});
+					jaws.switchGameState(MenuScreen, {fps: 30});
 				}
 			}
 			
@@ -256,11 +250,8 @@
 						
 						$('#game_canvas').unbind('click');
 						var _BomberTrollInstance = this;
-						$("#game_canvas").click(function(e) {
-							var lastMouseX = e.pageX - offset.left;
-							var lastMouseY = e.pageY - offset.top;
-						
-							if (_BomberTrollInstance.backButton.isInnerPoint(lastMouseX, lastMouseY)) {
+						$("#game_canvas").click(function() {						
+							if (_BomberTrollInstance.backButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 								// same as escape
 								$(document).unbind('keyup');
 								player = new Player();
@@ -268,9 +259,9 @@
 								StopAllSounds();
 								if (_BomberTrollInstance.isActiveScreen) {
 									_BomberTrollInstance.isActiveScreen = false;
-									jaws.start(MenuScreen, {fps: 30});
+									jaws.switchGameState(MenuScreen, {fps: 30});
 								}
-							} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+							} else if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 								soundsEnabled ? DisableSounds() : EnableSounds();
 							} else {
 								$('#game_canvas').unbind('click');
@@ -347,11 +338,8 @@
 					
 					$('#game_canvas').unbind('click');
 					var _BomberTrollInstance = this;
-					$("#game_canvas").click(function(e) {
-						var lastMouseX = e.pageX - offset.left;
-						var lastMouseY = e.pageY - offset.top;
-					
-						if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+					$("#game_canvas").click(function() {					
+						if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 							soundsEnabled ? DisableSounds() : EnableSounds();
 						} else {
 							$('#game_canvas').unbind('click');
@@ -479,7 +467,7 @@
 	this.endgame = function() {
 		if (this.isActiveScreen) {
 			this.isActiveScreen = false;
-			jaws.start(HighScoresScreen, {fps: 30});
+			jaws.switchGameState(HighScoresScreen, {fps: 30});
 		}
 	}
 	

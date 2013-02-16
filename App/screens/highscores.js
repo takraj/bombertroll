@@ -69,7 +69,7 @@
 			$('#game_canvas').unbind('click');
 			if (_BomberTrollInstance.isActiveScreen) {
 				_BomberTrollInstance.isActiveScreen = false;
-				jaws.start(MenuScreen, {fps: 30});
+				jaws.switchGameState(MenuScreen, {fps: 30});
 			}
 		});
 		

@@ -30,29 +30,26 @@
 		var _BomberTrollInstance = this;
 		
 		// for menu animations
-		$('#game_canvas').mousemove(function(e) {
-			var lastMouseX = e.pageX - offset.left;
-			var lastMouseY = e.pageY - offset.top;
-		
-			if (_BomberTrollInstance.newGameButton.isInnerPoint(lastMouseX, lastMouseY)) {
+		$('#game_canvas').mousemove(function() {
+			if (_BomberTrollInstance.newGameButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.newGameButton.hover = true;
 			} else {
 				_BomberTrollInstance.newGameButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.helpButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.helpButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.helpButton.hover = true;
 			} else {
 				_BomberTrollInstance.helpButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.highscoresButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.highscoresButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.highscoresButton.hover = true;
 			} else {
 				_BomberTrollInstance.highscoresButton.hover = false;
 			}
 			
-			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.muteButton.hover = true;
 			} else {
 				_BomberTrollInstance.muteButton.hover = false;
@@ -60,38 +57,35 @@
 		});
 		
 		// for menu selections
-		$('#game_canvas').click(function(e) {
-			var lastMouseX = e.pageX - offset.left;
-			var lastMouseY = e.pageY - offset.top;
-		
-			if (_BomberTrollInstance.newGameButton.isInnerPoint(lastMouseX, lastMouseY)) {
+		$('#game_canvas').click(function() {
+			if (_BomberTrollInstance.newGameButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.start(ModeSelectScreen, {fps: 30});
+					jaws.switchGameState(ModeSelectScreen, {fps: 30});
 				}
 			}
 			
-			if (_BomberTrollInstance.helpButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.helpButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.start(HelpScreen, {fps: 30});
+					jaws.switchGameState(HelpScreen, {fps: 30});
 				}
 			}
 			
-			if (_BomberTrollInstance.highscoresButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.highscoresButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.start(HighScoresScreen, {fps: 30});
+					jaws.switchGameState(HighScoresScreen, {fps: 30});
 				}
 			}
 			
-			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
+			if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			}
 		});
