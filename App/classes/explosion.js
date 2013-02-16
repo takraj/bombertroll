@@ -1,10 +1,10 @@
 ﻿function Explosion(obj) {
-	this.maxLife = 1000.0;		// Life in ms
-	this.life = 0.0;
+	this.maxLife = 1000.0 + ((Math.random() - 0.5) * 350.0);		// Life in ms
+	this.life = 0.0 + (Math.random() * 100.0);
 	this.centerX = (obj.x + (obj.x + obj.width)) / 2.0;
 	this.centerY = (obj.y + (obj.y + obj.height)) / 2.0;
 	this.minRadius = 10;
-	this.maxRadius = 100;
+	this.maxRadius = 100 + Math.round(Math.random() * 20);
 	
 	this.step = function(diff) {
 		this.life += diff;
