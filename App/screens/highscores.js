@@ -10,7 +10,7 @@
 			answer = window.prompt("Mi a neved?", "");
 			
 			while ((answer == "") || (answer.length > 30)) {
-				if (answer.length > 50) {
+				if (answer.length > 30) {
 					answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
 				} else {
 					answer = window.prompt("Biztos van...\nMi a neved?", "");
@@ -22,7 +22,7 @@
 			answer = window.prompt("NEGATÍV REKORD!! Mi a neved?", "");
 			
 			while ((answer == "") || (answer.length > 30)) {
-				if (answer.length > 50) {
+				if (answer.length > 30) {
 					answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
 				} else {
 					answer = window.prompt("Pedig híres is lehetnél...\nMi a neved?", "");

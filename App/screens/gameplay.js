@@ -472,10 +472,24 @@
 	}
 	
 	this.addExplosion = function(obj) {
+		for (i=0; i<this.explosions.length; i++) {
+			if (this.explosions[i] == null) {
+				this.explosions[i] = new Explosion(obj);
+				return;
+			}
+		}
 		this.explosions[this.explosions.length] = new Explosion(obj);
+		console.log("Explosion buffer size increased to " + this.explosions.length);
 	}
 	
 	this.addFlyingText = function(obj, str, isRedNotGreen) {
+		for (i=0; i<this.flyingTexts.length; i++) {
+			if (this.flyingTexts[i] == null) {
+				this.flyingTexts[i] = new FlyingText(obj, str, isRedNotGreen);
+				return;
+			}
+		}
 		this.flyingTexts[this.flyingTexts.length] = new FlyingText(obj, str, isRedNotGreen);
+		console.log("Flying text buffer size increased to " + this.flyingTexts.length);
 	}
 }
