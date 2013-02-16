@@ -3,6 +3,7 @@
 	this.clouds = new Array();
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
+	this.textVersion = new Text(300, 70, "v2.0", 12, "rgba(255, 255, 255, 0.5)");
 	this.textAuthor = new Text(150, 90, "by TakRaj", 16, "rgb(255, 255, 255)");
 	
 	this.newGameButton = new AnimatedButton(500, 200, 250, 40, "Új játék");
@@ -10,9 +11,12 @@
 	this.highscoresButton = new AnimatedButton(500, 320, 250, 40, "Legjobbak listája");
 	
 	this.muteButton = new MuteButton(16, jaws.context.canvas.height - 16, 14, 14);
+	this.credits = null;
 	
 	this.setup = function() {	
 		console.log("MenuScreen.setup()");
+		
+		this.credits = new CreditsWidget(115, 300);
 		
 		this.clouds = new Array();
 		for (var i = 0; i < 20; i++) {
@@ -108,6 +112,8 @@
 				this.clouds[i].step(diff);
 			}
 			
+			this.credits.step(diff);
+			
 			this.newGameButton.step(diff);
 			this.helpButton.step(diff);
 			this.highscoresButton.step(diff);
@@ -127,6 +133,8 @@
 		jaws.context.fillStyle = "rgba(0,0,0, 0.8)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);
 		
+		this.credits.draw();
+		
 		this.newGameButton.draw();
 		this.helpButton.draw();
 		this.highscoresButton.draw();
@@ -134,6 +142,7 @@
 		this.muteButton.draw();
 		
 		this.textTitle.draw();
+		this.textVersion.draw();
 		this.textAuthor.draw();
 	}
 }

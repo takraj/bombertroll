@@ -88,6 +88,7 @@ function Player() {
 	this.highscores = new Array();
 	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -10000, 1, false);
 	this.scoretimer = 0;
+	this.multiplier = 1;
 	
 	for (var i = 0; i < 10; i++) {
 		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 1000 * (i+1), 1, false);
@@ -201,6 +202,7 @@ function PlaySound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		StopSound(html_id);
 		document.getElementById(html_id).play();
+		document.getElementById(html_id).volume = 0.3;
 		document.getElementById(html_id).muted = !soundsEnabled;
 		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
 	}

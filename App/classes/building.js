@@ -105,6 +105,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 		if (isHardMode) {
 			addpoints += (this.player.currentLevel-1);
 		}
+		addpoints *= this.player.multiplier;
 		scene.addFlyingText(this, "+"+addpoints+" pont", false);
 		this.player.currentScore += addpoints;
 		this.building.baseElement = null;
@@ -201,6 +202,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 		if (isHardMode) {
 			addpoints += (this.player.currentLevel-1);
 		}
+		addpoints *= this.player.multiplier;
 		scene.addFlyingText(this, "+"+addpoints+" pont", false);
 		this.player.currentScore += addpoints;
 		this.parentElement.childElement = null;
@@ -276,6 +278,7 @@ function RoofElement(parentElement) {
 		if (isHardMode) {
 			addpoints += (this.player.currentLevel-1);
 		}
+		addpoints *= this.player.multiplier;
 		scene.addFlyingText(this, "+"+addpoints+" pont", false);
 		this.player.currentScore += addpoints;
 		this.parentElement.childElement = null;

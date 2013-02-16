@@ -206,11 +206,21 @@
 				if (this.airplane.bomb != null) {
 					for (var i = 0; i < this.buildings.length; i++) {
 						if (this.buildings[i].isCollision(this.airplane.bomb.x, this.airplane.bomb.y, this.airplane.bomb.width, this.airplane.bomb.height)) {
+						
+							if (isHardMode && (player.currentLevel > 1) && ((this.airplane.bomb.y - this.airplane.bomb.startY) > 220)) {
+								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, player.currentLevel + "x bónusz!", false);
+								player.multiplier = player.currentLevel;
+							} else if (!isHardMode && ((this.airplane.bomb.y - this.airplane.bomb.startY) < 50)) {
+								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, "10x bónusz!", false);
+								player.multiplier = 10;
+							}
+						
 							this.buildings[i].doDestroyByBomb(this);
 							this.addExplosion(this.airplane.bomb);
 							StopSound("bomb_falling");
 							PlaySound("bomb_explosion");
 							this.airplane.bomb = null;
+							player.multiplier = 1;
 							break;
 						}
 					}

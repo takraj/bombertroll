@@ -1,10 +1,11 @@
 ﻿function ModeSelectScreen() {
 	this.isActiveScreen = true;
 	this.textTitle = new Text(100, 70, "Könnyű vagy Nehéz játékot szeretnél?", 32, "rgb(255, 255, 255)");
-	this.textHardModeHint1 = new Text(150, 150, "Nehéz módban nincs negatív pontszám és a bomba sem függőlegesen esik, továbbá", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint2 = new Text(150, 166, "minden másodpercben az aktuális szint számával csökken a pontszámod. Cserébe", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint3 = new Text(150, 182, "ez utóbbi minden szintlépéskor megduplázódik, félredobás esetén pedig azonnal", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint4 = new Text(150, 198, "megfeleződik. A lerombolt épületrészek minden szinten egy ponttal többet érnek.", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint1 = new Text(130, 150, "Nehéz módban nincs negatív pontszám és a bomba sem függőlegesen esik, továbbá minden másodpercben", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint2 = new Text(130, 166, "az aktuális szint számával csökken a pontszámod. Cserébe ez utóbbi minden szintlépéskor megduplázódik,", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint3 = new Text(130, 182, "félredobás esetén pedig azonnal megfeleződik. A lerombolt épületrészek minden szinten egy ponttal többet", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint4 = new Text(130, 198, "érnek. Nehéz módban a bónusz a 2. szinttől kezdve jár akkor, ha a bomba nagyon magasról lett indítva.", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint5 = new Text(130, 214, "A bónusz szorzó értéke ilyenkor az aktuális szint száma.", 12, "rgb(255, 255, 255)");
 	
 	this.easyButton = new SolidButton(100, 320, 190, 40, "Könnyűt");
 	this.hardButton = new SolidButton(300, 320, 190, 40, "Nehezet");
@@ -90,6 +91,7 @@
 		this.textHardModeHint2.draw();
 		this.textHardModeHint3.draw();
 		this.textHardModeHint4.draw();
+		this.textHardModeHint5.draw();
 		
 		this.easyButton.draw();
 		this.hardButton.draw();

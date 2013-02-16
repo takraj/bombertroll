@@ -71,7 +71,7 @@
 					this.player.currentScore = Math.floor(this.player.currentScore / 2);
 				} else {
 					scene.addFlyingText(this.bomb, "-500 pont", true);
-					this.player.currentScore -= 500;
+					this.player.currentScore -= 500 * this.player.multiplier;
 				}
 				this.bomb = null;
 			}

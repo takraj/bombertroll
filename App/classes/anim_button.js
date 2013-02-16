@@ -27,7 +27,7 @@
 		this.textLabelShadow.draw();
 		
 		if (this.hover) {
-			jaws.context.fillStyle = "rgb(0,0,0)";
+			jaws.context.fillStyle = "rgb(128,64,0)";
 		} else {
 			jaws.context.fillStyle = "rgba(0,0,0, 0.5)";
 		}
