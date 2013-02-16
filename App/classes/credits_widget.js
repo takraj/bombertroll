@@ -23,7 +23,7 @@
 	
 	this.step = function(diff) {
 		this.life += diff;
-		this.life %= 6 * this.holdTime;
+		this.life %= 7 * this.holdTime;
 		this.setTexts();
 	}
 	
@@ -102,6 +102,7 @@
 				// create texts
 				
 				this.text_Title = new Text(this.x, this.y, "Rajzok:", 14, this.textColorObject.toAlphaString());
+				this.addContributor("Takács Rajmund   (TakRaj)");
 				this.addContributor("rg1024 (openclipart.org)");
 				this.addContributor("animationbuddy.com");
 				this.addContributor("philipp (clker.com)");

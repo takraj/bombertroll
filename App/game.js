@@ -86,12 +86,12 @@ function Player() {
 	this.currentScore = 0;
 	this.currentLevel = 1;		// range = 1..12
 	this.highscores = new Array();
-	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -10000, 1, false);
+	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -20000, 1, false);
 	this.scoretimer = 0;
 	this.multiplier = 1;
 	
 	for (var i = 0; i < 10; i++) {
-		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 1000 * (i+1), 1, false);
+		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 3000 * (10-i), 1, false);
 	}
 	
 	if (localStorage['highscores'] == null) {
