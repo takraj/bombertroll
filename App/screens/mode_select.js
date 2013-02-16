@@ -47,7 +47,7 @@
 				isHardMode = false;
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(BomberTroll, {fps: 30});
+					jaws.switchGameState(BomberTroll);
 				}
 			}
 			
@@ -57,7 +57,7 @@
 				isHardMode = true;
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(BomberTroll, {fps: 30});
+					jaws.switchGameState(BomberTroll);
 				}
 			}
 			
@@ -66,7 +66,7 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(MenuScreen, {fps: 30});
+					jaws.switchGameState(MenuScreen);
 				}
 			}
 		});

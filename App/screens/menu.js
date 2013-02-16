@@ -63,7 +63,7 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(ModeSelectScreen, {fps: 30});
+					jaws.switchGameState(ModeSelectScreen);
 				}
 			}
 			
@@ -72,7 +72,7 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(HelpScreen, {fps: 30});
+					jaws.switchGameState(HelpScreen);
 				}
 			}
 			
@@ -81,7 +81,7 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(HighScoresScreen, {fps: 30});
+					jaws.switchGameState(HighScoresScreen);
 				}
 			}
 			

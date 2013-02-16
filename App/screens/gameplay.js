@@ -102,7 +102,7 @@
 				StopAllSounds();
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(MenuScreen, {fps: 30});
+					jaws.switchGameState(MenuScreen);
 				}
 			} else if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
@@ -141,7 +141,7 @@
 		});
 		
 		$(document).unbind('keyup');
-		$(document).keyup(function() {
+		$(document).keyup(function(e) {
 			if ((e.keyCode == 27) && !_BomberTrollInstance.state_gameover) {
 				// escape
 				$(document).unbind('keyup');
@@ -150,7 +150,7 @@
 				StopAllSounds();
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
-					jaws.switchGameState(MenuScreen, {fps: 30});
+					jaws.switchGameState(MenuScreen);
 				}
 			}
 			
@@ -259,7 +259,7 @@
 								StopAllSounds();
 								if (_BomberTrollInstance.isActiveScreen) {
 									_BomberTrollInstance.isActiveScreen = false;
-									jaws.switchGameState(MenuScreen, {fps: 30});
+									jaws.switchGameState(MenuScreen);
 								}
 							} else if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 								soundsEnabled ? DisableSounds() : EnableSounds();
@@ -467,7 +467,7 @@
 	this.endgame = function() {
 		if (this.isActiveScreen) {
 			this.isActiveScreen = false;
-			jaws.switchGameState(HighScoresScreen, {fps: 30});
+			jaws.switchGameState(HighScoresScreen);
 		}
 	}
 	

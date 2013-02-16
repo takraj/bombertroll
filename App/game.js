@@ -73,7 +73,7 @@ function PreloadGame() {
 		if (isLoaded && this.isActiveScreen) {
 			this.isActiveScreen = false;
 			LoadMuteState();
-			jaws.switchGameState(MenuScreen, {fps: 30});
+			jaws.switchGameState(MenuScreen);
 		}
 	}
 	
