@@ -1,7 +1,5 @@
 ﻿function MenuScreen() {
 	this.isActiveScreen = true;
-	this.previousUpdateTime;
-	this.currentUpdateTime;
 	this.clouds = new Array();
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
@@ -15,9 +13,6 @@
 	
 	this.setup = function() {	
 		console.log("MenuScreen.setup()");
-		
-		this.previousUpdateTime = new Date().getTime();
-		this.currentUpdateTime = this.previousUpdateTime;
 		
 		this.clouds = new Array();
 		for (var i = 0; i < 20; i++) {
@@ -100,8 +95,7 @@
 	
 	this.update = function() {
 		if (!this.isActiveScreen) return;
-		this.currentUpdateTime = new Date().getTime();
-		var big_diff = this.currentUpdateTime - this.previousUpdateTime;
+		var big_diff = jaws.game_loop.tick_duration;
 		var diff = 100;
 		
 		while (big_diff > 0) {
@@ -118,8 +112,6 @@
 			this.helpButton.step(diff);
 			this.highscoresButton.step(diff);
 		}
-		
-		this.previousUpdateTime = this.currentUpdateTime;
 	}
 	
 	this.draw = function() {

@@ -186,15 +186,9 @@
 	
 	/* Called each gametick. Put your gamelogic here. */
 	this.update = function() {
-		if (!this.isActiveScreen) return;	
-		this.currentUpdateTime = new Date().getTime();
+		if (!this.isActiveScreen || this.isPaused) return;
 		
-		if (this.isPaused) {
-			this.previousUpdateTime = this.currentUpdateTime;
-			return;
-		}
-		
-		var big_diff = this.currentUpdateTime - this.previousUpdateTime;
+		var big_diff = jaws.game_loop.tick_duration;
 		var diff = 100;
 		
 		player.scoretimer += big_diff;
@@ -361,8 +355,6 @@
 		} else {
 			player.scoretimer = 0;
 		}
-		
-		this.previousUpdateTime = this.currentUpdateTime;
 	}
 	
 	/* Called each gametick after update(). Put your drawing here. */
