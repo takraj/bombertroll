@@ -1,4 +1,5 @@
 ﻿function MenuScreen() {
+	this.isActiveScreen = true;
 	this.previousUpdateTime;
 	this.currentUpdateTime;
 	this.clouds = new Array();
@@ -13,6 +14,8 @@
 	this.muteButton = new MuteButton(16, jaws.context.canvas.height - 16, 14, 14);
 	
 	this.setup = function() {	
+		console.log("MenuScreen.setup()");
+		
 		this.previousUpdateTime = new Date().getTime();
 		this.currentUpdateTime = this.previousUpdateTime;
 		
@@ -64,19 +67,28 @@
 			if (_BomberTrollInstance.newGameButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
-				jaws.start(ModeSelectScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(ModeSelectScreen, {fps: 30});
+				}
 			}
 			
 			if (_BomberTrollInstance.helpButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
-				jaws.start(HelpScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(HelpScreen, {fps: 30});
+				}
 			}
 			
 			if (_BomberTrollInstance.highscoresButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
-				jaws.start(HighScoresScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(HighScoresScreen, {fps: 30});
+				}
 			}
 			
 			if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
@@ -93,6 +105,7 @@
 	}
 	
 	this.update = function() {
+		if (!this.isActiveScreen) return;
 		this.currentUpdateTime = new Date().getTime();
 		var big_diff = this.currentUpdateTime - this.previousUpdateTime;
 		var diff = 100;
@@ -116,6 +129,7 @@
 	}
 	
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
 		jaws.clear();
 		jaws.context.fillStyle = "rgb(183,184,255)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);

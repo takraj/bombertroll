@@ -13,7 +13,6 @@ var offset = $('#game_canvas').offset();
 var player = new Player();
 var backgrounds = new Array();
 var isLoaded = false;
-var isStarted = false;
 var soundsLoaded = false;
 var soundsEnabled = true;
 var isHardMode = false;
@@ -25,8 +24,11 @@ var soundsWerePlayingBeforePause = new Array();
 */
 
 function PreloadGame() {
-
+	this.isActiveScreen = true;
+	
 	this.setup = function() {
+		console.log("PreloadGame.setup()");
+		
 		jaws.assets.add("images/bomba.png");
 		jaws.assets.add("images/airplane.png");
 		jaws.assets.add("images/cloud-th.png");
@@ -67,14 +69,16 @@ function PreloadGame() {
 	}
 	
 	this.update = function() {
-		if (isLoaded && !isStarted) {
-			isStarted = true;
+		if (!this.isActiveScreen) return;
+		if (isLoaded && this.isActiveScreen) {
+			this.isActiveScreen = false;
 			LoadMuteState();
 			jaws.start(MenuScreen, {fps: 30});
 		}
 	}
 	
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
 	}
 }
 

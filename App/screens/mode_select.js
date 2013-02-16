@@ -1,4 +1,5 @@
 ﻿function ModeSelectScreen() {
+	this.isActiveScreen = true;
 	this.textTitle = new Text(100, 70, "Könnyű vagy Nehéz játékot szeretnél?", 32, "rgb(255, 255, 255)");
 	this.textHardModeHint1 = new Text(150, 150, "Nehéz módban nincs negatív pontszám és a bomba sem függőlegesen esik, továbbá", 12, "rgb(255, 255, 255)");
 	this.textHardModeHint2 = new Text(150, 166, "minden másodpercben az aktuális szint számával csökken a pontszámod. Cserébe", 12, "rgb(255, 255, 255)");
@@ -10,6 +11,8 @@
 	this.cancelButton = new SolidButton(500, 320, 190, 40, "Egyiket sem");
 	
 	this.setup = function() {
+		console.log("ModeSelectScreen.setup()");
+		
 		$('#game_canvas').unbind('click');
 		$('#game_canvas').unbind('mousemove');
 		
@@ -48,20 +51,29 @@
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				isHardMode = false;
-				jaws.start(BomberTroll, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(BomberTroll, {fps: 30});
+				}
 			}
 			
 			if (_BomberTrollInstance.hardButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
 				isHardMode = true;
-				jaws.start(BomberTroll, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(BomberTroll, {fps: 30});
+				}
 			}
 			
 			if (_BomberTrollInstance.cancelButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				$('#game_canvas').unbind('click');
 				$('#game_canvas').unbind('mousemove');
-				jaws.start(MenuScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(MenuScreen, {fps: 30});
+				}
 			}
 		});
 		
@@ -70,9 +82,11 @@
 	}
 	
 	this.update = function() {
+		if (!this.isActiveScreen) return;
 	}
 	
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
 		jaws.clear();
 		jaws.context.fillStyle = "rgb(0,0,0)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);

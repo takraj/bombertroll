@@ -1,4 +1,5 @@
 ﻿function HelpScreen() {
+	this.isActiveScreen = true;
 	this.textTitle = new Text(100, 70, "Játékszabályok", 32, "rgb(255, 255, 255)");
 	this.textClickToContinue = new Text(600, 450, "Kattints a visszalépéshez!", 12, "rgb(255, 255, 255)");
 	
@@ -29,17 +30,25 @@
 	}
 
 	this.setup = function() {
+		var _BomberTrollInstance = this;
+		console.log("HelpScreen.setup()");
+		
 		$('#game_canvas').unbind('click');
 		$("#game_canvas").click(function() {
-			jaws.start(MenuScreen, {fps: 30});
+			if (_BomberTrollInstance.isActiveScreen) {
+				_BomberTrollInstance.isActiveScreen = false;
+				jaws.start(MenuScreen, {fps: 30});
+			}
 		});
 		offset = $('#game_canvas').offset();
 	}
 	
 	this.update = function() {
+		if (!this.isActiveScreen) return;
 	}
 	
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
 		jaws.clear();
 		jaws.context.fillStyle = "rgb(0,0,0)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);

@@ -1,4 +1,5 @@
 ﻿function HighScoresScreen() {
+	this.isActiveScreen = true;
 	this.textHighScores = new Text(100, 70, "Legjobbak Listája", 32, "rgb(255, 255, 255)");
 	this.textClickToContinue = new Text(600, 450, "Kattints a továbblépéshez!", 12, "rgb(255, 255, 255)");
 	this.textNegativeRecord = new Text(100, 400, "Negatív rekord: ", 12, "rgb(128, 128, 0)");
@@ -6,6 +7,9 @@
 	this.textHSList = new Array();
 
 	this.setup = function() {
+		console.log("HighScoresScreen.setup()");
+		var _BomberTrollInstance = this;
+		
 		if (player.currentScore > player.getLowestHighscore().score) {
 			answer = window.prompt("Mi a neved?", "");
 			
@@ -63,7 +67,10 @@
 		$('#game_canvas').unbind('click');
 		$("#game_canvas").click(function() {
 			$('#game_canvas').unbind('click');
-			jaws.start(MenuScreen, {fps: 30});
+			if (_BomberTrollInstance.isActiveScreen) {
+				_BomberTrollInstance.isActiveScreen = false;
+				jaws.start(MenuScreen, {fps: 30});
+			}
 		});
 		
 		player = new Player();
@@ -71,9 +78,11 @@
 	}
 	
 	this.update = function() {
+		if (!this.isActiveScreen) return;
 	}
 	
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
 		jaws.clear();
 		jaws.context.fillStyle = "rgb(0,0,0)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);

@@ -1,4 +1,5 @@
 ﻿function BomberTroll() {
+	this.isActiveScreen = true;
 	this.previousUpdateTime;
 	this.currentUpdateTime;
 	this.airplane;
@@ -56,6 +57,8 @@
 
 	/* Called once. Put your one-time initializing here. */
 	this.setup = function() {
+		console.log("BomberTroll.setup()");
+		
 		player = new Player();
 		this.initLevel();
 		offset = $('#game_canvas').offset();
@@ -100,7 +103,10 @@
 				player = new Player();
 				ContinueAllSounds();
 				StopAllSounds();
-				jaws.start(MenuScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(MenuScreen, {fps: 30});
+				}
 			} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			} else if (_BomberTrollInstance.isPaused) {
@@ -148,7 +154,10 @@
 				player = new Player();
 				ContinueAllSounds();
 				StopAllSounds();
-				jaws.start(MenuScreen, {fps: 30});
+				if (_BomberTrollInstance.isActiveScreen) {
+					_BomberTrollInstance.isActiveScreen = false;
+					jaws.start(MenuScreen, {fps: 30});
+				}
 			}
 			
 			if ((e.keyCode == 80) && !_BomberTrollInstance.state_gameover && !_BomberTrollInstance.state_endgame) {
@@ -183,6 +192,7 @@
 	
 	/* Called each gametick. Put your gamelogic here. */
 	this.update = function() {
+		if (!this.isActiveScreen) return;	
 		this.currentUpdateTime = new Date().getTime();
 		
 		if (this.isPaused) {
@@ -256,7 +266,10 @@
 								player = new Player();
 								ContinueAllSounds();
 								StopAllSounds();
-								jaws.start(MenuScreen, {fps: 30});
+								if (_BomberTrollInstance.isActiveScreen) {
+									_BomberTrollInstance.isActiveScreen = false;
+									jaws.start(MenuScreen, {fps: 30});
+								}
 							} else if (_BomberTrollInstance.muteButton.isInnerPoint(lastMouseX, lastMouseY)) {
 								soundsEnabled ? DisableSounds() : EnableSounds();
 							} else {
@@ -366,6 +379,8 @@
 	
 	/* Called each gametick after update(). Put your drawing here. */
 	this.draw = function() {
+		if (!this.isActiveScreen) return;
+		
 		if (this.airplane != null) {
 			this.airplane.stopped = this.isPaused || this.state_nextlevel;
 		}
@@ -462,7 +477,10 @@
 	}
 	
 	this.endgame = function() {
-		jaws.start(HighScoresScreen, {fps: 30});
+		if (this.isActiveScreen) {
+			this.isActiveScreen = false;
+			jaws.start(HighScoresScreen, {fps: 30});
+		}
 	}
 	
 	this.nextLevel = function() {
