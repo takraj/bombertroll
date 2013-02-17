@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -15,6 +15,19 @@
 				<div id="jaws-log"></div>
 			</div>
 		</center>
+		
+		<!-- PREVENT CONSOLE ERRORS ON Internet Explorer -->
+		<script>
+			function console_log(str) {
+				if (typeof console == "undefined") { return; }
+				else { console.log(str); }
+			}
+			
+			function console_warn(str) {
+				if (typeof console == "undefined") { return; }
+				else { console.warn(str); }
+			}
+		</script>
 		
 		<!-- PRELOAD SCREEN SCRIPT -->
 		<script>
@@ -121,9 +134,12 @@
 			<source src="sfx/plane_explosion.ogg" type="audio/ogg">
 		</audio>
 		
-		<script>		
+		<script>
 			window.onload = function() {
-				jaws.start(PreloadGame, {fps: 30});
+				// timeout for Internet Explorer
+				setTimeout(function() {
+					jaws.start(PreloadGame, {fps: 30});
+				}, 1000);
 			};
 			
 			window.onunload = function() {};

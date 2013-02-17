@@ -1726,7 +1726,7 @@ jaws.SpriteList.prototype.load = function(objects) {
       this.sprites = objects
     }
   }
-  else if(jaws.isString(objects)) { parseArray( JSON.parse(objects) ); console.log(objects) }
+  else if(jaws.isString(objects)) { parseArray( JSON.parse(objects) ); console_log(objects) }
   this.updateLength()
   
   function parseArray(array) {
@@ -2109,7 +2109,7 @@ jaws.Animation.prototype.currentFrame = function() {
  * Debugstring for Animation()-constructor
  * @example
  * var anim = new Animation(...)
- * console.log(anim.toString())
+ * console_log(anim.toString())
  */
 jaws.Animation.prototype.toString = function() { return "[Animation, " + this.frames.length + " frames]" }
 
@@ -2420,7 +2420,7 @@ jaws.TileMap.prototype.pushAsRect = function(obj, rect) {
     
     //jaws.log("rect.bottom " + rect.bottom + " from/to row: " + from_row + " " + to_row, true)
     for(var row = from_row; row <= to_row; row++) {
-      // console.log("pushAtRect() col/row: " + col + "/" + row + " - " + this.cells[col][row])
+      // console_log("pushAtRect() col/row: " + col + "/" + row + " - " + this.cells[col][row])
       this.pushToCell(col, row, obj)
     }
   }
@@ -2445,7 +2445,7 @@ jaws.TileMap.prototype.pushToCell = function(col, row, obj) {
 jaws.TileMap.prototype.at = function(x, y) {
   var col = parseInt(x / this.cell_size[0])
   var row = parseInt(y / this.cell_size[1])
-  // console.log("at() col/row: " + col + "/" + row)
+  // console_log("at() col/row: " + col + "/" + row)
   return this.cells[col][row]
 }
 

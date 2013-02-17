@@ -10,16 +10,15 @@
 /*********************************/
 
 // prefixes
-const ns_prefix = "hu.takraj.bombertroll.";
-const ls_prefix = ns_prefix + "lsData.";
+var ns_prefix = "hu.takraj.bombertroll.";
+var ls_prefix = ns_prefix + "lsData.";
 
 // ls properties
-const ls_highscores = ls_prefix + "highscores";
-const ls_neg_record = ls_prefix + "negativeRecord";
-const ls_mutestate = ls_prefix + "muteState";
+var ls_highscores = ls_prefix + "highscores";
+var ls_neg_record = ls_prefix + "negativeRecord";
+var ls_mutestate = ls_prefix + "muteState";
 
 // variables
-var player = new Player();
 var backgrounds = new Array();
 var isLoaded = false;
 var soundsLoaded = false;
@@ -27,6 +26,29 @@ var soundsEnabled = true;
 var isHardMode = false;
 var previousBackground = -1;
 var soundsWerePlayingBeforePause = new Array();
+var player = null;
+
+/*
+*	Fake Local Storage for if it is not supported
+*/
+var fakeLocalStorage = new Array();
+function setStorage(key, value) {
+	try {
+		localStorage[key] = value;
+	} catch (e) {
+		fakeLocalStorage[key] = value;
+		console_warn("LocalStorage is not supported!");
+	}
+}
+
+function getStorage(key) {
+	try {
+		return localStorage[key];
+	} catch (e) {
+		return fakeLocalStorage[key];
+		console_warn("LocalStorage is not supported!");
+	}
+}
 
 /*
 *	Game Code
@@ -36,7 +58,7 @@ function PreloadGame() {
 	this.isActiveScreen = true;
 	
 	this.setup = function() {
-		console.log("PreloadGame.setup()");
+		console_log("PreloadGame.setup()");
 		
 		jaws.assets.add("images/bomba.png");
 		jaws.assets.add("images/airplane.png");
@@ -44,7 +66,7 @@ function PreloadGame() {
 		
 		// --- Load Sounds ---
 		
-		console.log("Loading sounds...");
+		console_log("Loading sounds...");
 		soundsLoaded = true;		// this will become false if any of the sounds below cannot be loaded
 		InitSound("menu_music");
 		InitSound("ingame_music");
@@ -81,6 +103,7 @@ function PreloadGame() {
 		if (!this.isActiveScreen) return;
 		if (isLoaded && this.isActiveScreen) {
 			this.isActiveScreen = false;
+			player = new Player();
 			LoadMuteState();
 			jaws.switchGameState(MenuScreen);
 		}
@@ -103,16 +126,16 @@ function Player() {
 		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 3000 * (10-i), 1, false);
 	}
 	
-	if (localStorage[ls_highscores] == null) {
-		localStorage[ls_highscores] = JSON.stringify(this.highscores);
+	if (getStorage(ls_highscores) == null) {
+		setStorage(ls_highscores, JSON.stringify(this.highscores));
 	} else {
-		this.highscores = JSON.parse(localStorage[ls_highscores]);
+		this.highscores = JSON.parse(getStorage(ls_highscores));
 	}
 	
-	if (localStorage[ls_neg_record] == null) {
-		localStorage[ls_neg_record] = JSON.stringify(this.negativeRecord);
+	if (getStorage(ls_neg_record) == null) {
+		setStorage(ls_neg_record, JSON.stringify(this.negativeRecord));
 	} else {
-		this.negativeRecord = JSON.parse(localStorage[ls_neg_record]);
+		this.negativeRecord = JSON.parse(getStorage(ls_neg_record));
 	}
 	
 	this.getNegativeRecord = function() {
@@ -121,7 +144,7 @@ function Player() {
 	
 	this.setNegativeRecord = function(item) {
 		this.negativeRecord = item;
-		localStorage[ls_neg_record] = JSON.stringify(this.negativeRecord);
+		setStorage(ls_neg_record, JSON.stringify(this.negativeRecord));
 	}
 	
 	// eleve rendezetten, ez sokat segít
@@ -139,7 +162,7 @@ function Player() {
 		}
 		
 		this.highscores = updatedList;
-		localStorage[ls_highscores] = JSON.stringify(this.highscores);
+		setStorage(ls_highscores, JSON.stringify(this.highscores));
 	}
 	
 	this.getLowestHighscore = function() {
@@ -176,26 +199,26 @@ function Background(file, isDaytime) {
 // --- SOUND MANAGEMENT --- //
 
 function SaveMuteState() {
-	localStorage[ls_mutestate] = JSON.stringify(!soundsEnabled);
-	console.log("Mute state saved as " + !soundsEnabled);
+	setStorage(ls_mutestate, JSON.stringify(!soundsEnabled));
+	console_log("Mute state saved as " + !soundsEnabled);
 }
 
 function LoadMuteState() {
-	if (localStorage[ls_mutestate] == null) {
+	if (getStorage(ls_mutestate) == null) {
 		SaveMuteState();
 	}
-	soundsEnabled = !JSON.parse(localStorage[ls_mutestate]);
-	console.log("Mute state loaded as " + !soundsEnabled);
+	soundsEnabled = !JSON.parse(getStorage(ls_mutestate));
+	console_log("Mute state loaded as " + !soundsEnabled);
 }
 
 function InitSound(html_id) {
-	console.log("Loading sound " + html_id);
+	console_log("Loading sound " + html_id);
 	if (!! document.getElementById(html_id).currentSrc) {
 		jaws.assets.add(document.getElementById(html_id).currentSrc);
-		console.log(document.getElementById(html_id).currentSrc + " is loaded");
+		console_log(document.getElementById(html_id).currentSrc + " is loaded");
 	} else {
 		soundsLoaded = false;
-		console.warn(document.getElementById(html_id).currentSrc + " is not loaded");
+		console_warn(document.getElementById(html_id).currentSrc + " is not loaded");
 	}
 }
 
@@ -211,30 +234,29 @@ function PlaySound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		StopSound(html_id);
 		document.getElementById(html_id).play();
-		document.getElementById(html_id).volume = 0.3;
 		document.getElementById(html_id).muted = !soundsEnabled;
-		console.log("Playing sound " + document.getElementById(html_id).currentSrc);
+		console_log("Playing sound " + document.getElementById(html_id).currentSrc);
 	}
 }
 
 function MuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = true;
-		console.log("Sound " + document.getElementById(html_id).currentSrc + " is muted");
+		console_log("Sound " + document.getElementById(html_id).currentSrc + " is muted");
 	}
 }
 
 function UnmuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = false;
-		console.log("Sound " + document.getElementById(html_id).currentSrc + " is unmuted");
+		console_log("Sound " + document.getElementById(html_id).currentSrc + " is unmuted");
 	}
 }
 
 function StopSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).pause();
-		console.log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
+		console_log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
 	}
 }
 

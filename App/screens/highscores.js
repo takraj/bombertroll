@@ -7,7 +7,7 @@
 	this.textHSList = new Array();
 
 	this.setup = function() {
-		console.log("HighScoresScreen.setup()");
+		console_log("HighScoresScreen.setup()");
 		var _BomberTrollInstance = this;
 		var asks = 0;
 		

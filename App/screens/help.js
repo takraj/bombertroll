@@ -30,7 +30,7 @@
 
 	this.setup = function() {
 		var _BomberTrollInstance = this;
-		console.log("HelpScreen.setup()");
+		console_log("HelpScreen.setup()");
 		
 		$('#game_canvas').unbind('click');
 		$("#game_canvas").click(function() {

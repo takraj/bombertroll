@@ -12,7 +12,7 @@
 	this.cancelButton = new SolidButton(500, 320, 190, 40, "Egyiket sem");
 	
 	this.setup = function() {
-		console.log("ModeSelectScreen.setup()");
+		console_log("ModeSelectScreen.setup()");
 		
 		$('#game_canvas').unbind('click');
 		$('#game_canvas').unbind('mousemove');
@@ -73,7 +73,6 @@
 		});
 		
 		StopBackgroundSounds();
-		offset = $('#game_canvas').offset();
 	}
 	
 	this.update = function() {

@@ -14,7 +14,7 @@
 	this.credits = null;
 	
 	this.setup = function() {	
-		console.log("MenuScreen.setup()");
+		console_log("MenuScreen.setup()");
 		
 		this.credits = new CreditsWidget(115, 300);
 		

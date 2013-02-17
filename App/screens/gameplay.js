@@ -57,11 +57,10 @@
 
 	/* Called once. Put your one-time initializing here. */
 	this.setup = function() {
-		console.log("BomberTroll.setup()");
+		console_log("BomberTroll.setup()");
 		
 		player = new Player();
 		this.initLevel();
-		offset = $('#game_canvas').offset();
 	}
 	
 	this.initLevel = function() {	
@@ -487,7 +486,7 @@
 			}
 		}
 		this.explosions[this.explosions.length] = new Explosion(obj);
-		console.log("Explosion buffer size increased to " + this.explosions.length);
+		console_log("Explosion buffer size increased to " + this.explosions.length);
 	}
 	
 	this.addFlyingText = function(obj, str, isRedNotGreen) {
@@ -498,6 +497,6 @@
 			}
 		}
 		this.flyingTexts[this.flyingTexts.length] = new FlyingText(obj, str, isRedNotGreen);
-		console.log("Flying text buffer size increased to " + this.flyingTexts.length);
+		console_log("Flying text buffer size increased to " + this.flyingTexts.length);
 	}
 }
