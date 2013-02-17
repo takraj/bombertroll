@@ -58,7 +58,7 @@
 		this.textColorObject.alpha = Math.min(Math.max(this.textColorObject.alpha / 2.0, 0.0), 0.5);
 	
 		// setup strings
-		if (this.life < this.holdTime) {
+		if (this.life <= this.holdTime) {
 			// CODE
 			if (this.textState != 1) {
 				this.text_Contrib = new Array();
@@ -73,7 +73,7 @@
 				// change transparencies
 				this.setupColors();
 			}
-		} else if (this.life < (2*this.holdTime)) {
+		} else if (this.life <= (2*this.holdTime)) {
 			// BACKGROUNDS
 			if (this.textState != 2) {
 				this.text_Contrib = new Array();
@@ -95,7 +95,7 @@
 				// change transparencies
 				this.setupColors();
 			}
-		} else if (this.life < (3*this.holdTime)) {
+		} else if (this.life <= (3*this.holdTime)) {
 			// SPRITES
 			if (this.textState != 3) {
 				this.text_Contrib = new Array();
@@ -113,7 +113,7 @@
 				// change transparencies
 				this.setupColors();
 			}
-		} else if (this.life < (4*this.holdTime)) {
+		} else if (this.life <= (4*this.holdTime)) {
 			// SFX
 			if (this.textState != 4) {
 				this.text_Contrib = new Array();
@@ -132,7 +132,7 @@
 				// change transparencies
 				this.setupColors();
 			}
-		} else if (this.life < (5*this.holdTime)) {
+		} else if (this.life <= (5*this.holdTime)) {
 			// MUSIC
 			if (this.textState != 5) {
 				this.text_Contrib = new Array();
@@ -150,7 +150,7 @@
 				// change transparencies
 				this.setupColors();
 			}
-		} else if (this.life < (6*this.holdTime)) {
+		} else if (this.life <= (6*this.holdTime)) {
 			// ORIGINAL GAME
 			if (this.textState != 6) {
 				this.text_Contrib = new Array();
@@ -168,6 +168,10 @@
 				// change transparencies
 				this.setupColors();
 			}
+		} else {
+			// SHORT BREAK
+			this.textColorObject.alpha = 0.0;
+			this.setupColors();
 		}
 	}
 }
