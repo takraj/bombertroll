@@ -9,7 +9,16 @@
 /*               & Angus Ager    */
 /*********************************/
 
-var offset = $('#game_canvas').offset();
+// prefixes
+const ns_prefix = "hu.takraj.bombertroll.";
+const ls_prefix = ns_prefix + "lsData.";
+
+// ls properties
+const ls_highscores = ls_prefix + "highscores";
+const ls_neg_record = ls_prefix + "negativeRecord";
+const ls_mutestate = ls_prefix + "muteState";
+
+// variables
 var player = new Player();
 var backgrounds = new Array();
 var isLoaded = false;
@@ -20,7 +29,7 @@ var previousBackground = -1;
 var soundsWerePlayingBeforePause = new Array();
 
 /*
-*	Game States
+*	Game Code
 */
 
 function PreloadGame() {
@@ -86,7 +95,7 @@ function Player() {
 	this.currentScore = 0;
 	this.currentLevel = 1;		// range = 1..12
 	this.highscores = new Array();
-	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -20000, 1, false);
+	this.negativeRecord = new HighScoreItem("-- Mr. Maß --", -3000, 1, false);
 	this.scoretimer = 0;
 	this.multiplier = 1;
 	
@@ -94,16 +103,16 @@ function Player() {
 		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 3000 * (10-i), 1, false);
 	}
 	
-	if (localStorage['highscores'] == null) {
-		localStorage['highscores'] = JSON.stringify(this.highscores);
+	if (localStorage[ls_highscores] == null) {
+		localStorage[ls_highscores] = JSON.stringify(this.highscores);
 	} else {
-		this.highscores = JSON.parse(localStorage['highscores']);
+		this.highscores = JSON.parse(localStorage[ls_highscores]);
 	}
 	
-	if (localStorage['negativeRecord'] == null) {
-		localStorage['negativeRecord'] = JSON.stringify(this.negativeRecord);
+	if (localStorage[ls_neg_record] == null) {
+		localStorage[ls_neg_record] = JSON.stringify(this.negativeRecord);
 	} else {
-		this.negativeRecord = JSON.parse(localStorage['negativeRecord']);
+		this.negativeRecord = JSON.parse(localStorage[ls_neg_record]);
 	}
 	
 	this.getNegativeRecord = function() {
@@ -112,7 +121,7 @@ function Player() {
 	
 	this.setNegativeRecord = function(item) {
 		this.negativeRecord = item;
-		localStorage['negativeRecord'] = JSON.stringify(this.negativeRecord);
+		localStorage[ls_neg_record] = JSON.stringify(this.negativeRecord);
 	}
 	
 	// eleve rendezetten, ez sokat segít
@@ -130,7 +139,7 @@ function Player() {
 		}
 		
 		this.highscores = updatedList;
-		localStorage['highscores'] = JSON.stringify(this.highscores);
+		localStorage[ls_highscores] = JSON.stringify(this.highscores);
 	}
 	
 	this.getLowestHighscore = function() {
@@ -167,15 +176,15 @@ function Background(file, isDaytime) {
 // --- SOUND MANAGEMENT --- //
 
 function SaveMuteState() {
-	localStorage['muteState'] = JSON.stringify(!soundsEnabled);
+	localStorage[ls_mutestate] = JSON.stringify(!soundsEnabled);
 	console.log("Mute state saved as " + !soundsEnabled);
 }
 
 function LoadMuteState() {
-	if (localStorage['muteState'] == null) {
+	if (localStorage[ls_mutestate] == null) {
 		SaveMuteState();
 	}
-	soundsEnabled = !JSON.parse(localStorage['muteState']);
+	soundsEnabled = !JSON.parse(localStorage[ls_mutestate]);
 	console.log("Mute state loaded as " + !soundsEnabled);
 }
 
