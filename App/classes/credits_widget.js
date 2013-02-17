@@ -23,7 +23,7 @@
 	
 	this.step = function(diff) {
 		this.life += diff;
-		this.life %= 7 * this.holdTime;
+		this.life %= 8 * this.holdTime;
 		this.setTexts();
 	}
 	
@@ -151,8 +151,24 @@
 				this.setupColors();
 			}
 		} else if (this.life <= (6*this.holdTime)) {
-			// ORIGINAL GAME
+			// SPECIAL THANKS
 			if (this.textState != 6) {
+				this.text_Contrib = new Array();
+				// create texts
+				
+				this.text_Title = new Text(this.x, this.y, "Külön köszönet:", 14, this.textColorObject.toAlphaString());
+				this.addContributor("Takács Viktor   (TakVik)");
+				this.addContributor("Fehér Marcell");
+				
+				// change state
+				this.textState = 6;
+			} else {
+				// change transparencies
+				this.setupColors();
+			}
+		} else if (this.life <= (7*this.holdTime)) {
+			// ORIGINAL GAME
+			if (this.textState != 7) {
 				this.text_Contrib = new Array();
 				// create texts
 				
@@ -163,7 +179,7 @@
 				this.addContributor("        Sunshine Publications Ltd. / 1983");
 				
 				// change state
-				this.textState = 6;
+				this.textState = 7;
 			} else {
 				// change transparencies
 				this.setupColors();
