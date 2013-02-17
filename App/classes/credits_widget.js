@@ -23,7 +23,7 @@
 	
 	this.step = function(diff) {
 		this.life += diff;
-		this.life %= 8 * this.holdTime;
+		this.life %= 9 * this.holdTime;
 		this.setTexts();
 	}
 	
@@ -180,6 +180,25 @@
 				
 				// change state
 				this.textState = 7;
+			} else {
+				// change transparencies
+				this.setupColors();
+			}
+		} else if (this.life <= (8*this.holdTime)) {
+			// REMAKE
+			if (this.textState != 8) {
+				this.text_Contrib = new Array();
+				// create texts
+				
+				this.text_Title = new Text(this.x, this.y, "Felújított változat:", 14, this.textColorObject.toAlphaString());
+				this.addContributor("Bomber Troll   (HTML5)");
+				this.addContributor("");
+				this.addContributor("(c) TakRaj / 2013");
+				this.addContributor("        taraj@gmail.com");
+				this.addContributor("        facebook.com/takraj");
+				
+				// change state
+				this.textState = 8;
 			} else {
 				// change transparencies
 				this.setupColors();

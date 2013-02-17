@@ -3,6 +3,7 @@
 /*          ------------         */
 /*           HTML5 game          */
 /*            by TakRaj          */
+/*        takraj@gmail.com       */
 /*                               */
 /* Based on Bomber Run C64 game  */
 /*      created by Les Allan     */
