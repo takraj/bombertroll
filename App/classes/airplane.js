@@ -1,8 +1,10 @@
 ﻿function Airplane(x, y, velocity, player, scene) {
 	this.x = x;
 	this.y = y;
-	this.width = 65;
-	this.height = 35;
+	this.pictureW = Math.round(880.0 / 12.0);
+	this.pictureH = 60;
+	this.width = this.pictureW - 2;
+	this.height = this.pictureH - 15;
 	this.velocity = velocity;
 	this.fallingSpeed = velocity/60.0;
 	this.go_right = true;
@@ -12,14 +14,18 @@
 	this.stopped = false;
 	this.bomb = null;
 	
-	this.spritesheet = new jaws.SpriteSheet({image: "images/airplane.png", frame_size: [67,50] });
+	this.spritesheet = new jaws.SpriteSheet({image: "images/airplane.png", frame_size: [this.pictureW,this.pictureH] });
 	this.anim = new jaws.Animation({frames: this.spritesheet.frames, frame_duration: 80});
 	this.sprite = new jaws.Sprite({image: "images/airplane.png", x: 0, y: 0, scale: 1, anchor: "top_left"});
 	this.sprite.flip();
 	
 	this.dropBomb = function() {
 		if ((this.bomb == null) && (!this.stopped)) {
-			this.bomb = new Bomb(((2 * this.x) + this.width) / 2.0, this.y + this.height, this);
+			if (this.go_right == true) {
+				this.bomb = new Bomb((this.x + (this.width / 2.0) - 13), this.y + this.height, this);
+			} else {
+				this.bomb = new Bomb((this.x + (this.width / 2.0) - 17), this.y + this.height, this);
+			}
 			PlaySound("bomb_falling");
 		}
 	}
@@ -44,6 +50,10 @@
 		}
 		
 		this.sprite.draw();
+		
+		// draw hitbox
+		// jaws.context.fillStyle = "rgba(0,0,0, 0.8)";
+		// jaws.context.fillRect (this.x, this.y, this.width, this.height);
 	}
 	
 	this.setPosition = function(x, y) {

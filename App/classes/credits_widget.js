@@ -159,6 +159,7 @@
 				this.text_Title = new Text(this.x, this.y, "Külön köszönet:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("Takács Viktor   (TakVik)");
 				this.addContributor("Fehér Marcell");
+				this.addContributor("Bori András");
 				
 				// change state
 				this.textState = 6;
