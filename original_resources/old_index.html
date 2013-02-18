@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ansi" />
+		<meta property="og:title" content="Bomber Troll" />
+		<meta property="og:image" content="http://home.sch.bme.hu/~takraj/html5/BomberTroll_v2/bombertroll_thumb.png" />
+    		<meta property="og:type" content="game" />
+		<meta property="fb:admins" content="100000573383550" />
+
+		<meta name="description" content="A klasszikus Bomber Run (C64) játék egy felújított, továbbfejlesztett, HTML5 technológiát használó verziója. Készítette: Takács Rajmund (TakRaj) / 2013" />
+		<meta name="keywords" content="html5, bomber, bomber run, bomber troll, c64, remake, game" />
+
+		<title>Bomber Troll</title>
+	<head>
+	<body bgcolor="#555555">
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/hu_HU/all.js#xfbml=1";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<center>
+			<div class="fb-like" data-href="http://home.sch.bme.hu/~takraj/html5/BomberTroll_v2" data-send="false" data-width="450" data-show-faces="true" data-colorscheme="dark"></div>
+			<br /><br />
+			<canvas id="game_canvas" width="800" height="480" style="border: 1px solid black">
+				A böngészõd nem támogatja a canvas elemet.
+			</canvas>
+			<br /><br />
+			<!-- Counter Code START --><a href="http://www.e-zeeinternet.com/" target="_blank"><img src="http://www.e-zeeinternet.com/count.php?page=927665&style=default&nbdigits=9" alt="Hit Counter" border="0" ></a><br><a href="http://www.e-zeeinternet.com/" title="Hit Counter" target="_blank" style="font-family: Geneva, Arial, Helvetica, sans-serif; font-size: 10px; color: #000000; text-decoration: none;">Hit Counter</a><!-- Counter Code END -->
+			
+			<!--
+			<div>
+				<h3>jaws log</h3>
+				<div id="jaws-log"></div>
+			</div>
+			-->
+		</center>
+		
+		<!-- PREVENT CONSOLE ERRORS ON Internet Explorer -->
+		<script>
+			function console_log(str) {
+				if (typeof console == "undefined") { return; }
+				else { console.log(str); }
+			}
+			
+			function console_warn(str) {
+				if (typeof console == "undefined") { return; }
+				else { console.warn(str); }
+			}
+		</script>
+		
+		<!-- PRELOAD SCREEN SCRIPT -->
+		<script>
+			function preloadInfo(str) {
+				document.getElementById("game_canvas").getContext("2d").fillStyle = "rgb(0,0,0)";
+				document.getElementById("game_canvas").getContext("2d").fillRect(0, 0, 800, 480);
+				
+				document.getElementById("game_canvas").getContext("2d").fillStyle = "rgb(255,255,255)";
+				document.getElementById("game_canvas").getContext("2d").font = "32px Helvetica";
+				document.getElementById("game_canvas").getContext("2d").fillText("Inicializálás... " + str, 200, 272);
+			}
+		</script>
+		
+		<script>
+			preloadInfo("JQuery");
+		</script>
+		
+		<script src="jquery.js"></script>
+		
+		<script>
+			preloadInfo("Jaws Engine");
+		</script>
+		<script src="jaws.js"></script>
+		
+		<script>
+			preloadInfo("Játékelemek 1/6");
+		</script>
+		<script src="classes/colorstring.js"></script>
+		<script src="classes/text.js"></script>
+		<script src="classes/flying_text.js"></script>
+
+		<script>
+			preloadInfo("Játékelemek 2/6");
+		</script>
+		<script src="classes/airplane.js"></script>
+		<script src="classes/building.js"></script>
+		
+		<script>
+			preloadInfo("Játékelemek 3/6");
+		</script>
+		<script src="classes/explosion.js"></script>
+		<script src="classes/cloud.js"></script>
+		
+		<script>
+			preloadInfo("Játékelemek 4/6");
+		</script>
+		<script src="classes/solid_button.js"></script>
+		<script src="classes/anim_button.js"></script>
+		<script src="classes/pause_button.js"></script>
+		<script src="classes/back_button.js"></script>
+		<script src="classes/mute_button.js"></script>
+		
+		<script>
+			preloadInfo("Játékelemek 5/6");
+		</script>
+		<script src="classes/credits_widget.js"></script>
+		<script src="screens/menu.js"></script>
+		<script src="screens/gameplay.js"></script>
+		
+		<script>
+			preloadInfo("Játékelemek 6/6");
+		</script>
+		<script src="screens/help.js"></script>
+		<script src="screens/highscores.js"></script>
+		<script src="screens/mode_select.js"></script>
+		
+		<script>
+			preloadInfo("Alaplogika");
+		</script>
+		<script src="game.js"></script>
+		
+		<script>
+			preloadInfo("Hangok");
+		</script>
+		
+		<!--- BG MUSIC --->
+		
+		<audio loop="loop" preload="metadata" id="menu_music">
+			<source src="music/menu.mp3" type="audio/mpeg">
+			<source src="music/menu.ogg" type="audio/ogg">
+			A bÃ¶ngÃ©szÅ‘d nem tÃ¡mogatja a hangfÃ¡jlok lejÃ¡tszÃ¡sÃ¡t.
+		</audio>
+		
+		<audio loop="loop" preload="metadata" id="ingame_music">
+			<source src="music/ingame.mp3" type="audio/mpeg">
+			<source src="music/ingame.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio loop="loop" preload="metadata" id="landing_music">
+			<source src="music/landing.mp3" type="audio/mpeg">
+			<source src="music/landing.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="metadata" id="crashed_music">
+			<source src="music/crashed.mp3" type="audio/mpeg">
+			<source src="music/crashed.ogg" type="audio/ogg">
+		</audio>
+		
+		<!--- SFX --->
+		
+		<audio preload="metadata" id="bomb_explosion">
+			<source src="sfx/bomb_explosion.mp3" type="audio/mpeg">
+			<source src="sfx/bomb_explosion.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="metadata" id="bomb_falling">
+			<source src="sfx/bomb_falling.mp3" type="audio/mpeg">
+			<source src="sfx/bomb_falling.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="metadata" id="building_collapse">
+			<source src="sfx/building_collapse.mp3" type="audio/mpeg">
+			<source src="sfx/building_collapse.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="metadata" id="plane_crash">
+			<source src="sfx/plane_crash.mp3" type="audio/mpeg">
+			<source src="sfx/plane_crash.ogg" type="audio/ogg">
+		</audio>
+		
+		<audio preload="metadata" id="plane_explosion">
+			<source src="sfx/plane_explosion.mp3" type="audio/mpeg">
+			<source src="sfx/plane_explosion.ogg" type="audio/ogg">
+		</audio>
+		
+		<script>
+			window.onload = function() {
+				// timeout for Internet Explorer
+				setTimeout(function() {
+					jaws.start(PreloadGame, {fps: 30});
+				}, 1000);
+			};
+			
+			window.onunload = function() {};
+		</script>
+	</body>
+</html>
