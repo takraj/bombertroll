@@ -33,21 +33,24 @@
 			}
 		} else if (player.currentScore < player.getNegativeRecord().score) {
 			answer = window.prompt("NEGATÍV REKORD!! Mi a neved?", "");
-			asks++;
 			
-			while ((answer == "") || (answer.length > 30)) {
-				if ((++asks) > 10) {
-					answer = "-- ismeretlen --";
-					continue;
+			if (answer != null) {
+				asks++;
+				
+				while ((answer == "") || (answer.length > 30)) {
+					if ((++asks) > 10) {
+						answer = "-- ismeretlen --";
+						continue;
+					}
+					if (answer.length > 30) {
+						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
+					} else {
+						answer = window.prompt("Pedig híres is lehetnél...\nMi a neved?", "");
+					}
 				}
-				if (answer.length > 30) {
-					answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
-				} else {
-					answer = window.prompt("Pedig híres is lehetnél...\nMi a neved?", "");
-				}
+				
+				player.setNegativeRecord(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
 			}
-			
-			player.setNegativeRecord(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
 		}
 		
 		this.textNegativeRecordItem.str = player.getNegativeRecord().name + "                  ( " + player.getNegativeRecord().score + " pont @ lvl "+ player.getNegativeRecord().level +" )";
