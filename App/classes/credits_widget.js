@@ -209,6 +209,17 @@ function CreditsWidget(x, y) {
 			// SHORT BREAK
 			this.textColorObject.alpha = 0.0;
 			this.setupColors();
+			
+			if (this.textState != 9) {
+				// change state
+				this.textState = 9;
+				
+				// send report
+				try {
+					parent._gaq.push(['_trackEvent', 'CreditsWidget', 'Ended']);
+					console_log("Analytics sent.");
+				} catch (e) {}
+			}
 		}
 	}
 }
