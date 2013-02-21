@@ -1,9 +1,10 @@
 function MenuScreen() {
 	this.isActiveScreen = true;
 	this.clouds = new Array();
+	this.versionStr = "v2.1.2";
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
-	this.textVersion = new Text(300, 70, "v2.1.2", 12, "rgba(255, 255, 255, 0.5)");
+	this.textVersion = new Text(300, 70, this.versionStr, 12, "rgba(255, 255, 255, 0.5)");
 	this.textAuthor = new Text(150, 90, "by TakRaj", 16, "rgb(255, 255, 255)");
 	
 	this.newGameButton = new AnimatedButton(500, 200, 250, 40, "Új játék");
@@ -17,7 +18,7 @@ function MenuScreen() {
 		console_log("MenuScreen.setup()");
 		
 		try {
-			parent._gaq.push(['_trackEvent', 'MainMenu', 'Version', this.textVersion]);
+			parent._gaq.push(['_trackEvent', 'MainMenu', 'Version', this.versionStr]);
 			console_log("Analytics sent.");
 		} catch (e) {}
 		
