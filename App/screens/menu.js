@@ -16,6 +16,11 @@ function MenuScreen() {
 	this.setup = function() {	
 		console_log("MenuScreen.setup()");
 		
+		try {
+			parent._gaq.push(['_trackEvent', 'MainMenu', 'Version', this.textVersion]);
+			console_log("Analytics sent.");
+		} catch (e) {}
+		
 		this.credits = new CreditsWidget(115, 300);
 		
 		this.clouds = new Array();

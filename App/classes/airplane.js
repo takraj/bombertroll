@@ -27,11 +27,6 @@ function Airplane(x, y, velocity, player, scene) {
 				this.bomb = new Bomb((this.x + (this.width / 2.0) - 17), this.y + this.height, this);
 			}
 			PlaySound("bomb_falling");
-			
-			try {
-				parent._gaq.push(['_trackEvent', 'Gameplay', 'BombDropped']);
-				console_log("Analytics sent.");
-			} catch (e) {}
 		}
 	}
 	
