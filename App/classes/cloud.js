@@ -1,4 +1,4 @@
-﻿function Cloud(x, y) {
+function Cloud(x, y) {
 	this.sprite = new jaws.Sprite({image: "images/cloud-th.png", x: 0, y: 0, scale: 1, anchor: "top_left"});
 	this.sprite.x = x;
 	this.sprite.y = y;

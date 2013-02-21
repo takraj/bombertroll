@@ -1,10 +1,10 @@
-ï»¿function MuteButton(x, y, width, height) {
+function MuteButton(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.hover = false;
-	this.tooltip = new Text(x + 4, y - 14, "NÃ©mÃ­tÃ¡s", 14, "rgb(255, 255, 255)");
+	this.tooltip = new Text(x + 4, y - 14, "Némítás", 14, "rgb(255, 255, 255)");
 	
 	this.isInnerPoint = function(x, y) {
 		return ((x >= this.x) && (y >= this.y) && (x <= (this.x + this.width + 2)) && (y <= (this.y + this.height + 2)));
@@ -18,21 +18,21 @@
 		}
 		
 		jaws.context.beginPath();
-		// mÃ¡gnes felsÅ‘ rÃ©sze
+		// mágnes felsõ része
 		jaws.context.moveTo(this.x, this.y + (this.height / 3.0));
 		jaws.context.lineTo(this.x + (this.width / 4.0), this.y + (this.height / 3.0));
 		
-		// membrÃ¡n
+		// membrán
 		jaws.context.lineTo(this.x + this.width * 0.8, this.y);
 		jaws.context.lineTo(this.x + this.width * 0.8, this.y + this.height);
 		
-		// mÃ¡gnes alsÃ³ rÃ©sze
+		// mágnes alsó része
 		jaws.context.lineTo(this.x + (this.width / 4.0), this.y + (2 * this.height / 3.0));
 		jaws.context.lineTo(this.x, this.y + (2 * this.height / 3.0));
 		
 		jaws.context.fill();
 		
-		// Ã¡thÃºzÃ¡s
+		// áthúzás
 		if (!soundsEnabled) {
 			jaws.context.beginPath();
 			jaws.context.moveTo(this.x, this.y + this.height);

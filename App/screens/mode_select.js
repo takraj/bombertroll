@@ -1,13 +1,13 @@
-ï»¿function ModeSelectScreen() {
+function ModeSelectScreen() {
 	this.isActiveScreen = true;
-	this.textTitle = new Text(100, 70, "KÃ¶nnyÅ± vagy NehÃ©z jÃ¡tÃ©kot szeretnÃ©l?", 32, "rgb(255, 255, 255)");
-	this.textHardModeHint1 = new Text(130, 150, "NehÃ©z mÃ³dban nincs negatÃ­v pontszÃ¡m Ã©s a bomba sem fÃ¼ggÅ‘legesen esik, tovÃ¡bbÃ¡ minden mÃ¡sodpercben", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint2 = new Text(130, 166, "az aktuÃ¡lis szint szÃ¡mÃ¡val csÃ¶kken a pontszÃ¡mod. CserÃ©be ez utÃ³bbi minden szintlÃ©pÃ©skor megduplÃ¡zÃ³dik,", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint3 = new Text(130, 182, "fÃ©lredobÃ¡s esetÃ©n pedig azonnal megfelezÅ‘dik. A lerombolt Ã©pÃ¼letrÃ©szek minden szinten egy ponttal tÃ¶bbet", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint4 = new Text(130, 198, "Ã©rnek. NehÃ©z mÃ³dban a bÃ³nusz a 2. szinttÅ‘l kezdve jÃ¡r akkor, ha a bomba nagyon magasrÃ³l lett indÃ­tva.", 12, "rgb(255, 255, 255)");
-	this.textHardModeHint5 = new Text(130, 214, "A bÃ³nusz szorzÃ³ Ã©rtÃ©ke ilyenkor az aktuÃ¡lis szint szÃ¡ma.", 12, "rgb(255, 255, 255)");
+	this.textTitle = new Text(100, 70, "Könnyû vagy Nehéz játékot szeretnél?", 32, "rgb(255, 255, 255)");
+	this.textHardModeHint1 = new Text(130, 150, "Nehéz módban nincs negatív pontszám és a bomba sem függõlegesen esik, továbbá minden másodpercben", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint2 = new Text(130, 166, "az aktuális szint számával csökken a pontszámod. Cserébe ez utóbbi minden szintlépéskor megduplázódik,", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint3 = new Text(130, 182, "félredobás esetén pedig azonnal megfelezõdik. A lerombolt épületrészek minden szinten egy ponttal többet", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint4 = new Text(130, 198, "érnek. Nehéz módban a bónusz a 2. szinttõl kezdve jár akkor, ha a bomba nagyon magasról lett indítva.", 12, "rgb(255, 255, 255)");
+	this.textHardModeHint5 = new Text(130, 214, "A bónusz szorzó értéke ilyenkor az aktuális szint száma.", 12, "rgb(255, 255, 255)");
 	
-	this.easyButton = new SolidButton(100, 320, 190, 40, "KÃ¶nnyÅ±t");
+	this.easyButton = new SolidButton(100, 320, 190, 40, "Könnyût");
 	this.hardButton = new SolidButton(300, 320, 190, 40, "Nehezet");
 	this.cancelButton = new SolidButton(500, 320, 190, 40, "Egyiket sem");
 	
@@ -48,6 +48,12 @@
 				isHardMode = false;
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					
+					try {
+						parent._gaq.push(['_trackEvent', 'GameMode', 'Easy']);
+						console_log("Analytics sent.");
+					} catch (e) {}
+					
 					jaws.switchGameState(BomberTroll);
 				}
 			}
@@ -58,6 +64,12 @@
 				isHardMode = true;
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					
+					try {
+						parent._gaq.push(['_trackEvent', 'GameMode', 'Hard']);
+						console_log("Analytics sent.");
+					} catch (e) {}
+					
 					jaws.switchGameState(BomberTroll);
 				}
 			}

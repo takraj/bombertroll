@@ -1,4 +1,4 @@
-﻿function Text(x, y, str, size, color) {
+function Text(x, y, str, size, color) {
 	this.x = x;
 	this.y = y;
 	this.str = str;

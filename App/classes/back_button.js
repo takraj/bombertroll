@@ -1,10 +1,10 @@
-ï»¿function BackButton(x, y, width, height) {
+function BackButton(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.hover = false;
-	this.tooltip = new Text(x - 40, y - 14, "FÅ‘menÃ¼", 14, "rgb(255, 255, 255)");
+	this.tooltip = new Text(x - 40, y - 14, "Fõmenü", 14, "rgb(255, 255, 255)");
 	
 	this.isInnerPoint = function(x, y) {
 		return ((x >= this.x) && (y >= this.y) && (x <= (this.x + this.width + 2)) && (y <= (this.y + this.height + 2)));

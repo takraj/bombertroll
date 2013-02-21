@@ -1,4 +1,4 @@
-ï»¿function Building(x, width, isDaytime, maxFloors, minFloors, player) {
+function Building(x, width, isDaytime, maxFloors, minFloors, player) {
 	this.x = x;
 	this.width = width;
 	this.rgbString = new ColorString(Math.random(), Math.random(), Math.random()).mul(255).toString();
@@ -10,7 +10,7 @@
 	
 	this.baseElement = new BaseElement(x, 20, width, this.rgbString, isDaytime, Math.round(minFloors + (maxFloors-minFloors) * Math.random()), this);
 	
-	// Megadja az Ã©pÃ¼let jelenlegi elemszÃ¡mÃ¡t (magassÃ¡gÃ¡t)
+	// Megadja az épület jelenlegi elemszámát (magasságát)
 	this.getHeight = function() {
 		result = 0;
 		
@@ -26,7 +26,7 @@
 		return result;
 	}
 	
-	// ÃœtkÃ¶zÃ©st vizsgÃ¡l egy befoglalÃ³ nÃ©gyzettel
+	// Ütközést vizsgál egy befoglaló négyzettel
 	this.isCollision = function(x, y, w, h) {
 		if (this.baseElement != null) {
 			height = this.getHeight();
@@ -36,7 +36,7 @@
 		}
 	}
 	
-	// MegprÃ³bÃ¡lja elpusztÃ­tani az Ã©pÃ¼letet
+	// Megpróbálja elpusztítani az épületet
 	this.doDestroyByBomb = function(scene) {
 		if (this.baseElement != null) {
 			element = this.baseElement;
@@ -52,7 +52,7 @@
 		}
 	}
 	
-	// RajzolÃ³ fÃ¼ggvÃ©ny
+	// Rajzoló függvény
 	this.draw = function() {
 		if (this.baseElement != null) {
 			this.baseElement.draw();
@@ -60,11 +60,11 @@
 	}
 }
 
-// 4 fÃ©le (a 4. legyen Ã¡tmenetes, torony tÃ­pusÃº)
+// 4 féle (a 4. legyen átmenetes, torony típusú)
 function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, building) {
 	this.x = x;
 	this.width = width;
-	this.type = Math.round(Math.random() * 2);	// tÃ­pus generÃ¡lÃ¡sa
+	this.type = Math.round(Math.random() * 2);	// típus generálása
 	this.color = color;
 	this.isDaytime = isDaytime;
 	this.building = building;
@@ -73,7 +73,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	this.y = jaws.context.canvas.height - shiftUp;
 	this.player = building.player;
 	
-	// ablakok szÃ­nÃ©nek generÃ¡lÃ¡sa
+	// ablakok színének generálása
 	this.wndColors = new Array();
 	for (var i = 0; i < 50; i++) {
 		if (!this.isDaytime) {
@@ -83,7 +83,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 		}
 	}
 	
-	// Maga fÃ¶lÃ© Ã©pÃ­t, amÃ­g lehet
+	// Maga fölé épít, amíg lehet
 	if (numberOfFloors > 1) {
 		this.childElement = new FloorElement(this, true, numberOfFloors-1);
 	} else {
@@ -112,14 +112,14 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 		this.building = null;
 	}
 
-	// RajzolÃ³ fÃ¼ggvÃ©ny
+	// Rajzoló függvény
 	this.draw = function() {
 		jaws.context.fillStyle = this.color;
 		jaws.context.fillRect(this.x, this.y - this.height, this.width, this.height);
 		
 		switch (this.type) {
 		case 0:
-			// ajtÃ³
+			// ajtó
 			jaws.context.fillStyle = "rgb(111, 78, 47)";
 			jaws.context.fillRect(this.x + (this.width * 0.6), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.6);
 			
@@ -128,7 +128,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 			jaws.context.fillRect(this.x + (this.width * 0.2), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.4);
 			break;
 		case 1:
-			// ajtÃ³
+			// ajtó
 			jaws.context.fillStyle = "rgb(111, 78, 47)";
 			jaws.context.fillRect(this.x + (this.width * 0.2), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.6);
 			
@@ -137,7 +137,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 			jaws.context.fillRect(this.x + (this.width * 0.6), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.4);
 			break;
 		case 2:
-			// ajtÃ³
+			// ajtó
 			jaws.context.fillStyle = this.wndColors[2];
 			jaws.context.fillRect(this.x + (this.width * 0.4), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.6);
 			
@@ -157,7 +157,7 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	}
 }
 
-// 4 fÃ©le
+// 4 féle
 function FloorElement(parentElement, generate, numberOfFloors) {
 	this.height = 20;
 	
@@ -168,10 +168,10 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	this.color = parentElement.color;
 	this.isDaytime = parentElement.isDaytime;
 	
-	this.type = (generate ? Math.round(Math.random() * 2) : parentElement.type); // tÃ­pus generÃ¡lÃ¡sa, ha Å‘ az elsÅ‘, amÃºgy Ã¶rÃ¶kÃ¶l
+	this.type = (generate ? Math.round(Math.random() * 2) : parentElement.type); // típus generálása, ha õ az elsõ, amúgy örököl
 	this.player = parentElement.player;
 	
-	// ablakok szÃ­nÃ©nek generÃ¡lÃ¡sa
+	// ablakok színének generálása
 	this.wndColors = new Array();
 	for (var i = 0; i < 50; i++) {
 		if (!this.isDaytime) {
@@ -181,7 +181,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 		}
 	}
 	
-	// Maga fÃ¶lÃ© Ã©pÃ­t amÃ­g lehet
+	// Maga fölé épít amíg lehet
 	if (numberOfFloors > 1) {
 		this.childElement = new FloorElement(this, false, numberOfFloors-1);
 	} else {
@@ -210,7 +210,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 		this.parentElement = null;
 	}
 
-	// RajzolÃ³ fÃ¼ggvÃ©ny
+	// Rajzoló függvény
 	this.draw = function() {
 		jaws.context.fillStyle = this.color;
 		jaws.context.fillRect(this.x, this.y - this.height, this.width, this.height);
@@ -221,7 +221,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 			jaws.context.fillStyle = this.wndColors[5];
 			jaws.context.fillRect(this.x + (this.width * 0.1), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.4);
 			
-			// kÃ¶zÃ©psÅ‘ ablak
+			// középsõ ablak
 			jaws.context.fillStyle = this.wndColors[6];
 			jaws.context.fillRect(this.x + (this.width * 0.4), this.y - (this.height * 0.6), this.width * 0.2, this.height * 0.4);
 			
@@ -238,7 +238,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 			jaws.context.fillStyle = this.wndColors[9];
 			jaws.context.fillRect(this.x + (this.width * 0.4), this.y - (this.height * 0.9), this.width * 0.1, this.height * 0.95);
 			
-			// kÃ¶zÃ©psÅ‘ ablak
+			// középsõ ablak
 			jaws.context.fillStyle = this.wndColors[10];
 			jaws.context.fillRect(this.x + (this.width * 0.6), this.y - (this.height * 0.9), this.width * 0.1, this.height * 0.95);
 			
@@ -254,7 +254,7 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	}
 }
 
-// 4 fÃ©le: lapostetÅ‘, egycsÃºcsos, 3 csÃºcsos, torony tÃ­pusÃº csÃºcsos (Ã³rÃ¡val)
+// 4 féle: lapostetõ, egycsúcsos, 3 csúcsos, torony típusú csúcsos (órával)
 function RoofElement(parentElement) {
 	this.height = 20;
 	
@@ -263,7 +263,7 @@ function RoofElement(parentElement) {
 	this.y = parentElement.y - this.height;
 	this.width = parentElement.width;
 	
-	this.type = Math.round(Math.random() * 2);	// tÃ­pus generÃ¡lÃ¡sa
+	this.type = Math.round(Math.random() * 2);	// típus generálása
 	this.player = parentElement.player;
 	
 	if ((this.type == 1) || (Math.random() > 0.7)) {
@@ -286,7 +286,7 @@ function RoofElement(parentElement) {
 		this.parentElement = null;
 	}
 
-	// RajzolÃ³ fÃ¼ggvÃ©ny
+	// Rajzoló függvény
 	this.draw = function() {
 		jaws.context.fillStyle = this.color;
 	
@@ -304,21 +304,21 @@ function RoofElement(parentElement) {
 			jaws.context.fill();
 			break;
 		case 2:
-			// bal csÃºcs
+			// bal csúcs
 			jaws.context.beginPath();
 			jaws.context.moveTo(this.x, this.y);
 			jaws.context.lineTo(this.x + (this.width / 4.0), this.y - (this.height / 2.0));
 			jaws.context.lineTo(this.x + (this.width / 2.0), this.y);
 			jaws.context.fill();
 			
-			// jobb csÃºcs
+			// jobb csúcs
 			jaws.context.beginPath();
 			jaws.context.moveTo(this.x + (this.width / 2.0), this.y);
 			jaws.context.lineTo(this.x + ((this.width * 3) / 4.0), this.y - (this.height / 2.0));
 			jaws.context.lineTo(this.x + this.width, this.y);
 			jaws.context.fill();
 			
-			// kÃ¶zÃ©psÅ‘ csÃºcs
+			// középsõ csúcs
 			jaws.context.beginPath();
 			jaws.context.moveTo(this.x + (this.width / 4.0), this.y);
 			jaws.context.lineTo(this.x + (this.width / 2.0), this.y - this.height);

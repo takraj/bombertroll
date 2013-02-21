@@ -1,10 +1,10 @@
-ï»¿function PauseButton(x, y, width, height) {
+function PauseButton(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.hover = false;
-	this.tooltip = new Text(x - 40, y - 14, "MegÃ¡llÃ­tÃ¡s", 14, "rgb(255, 255, 255)");
+	this.tooltip = new Text(x - 40, y - 14, "Megállítás", 14, "rgb(255, 255, 255)");
 	
 	this.isInnerPoint = function(x, y) {
 		return ((x >= this.x) && (y >= this.y) && (x <= (this.x + this.width + 2)) && (y <= (this.y + this.height + 2)));

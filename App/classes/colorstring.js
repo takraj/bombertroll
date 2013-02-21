@@ -1,4 +1,4 @@
-﻿function ColorString(red, green, blue) {		// 0..255
+function ColorString(red, green, blue) {		// 0..255
 
 	this.red = Math.min(Math.max(0, red), 255);
 	this.green = Math.min(Math.max(0, green), 255);

@@ -1,14 +1,14 @@
-Ôªøfunction MenuScreen() {
+function MenuScreen() {
 	this.isActiveScreen = true;
 	this.clouds = new Array();
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
-	this.textVersion = new Text(300, 70, "v2.1.1", 12, "rgba(255, 255, 255, 0.5)");
+	this.textVersion = new Text(300, 70, "v2.1.2", 12, "rgba(255, 255, 255, 0.5)");
 	this.textAuthor = new Text(150, 90, "by TakRaj", 16, "rgb(255, 255, 255)");
 	
-	this.newGameButton = new AnimatedButton(500, 200, 250, 40, "√öj j√°t√©k");
-	this.helpButton = new AnimatedButton(500, 260, 250, 40, "J√°t√©kszab√°lyok");
-	this.highscoresButton = new AnimatedButton(500, 320, 250, 40, "Legjobbak list√°ja");
+	this.newGameButton = new AnimatedButton(500, 200, 250, 40, "⁄j j·tÈk");
+	this.helpButton = new AnimatedButton(500, 260, 250, 40, "J·tÈkszab·lyok");
+	this.highscoresButton = new AnimatedButton(500, 320, 250, 40, "Legjobbak list·ja");
 	
 	this.muteButton = new MuteButton(16, jaws.context.canvas.height - 16, 14, 14);
 	this.credits = null;
@@ -62,6 +62,12 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					
+					try {
+						parent._gaq.push(['_trackEvent', 'MainMenu', 'NewGameSelected']);
+						console_log("Analytics sent.");
+					} catch (e) {}
+					
 					jaws.switchGameState(ModeSelectScreen);
 				}
 			}
@@ -71,6 +77,12 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					
+					try {
+						parent._gaq.push(['_trackEvent', 'MainMenu', 'HelpSelected']);
+						console_log("Analytics sent.");
+					} catch (e) {}
+					
 					jaws.switchGameState(HelpScreen);
 				}
 			}
@@ -80,6 +92,12 @@
 				$('#game_canvas').unbind('mousemove');
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					
+					try {
+						parent._gaq.push(['_trackEvent', 'MainMenu', 'HighScoresSelected']);
+						console_log("Analytics sent.");
+					} catch (e) {}
+					
 					jaws.switchGameState(HighScoresScreen);
 				}
 			}

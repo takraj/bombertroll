@@ -1,4 +1,4 @@
-ï»¿function BomberTroll() {
+function BomberTroll() {
 	this.isActiveScreen = true;
 	this.previousUpdateTime;
 	this.currentUpdateTime;
@@ -21,17 +21,17 @@
 	
 	// texts
 	
-	this.textPaused = new Text(150, 300, "Egy pillanatra megÃ¡lltam!", 32, "rgb(255, 255, 255)");
-	this.textPausedHint = new Text(300, 330, "...de kattintÃ¡sra vagy a 'P' billentyÅ±re folytatom!", 12, "rgb(255, 255, 255)");
+	this.textPaused = new Text(150, 300, "Egy pillanatra megálltam!", 32, "rgb(255, 255, 255)");
+	this.textPausedHint = new Text(300, 330, "...de kattintásra vagy a 'P' billentyûre folytatom!", 12, "rgb(255, 255, 255)");
 	
-	this.textGameOver = new Text(150, 300, "VÃ©ge a jÃ¡tÃ©knak!", 32, "rgb(255, 255, 255)");
-	this.textHighScoreHint = new Text(300, 330, "...de bekerÃ¼ltÃ©l a legjobbak kÃ¶zÃ©!", 12, "rgb(255, 255, 255)");
-	this.textNegativeRecordHint = new Text(300, 330, "...Ã©s megdÃ¶ntÃ¶tted a negatÃ­v rekordot!", 12, "rgb(255, 255, 255)");
+	this.textGameOver = new Text(150, 300, "Vége a játéknak!", 32, "rgb(255, 255, 255)");
+	this.textHighScoreHint = new Text(300, 330, "...de bekerültél a legjobbak közé!", 12, "rgb(255, 255, 255)");
+	this.textNegativeRecordHint = new Text(300, 330, "...és megdöntötted a negatív rekordot!", 12, "rgb(255, 255, 255)");
 	
-	this.textNextLevel = new Text(150, 300, "Sikeres kÃ¼ldetÃ©s!", 32, "rgb(255, 255, 255)");
-	this.textNextLevelHint = new Text(300, 330, "Kattints a kÃ¶vetekzÅ‘ szintre lÃ©pÃ©shez!", 12, "rgb(255, 255, 255)");
+	this.textNextLevel = new Text(150, 300, "Sikeres küldetés!", 32, "rgb(255, 255, 255)");
+	this.textNextLevelHint = new Text(300, 330, "Kattints a követekzõ szintre lépéshez!", 12, "rgb(255, 255, 255)");
 	
-	this.hardModeHint = new Text(jaws.context.canvas.width / 2.0 - 30, jaws.context.canvas.height - 5, "-- nehÃ©z mÃ³d --", 12, "rgba(255, 255, 255, 0.5)");
+	this.hardModeHint = new Text(jaws.context.canvas.width / 2.0 - 30, jaws.context.canvas.height - 5, "-- nehéz mód --", 12, "rgba(255, 255, 255, 0.5)");
 	
 	// other
 	
@@ -70,6 +70,11 @@
 		this.background = backgrounds[Math.round(Math.random() * (backgrounds.length - 1))];
 		this.backgroundSprite = new jaws.Sprite({image: this.background.file, x: 0, y: 0, scale: 1, anchor: "top_left"});
 		
+		try {
+			parent._gaq.push(['_trackEvent', 'Gameplay', 'BackgroundFile', this.background.file]);
+			console_log("Analytics sent.");
+		} catch (e) {}
+		
 		this.clouds = new Array();
 		for (var i = 0; i < 6; i++) {
 			this.clouds[i] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * 100);
@@ -81,12 +86,12 @@
 		this.flyingTexts = new Array();
 		
 		for (var i = 0; i < 16; i++) {
-			// az Ã©pÃ¼let max magassÃ¡ga 16 egysÃ©g, max szÃ³rÃ¡sa lefelÃ© 6 egysÃ©g
+			// az épület max magassága 16 egység, max szórása lefelé 6 egység
 			this.buildings[i] = new Building(i*50, 50, this.background.isDaytime, Math.min(4 + player.currentLevel, 16), Math.min(Math.ceil(player.currentLevel / 2.0), 10), player);
 		}
 		
 		this.levelText = new Text(jaws.context.canvas.width - 80, 30, "" + player.currentLevel + ". szint", 16, "rgb(0, 0, 0)");
-		this.scoreText = new Text(20, 30, "PontszÃ¡m: " + player.currentScore, 16, "rgb(0, 0, 0)");
+		this.scoreText = new Text(20, 30, "Pontszám: " + player.currentScore, 16, "rgb(0, 0, 0)");
 		
 		// local event handlers
 		var _BomberTrollInstance = this;
@@ -101,15 +106,27 @@
 				StopAllSounds();
 				if (_BomberTrollInstance.isActiveScreen) {
 					_BomberTrollInstance.isActiveScreen = false;
+					try {
+						parent._gaq.push(['_trackEvent', 'GameOptions', 'BackToMainMenu']);
+						console_log("Analytics sent.");
+					} catch (e) {}
 					jaws.switchGameState(MenuScreen);
 				}
 			} else if (_BomberTrollInstance.muteButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				soundsEnabled ? DisableSounds() : EnableSounds();
 			} else if (_BomberTrollInstance.isPaused) {
 				_BomberTrollInstance.isPaused = false;
+				try {
+					parent._gaq.push(['_trackEvent', 'GameOptions', 'Unpaused']);
+					console_log("Analytics sent.");
+				} catch (e) {}
 				ContinueAllSounds();
 			} else if (_BomberTrollInstance.pauseButton.isInnerPoint(jaws.mouse_x, jaws.mouse_y)) {
 				_BomberTrollInstance.isPaused = true;
+				try {
+					parent._gaq.push(['_trackEvent', 'GameOptions', 'Paused']);
+					console_log("Analytics sent.");
+				} catch (e) {}
 				PauseAllSounds();
 			} else {
 				if (_BomberTrollInstance.airplane != null) {
@@ -141,6 +158,11 @@
 		
 		$(document).unbind('keyup');
 		$(document).keyup(function(e) {
+			try {
+				parent._gaq.push(['_trackEvent', 'Keyboard', 'ButtonPressed', 'keycode=' + e.keyCode]);
+				console_log("Analytics sent.");
+			} catch (e) {}
+		
 			if ((e.keyCode == 27) && !_BomberTrollInstance.state_gameover) {
 				// escape
 				$(document).unbind('keyup');
@@ -201,16 +223,16 @@
 			if (this.airplane != null) {
 				this.airplane.step(diff);
 				
-				// megvizsgÃ¡lja, hogy a bomba eltalÃ¡lt-e valami Ã©pÃ¼letet
+				// megvizsgálja, hogy a bomba eltalált-e valami épületet
 				if (this.airplane.bomb != null) {
 					for (var i = 0; i < this.buildings.length; i++) {
 						if (this.buildings[i].isCollision(this.airplane.bomb.x, this.airplane.bomb.y, this.airplane.bomb.width, this.airplane.bomb.height)) {
 						
 							if (isHardMode && (player.currentLevel > 1) && ((this.airplane.bomb.y - this.airplane.bomb.startY) > 220)) {
-								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, player.currentLevel + "x bÃ³nusz!", false);
+								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, player.currentLevel + "x bónusz!", false);
 								player.multiplier = player.currentLevel;
 							} else if (!isHardMode && ((this.airplane.bomb.y - this.airplane.bomb.startY) < 50)) {
-								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, "10x bÃ³nusz!", false);
+								this.addFlyingText({x: this.airplane.x, y: this.airplane.y+60}, "10x bónusz!", false);
 								player.multiplier = 10;
 							}
 						
@@ -225,7 +247,7 @@
 					}
 				}
 				
-				// megvizsgÃ¡lja, hogy lezuhant-e a repÃ¼lÅ‘
+				// megvizsgálja, hogy lezuhant-e a repülõ
 				for (var i = 0; i < this.buildings.length; i++) {
 					if (this.buildings[i].isCollision(this.airplane.x, this.airplane.y, this.airplane.width, this.airplane.height)) {
 						this.addExplosion(this.airplane);
@@ -237,7 +259,7 @@
 					}
 				}
 				
-				// megvizsgÃ¡lja, hogy leszÃ¡lltunk-e
+				// megvizsgálja, hogy leszálltunk-e
 				if ((this.airplane != null) && (this.airplane.y > (jaws.context.canvas.height - 20 - this.airplane.height))) {
 					allDestroyed = true;
 					for (var i = 0; i < this.buildings.length; i++) {
@@ -277,7 +299,7 @@
 					}
 				}
 				
-				// ha elfogytak az Ã©pÃ¼letek, akkor felgyorsÃ­tja a repÃ¼lÅ‘ zuhanÃ¡si sebessÃ©gÃ©t
+				// ha elfogytak az épületek, akkor felgyorsítja a repülõ zuhanási sebességét
 				if ((this.airplane != null) && (!this.airplane.speedup)) {
 					allDestroyed = true;
 					for (var i = 0; i < this.buildings.length; i++) {
@@ -295,7 +317,7 @@
 				}
 			}
 				
-			// frissÃ­ti a robbanÃ¡sokat
+			// frissíti a robbanásokat
 			for (var i = 0; i < this.explosions.length; i++) {
 				if (this.explosions[i] != null) {
 					if (!this.explosions[i].isDead()) {
@@ -306,7 +328,7 @@
 				}
 			}
 			
-			// frissÃ­ti a repÃ¼lÅ‘ szÃ¶vegeket
+			// frissíti a repülõ szövegeket
 			for (var i = 0; i < this.flyingTexts.length; i++) {
 				if (this.flyingTexts[i] != null) {
 					if (!this.flyingTexts[i].isDead()) {
@@ -317,12 +339,12 @@
 				}
 			}
 			
-			// frissÃ­ti a felhÅ‘ket
+			// frissíti a felhõket
 			for (var i = 0; i < this.clouds.length; i++) {
 				this.clouds[i].step(diff);
 			}
 			
-			// ha mÃ¡r nincs repcsi, de a robanÃ¡s is lezajlott
+			// ha már nincs repcsi, de a robanás is lezajlott
 			if (this.stillAlive && (this.airplane == null)) {
 				noExplosionsRunning = true;
 				
@@ -395,14 +417,14 @@
 			this.airplane.draw();
 		}
 		
-		// kirajzolja a robbanÃ¡sokat
+		// kirajzolja a robbanásokat
 		for (var i = 0; i < this.explosions.length; i++) {
 			if (this.explosions[i] != null) {
 				this.explosions[i].draw();
 			}
 		}
 		
-		// kirajzolja a repÃ¼lÅ‘ pontokat
+		// kirajzolja a repülõ pontokat
 		for (var i = 0; i < this.flyingTexts.length; i++) {
 			if (this.flyingTexts[i] != null) {
 				this.flyingTexts[i].draw();
@@ -454,7 +476,7 @@
 		
 		// scoreboard
 		
-		this.scoreText.str = "PontszÃ¡m: " + player.currentScore;
+		this.scoreText.str = "Pontszám: " + player.currentScore;
 		
 		if (!this.state_nextlevel && !this.state_gameover && !this.isPaused && this.background.isDaytime) {
 			this.scoreText.draw();
@@ -468,12 +490,26 @@
 	this.endgame = function() {
 		if (this.isActiveScreen) {
 			this.isActiveScreen = false;
+			
+			try {
+				parent._gaq.push(['_trackEvent', 'Gameplay', 'LevelFailed', 'level', player.currentLevel]);
+				parent._gaq.push(['_trackEvent', 'Gameplay', 'LevelFailed', 'score', player.currentScore]);
+				console_log("Level data sent.");
+			} catch (e) {}
+			
 			jaws.switchGameState(HighScoresScreen);
 		}
 	}
 	
 	this.nextLevel = function() {
 		this.state_nextlevel = false;
+		
+		try {
+			parent._gaq.push(['_trackEvent', 'Gameplay', 'LevelComplete', 'level', player.currentLevel]);
+			parent._gaq.push(['_trackEvent', 'Gameplay', 'LevelComplete', 'score', player.currentScore]);
+			console_log("Level data sent.");
+		} catch (e) {}
+		
 		player.currentLevel++;
 		this.initLevel();
 	}

@@ -1,4 +1,4 @@
-﻿function SolidButton(x, y, width, height, label) {
+function SolidButton(x, y, width, height, label) {
 	this.x = x;
 	this.y = y;
 	this.width = width;

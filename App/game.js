@@ -1,4 +1,4 @@
-Ôªø/*********************************/
+/*********************************/
 /*          BOMBER TROLL         */
 /*          ------------         */
 /*           HTML5 game          */
@@ -119,7 +119,7 @@ function Player() {
 	this.currentScore = 0;
 	this.currentLevel = 1;		// range = 1..12
 	this.highscores = new Array();
-	this.negativeRecord = new HighScoreItem("-- Mr. Ma√ü --", -3000, 1, false);
+	this.negativeRecord = new HighScoreItem("-- Mr. Maﬂ --", -3000, 1, false);
 	this.scoretimer = 0;
 	this.multiplier = 1;
 	
@@ -148,7 +148,7 @@ function Player() {
 		setStorage(ls_neg_record, JSON.stringify(this.negativeRecord));
 	}
 	
-	// eleve rendezetten, ez sokat seg√≠t
+	// eleve rendezetten, ez sokat segÌt
 	this.addHighScore = function(item) {
 		updatedList = new Array();
 		added = false;
@@ -324,6 +324,11 @@ function DisableSounds() {
 	MuteSound("building_collapse");
 	MuteSound("plane_crash");
 	MuteSound("plane_explosion");
+	
+	try {
+		parent._gaq.push(['_trackEvent', 'SoundOptions', 'Muted']);
+		console_log("Analytics sent.");
+	} catch (e) {}
 }
 
 function EnableSounds() {
@@ -340,4 +345,9 @@ function EnableSounds() {
 	UnmuteSound("building_collapse");
 	UnmuteSound("plane_crash");
 	UnmuteSound("plane_explosion");
+	
+	try {
+		parent._gaq.push(['_trackEvent', 'SoundOptions', 'Unmuted']);
+		console_log("Analytics sent.");
+	} catch (e) {}
 }

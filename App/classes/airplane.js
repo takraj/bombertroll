@@ -1,4 +1,4 @@
-Ôªøfunction Airplane(x, y, velocity, player, scene) {
+function Airplane(x, y, velocity, player, scene) {
 	this.x = x;
 	this.y = y;
 	this.pictureW = Math.round(880.0 / 12.0);
@@ -9,7 +9,7 @@
 	this.fallingSpeed = velocity/60.0;
 	this.go_right = true;
 	this.player = player;
-	this.speedup = false;	// gyorsabb zuhan√°si sebess√©g bekapcsol√°sa (ha elfogytak a h√°zak)
+	this.speedup = false;	// gyorsabb zuhan·si sebessÈg bekapcsol·sa (ha elfogytak a h·zak)
 	this.scene = scene;
 	this.stopped = false;
 	this.bomb = null;
@@ -27,6 +27,11 @@
 				this.bomb = new Bomb((this.x + (this.width / 2.0) - 17), this.y + this.height, this);
 			}
 			PlaySound("bomb_falling");
+			
+			try {
+				parent._gaq.push(['_trackEvent', 'Gameplay', 'BombDropped']);
+				console_log("Analytics sent.");
+			} catch (e) {}
 		}
 	}
 	

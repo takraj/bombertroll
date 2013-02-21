@@ -1,28 +1,28 @@
-ï»¿function HelpScreen() {
+function HelpScreen() {
 	this.isActiveScreen = true;
-	this.textTitle = new Text(100, 70, "JÃ¡tÃ©kszabÃ¡lyok", 32, "rgb(255, 255, 255)");
-	this.textClickToContinue = new Text(600, 450, "Kattints a visszalÃ©pÃ©shez!", 12, "rgb(255, 255, 255)");
+	this.textTitle = new Text(100, 70, "Játékszabályok", 32, "rgb(255, 255, 255)");
+	this.textClickToContinue = new Text(600, 450, "Kattints a visszalépéshez!", 12, "rgb(255, 255, 255)");
 	
 	this.rules = new Array();
-	this.rules[this.rules.length] = "A jÃ¡tÃ©kos egy repÃ¼lÅ‘gÃ©pet irÃ¡nyÃ­t, mely a jÃ¡tÃ©ktÃ©ren talÃ¡lhatÃ³ emeletes hÃ¡zak fÃ¶lÃ¶tt kÃ¶rÃ¶z Ã©s folyamatosan";
-	this.rules[this.rules.length] = "ereszkedik. A repÃ¼lÅ‘gÃ©p kÃ©pes bombÃ¡kat ledobni, de egyszerre csak egyet.";
+	this.rules[this.rules.length] = "A játékos egy repülõgépet irányít, mely a játéktéren található emeletes házak fölött köröz és folyamatosan";
+	this.rules[this.rules.length] = "ereszkedik. A repülõgép képes bombákat ledobni, de egyszerre csak egyet.";
 	this.rules[this.rules.length] = "";
-	this.rules[this.rules.length] = "Ha a bomba rÃ¡esik egy hÃ¡zra, akkor abban jelentÅ‘s kÃ¡rt tesz vagy teljesen le is rombolhatja. A cÃ©l az, hogy";
-	this.rules[this.rules.length] = "a jÃ¡tÃ©kos minden hÃ¡zat leromboljon anÃ©lkÃ¼l, hogy bÃ¡rmelyikbe is beleÃ¼tkÃ¶zzÃ¶n a repÃ¼lÅ‘gÃ©pÃ©vel. A sikeres";
-	this.rules[this.rules.length] = "rombolÃ¡s Ã©rtÃ©ke emeletenkÃ©nt +15 pont, tovÃ¡bbÃ¡ egy tetÅ‘ +5, mÃ­g egy alagsor +18 pontot Ã©r. A sikertelensÃ©g,";
-	this.rules[this.rules.length] = "vagyis a mellÃ©dobÃ¡s Ã©rtÃ©ke -500 pont, kÃ¶nnyÅ± jÃ¡tÃ©kmÃ³d esetÃ©n. A hÃ¡zak minden pÃ¡lyÃ¡n vÃ©letlenszerÅ±en";
-	this.rules[this.rules.length] = "generÃ¡lÃ³dnak, maximÃ¡lis magassÃ¡gukat a 14. szinten Ã©rhetik el legkorÃ¡bban.";
+	this.rules[this.rules.length] = "Ha a bomba ráesik egy házra, akkor abban jelentõs kárt tesz vagy teljesen le is rombolhatja. A cél az, hogy";
+	this.rules[this.rules.length] = "a játékos minden házat leromboljon anélkül, hogy bármelyikbe is beleütközzön a repülõgépével. A sikeres";
+	this.rules[this.rules.length] = "rombolás értéke emeletenként +15 pont, továbbá egy tetõ +5, míg egy alagsor +18 pontot ér. A sikertelenség,";
+	this.rules[this.rules.length] = "vagyis a mellédobás értéke -500 pont, könnyû játékmód esetén. A házak minden pályán véletlenszerûen";
+	this.rules[this.rules.length] = "generálódnak, maximális magasságukat a 14. szinten érhetik el legkorábban.";
 	this.rules[this.rules.length] = "";
-	this.rules[this.rules.length] = "BÃ³nusz: Ha a bomba Ã©pÃ¼letbe csapÃ³dÃ¡s elÅ‘tt csak kevÃ©s utat tesz meg, akkor a rombolÃ¡sÃ©rt kapott pontok";
-	this.rules[this.rules.length] = "megtÃ­zszerezÅ‘dnek arra az alkalomra. A jÃ¡tÃ©k rendelkezik egy speciÃ¡lis nehÃ©z mÃ³ddal is, amely instrukciÃ³it";
-	this.rules[this.rules.length] = "az 'Ãšj jÃ¡tÃ©k' kÃ©pernyÅ‘n lehet elolvasni.";
+	this.rules[this.rules.length] = "Bónusz: Ha a bomba épületbe csapódás elõtt csak kevés utat tesz meg, akkor a rombolásért kapott pontok";
+	this.rules[this.rules.length] = "megtízszerezõdnek arra az alkalomra. A játék rendelkezik egy speciális nehéz móddal is, amely instrukcióit";
+	this.rules[this.rules.length] = "az 'Új játék' képernyõn lehet elolvasni.";
 	this.rules[this.rules.length] = "";
-	this.rules[this.rules.length] = "IrÃ¡nyÃ­tÃ¡s:";
+	this.rules[this.rules.length] = "Irányítás:";
 	this.rules[this.rules.length] = "----------";
-	this.rules[this.rules.length] = "KattintÃ¡s vagy Enter              : bomba elengedÃ©se";
-	this.rules[this.rules.length] = "P vagy kattintÃ¡s az ikonon        : szÃ¼net be / ki";
-	this.rules[this.rules.length] = "M vagy kattintÃ¡s az ikonon        : nÃ©mÃ­tÃ¡s be / ki";
-	this.rules[this.rules.length] = "ESC vagy kattintÃ¡s az ikonon      : vissza a fÅ‘menÃ¼be";
+	this.rules[this.rules.length] = "Kattintás vagy Enter              : bomba elengedése";
+	this.rules[this.rules.length] = "P vagy kattintás az ikonon        : szünet be / ki";
+	this.rules[this.rules.length] = "M vagy kattintás az ikonon        : némítás be / ki";
+	this.rules[this.rules.length] = "ESC vagy kattintás az ikonon      : vissza a fõmenübe";
 	
 	for (var i = 0; i < this.rules.length; i++) {
 		this.rules[i] = new Text(150, 110 + (i*16), this.rules[i], 12, "rgb(255, 255, 255)");

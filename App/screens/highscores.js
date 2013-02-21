@@ -1,9 +1,9 @@
-ï»¿function HighScoresScreen() {
+function HighScoresScreen() {
 	this.isActiveScreen = true;
-	this.textHighScores = new Text(100, 70, "Legjobbak ListÃ¡ja", 32, "rgb(255, 255, 255)");
-	this.textClickToContinue = new Text(600, 450, "Kattints a tovÃ¡bblÃ©pÃ©shez!", 12, "rgb(255, 255, 255)");
-	this.textNegativeRecord = new Text(100, 400, "NegatÃ­v rekord: ", 12, "rgb(128, 128, 0)");
-	this.textNegativeRecordItem = new Text(120, 420, "-- mÃ©g nincs --", 14, "rgb(255, 255, 0)");
+	this.textHighScores = new Text(100, 70, "Legjobbak Listája", 32, "rgb(255, 255, 255)");
+	this.textClickToContinue = new Text(600, 450, "Kattints a továbblépéshez!", 12, "rgb(255, 255, 255)");
+	this.textNegativeRecord = new Text(100, 400, "Negatív rekord: ", 12, "rgb(128, 128, 0)");
+	this.textNegativeRecordItem = new Text(120, 420, "-- még nincs --", 14, "rgb(255, 255, 0)");
 	this.textHSList = new Array();
 
 	this.setup = function() {
@@ -23,16 +23,30 @@
 						continue;
 					}
 					if (answer.length > 30) {
-						answer = window.prompt("TÃºl hosszÃº...\nMi a (rÃ¶videbb) neved? MAX 30 karakter legyen!", "");
+						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
 					} else {
 						answer = window.prompt("Biztos van...\nMi a neved?", "");
 					}
 				}
 				
 				player.addHighScore(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
+				
+				try {
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewHighScore', 'name: ' + answer]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewHighScore', 'asks', asks]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewHighScore', 'level', player.currentLevel]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewHighScore', 'score', player.currentScore]);
+					console_log("Analytics sent.");
+				} catch (e) {}
+			} else {
+				try {
+					parent._gaq.push(['_trackEvent', 'HighScores', 'HighScoreInputCancelled', 'level', player.currentLevel]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'HighScoreInputCancelled', 'score', player.currentScore]);
+					console_log("Analytics sent.");
+				} catch (e) {}
 			}
 		} else if (player.currentScore < player.getNegativeRecord().score) {
-			answer = window.prompt("NEGATÃV REKORD!! Mi a neved?", "");
+			answer = window.prompt("NEGATÍV REKORD!! Mi a neved?", "");
 			
 			if (answer != null) {
 				asks++;
@@ -43,22 +57,36 @@
 						continue;
 					}
 					if (answer.length > 30) {
-						answer = window.prompt("TÃºl hosszÃº...\nMi a (rÃ¶videbb) neved? MAX 30 karakter legyen!", "");
+						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
 					} else {
-						answer = window.prompt("Pedig hÃ­res is lehetnÃ©l...\nMi a neved?", "");
+						answer = window.prompt("Pedig híres is lehetnél...\nMi a neved?", "");
 					}
 				}
 				
 				player.setNegativeRecord(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
+				
+				try {
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewNegativeRecord', 'name: ' + answer]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewNegativeRecord', 'asks', asks]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewNegativeRecord', 'level', player.currentLevel]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NewNegativeRecord', 'score', player.currentScore]);
+					console_log("Analytics sent.");
+				} catch (e) {}
+			} else {
+				try {
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NegativeRecordInputCancelled', 'level', player.currentLevel]);
+					parent._gaq.push(['_trackEvent', 'HighScores', 'NegativeRecordInputCancelled', 'score', player.currentScore]);
+					console_log("Analytics sent.");
+				} catch (e) {}
 			}
 		}
 		
 		this.textNegativeRecordItem.str = player.getNegativeRecord().name + "                  ( " + player.getNegativeRecord().score + " pont @ lvl "+ player.getNegativeRecord().level +" )";
 		
-		this.textHSList[0] = new Text(150, 130, "NÃ©v", 12, "rgb(255, 255, 255)");
-		this.textHSList[1] = new Text(500, 130, "PontszÃ¡m", 12, "rgb(255, 255, 255)");
+		this.textHSList[0] = new Text(150, 130, "Név", 12, "rgb(255, 255, 255)");
+		this.textHSList[1] = new Text(500, 130, "Pontszám", 12, "rgb(255, 255, 255)");
 		this.textHSList[2] = new Text(600, 130, "Szint", 12, "rgb(255, 255, 255)");
-		this.textHSList[3] = new Text(650, 130, "JÃ¡tÃ©kmÃ³d", 12, "rgb(255, 255, 255)");
+		this.textHSList[3] = new Text(650, 130, "Játékmód", 12, "rgb(255, 255, 255)");
 		
 		for (var i = 0; i < player.highscores.length; i++) {
 			if (player.highscores[i].name == null) {
@@ -78,7 +106,7 @@
 			this.textHSList[3 + (i * 5) + 2] = new Text(150, 160 + (i * 20), player.highscores[i].name, 12, "rgb(255, 255, 255)");
 			this.textHSList[3 + (i * 5) + 3] = new Text(500, 160 + (i * 20), player.highscores[i].score, 12, "rgb(255, 255, 255)");
 			this.textHSList[3 + (i * 5) + 4] = new Text(600, 160 + (i * 20), player.highscores[i].level, 12, "rgb(255, 255, 255)");
-			this.textHSList[3 + (i * 5) + 5] = new Text(650, 160 + (i * 20), (player.highscores[i].mode ? "NehÃ©z" : "KÃ¶nnyÅ±"), 12, "rgb(255, 255, 255)");
+			this.textHSList[3 + (i * 5) + 5] = new Text(650, 160 + (i * 20), (player.highscores[i].mode ? "Nehéz" : "Könnyû"), 12, "rgb(255, 255, 255)");
 		}
 		
 		$('#game_canvas').unbind('click');

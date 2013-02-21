@@ -1,4 +1,4 @@
-﻿function AnimatedButton(x, y, width, height, label) {
+function AnimatedButton(x, y, width, height, label) {
 	this.x = x;
 	this.y = y;
 	this.width = width;

@@ -1,4 +1,4 @@
-ï»¿function CreditsWidget(x, y) {
+function CreditsWidget(x, y) {
 	this.life = 0;
 	this.x = x;
 	this.y = y;
@@ -65,7 +65,7 @@
 				// create texts
 				
 				this.text_Title = new Text(this.x, this.y, "Programozta:", 14, this.textColorObject.toAlphaString());
-				this.addContributor("TakÃ¡cs Rajmund   (TakRaj)");
+				this.addContributor("Takács Rajmund   (TakRaj)");
 				
 				// change state
 				this.textState = 1;
@@ -79,12 +79,12 @@
 				this.text_Contrib = new Array();
 				// create texts
 				
-				this.text_Title = new Text(this.x, this.y, "HÃ¡tterek:", 14, this.textColorObject.toAlphaString());
+				this.text_Title = new Text(this.x, this.y, "Hátterek:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("zhihan (zhihan08.blogspot.com)");
 				this.addContributor("Earl Baumgardner (earlb.com)");
 				this.addContributor("budapest-foto.hu");
 				this.addContributor("Rhonda (one2one-removals.com.au)");
-				this.addContributor("OsvÃ¡t AndrÃ¡s (hu.wikipedia.org)");
+				this.addContributor("Osvát András (hu.wikipedia.org)");
 				this.addContributor("Bobby Alcott (bobbyalcottweddings.com)");
 				this.addContributor("wallsfeed.com");
 				this.addContributor("cityhdwallpapers.com");
@@ -102,7 +102,7 @@
 				// create texts
 				
 				this.text_Title = new Text(this.x, this.y, "Rajzok:", 14, this.textColorObject.toAlphaString());
-				this.addContributor("TakÃ¡cs Rajmund   (TakRaj)");
+				this.addContributor("Takács Rajmund   (TakRaj)");
 				this.addContributor("rg1024 (openclipart.org)");
 				this.addContributor("animationbuddy.com");
 				this.addContributor("philipp (clker.com)");
@@ -138,7 +138,7 @@
 				this.text_Contrib = new Array();
 				// create texts
 				
-				this.text_Title = new Text(this.x, this.y, "ZenÃ©k:", 14, this.textColorObject.toAlphaString());
+				this.text_Title = new Text(this.x, this.y, "Zenék:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("RED - Skifa2");
 				this.addContributor("Skuter - Turbo Outrun Highscore");
 				this.addContributor("Nula - Beery");
@@ -156,10 +156,10 @@
 				this.text_Contrib = new Array();
 				// create texts
 				
-				this.text_Title = new Text(this.x, this.y, "KÃ¼lÃ¶n kÃ¶szÃ¶net:", 14, this.textColorObject.toAlphaString());
-				this.addContributor("TakÃ¡cs Viktor   (TakVik)");
-				this.addContributor("FehÃ©r Marcell");
-				this.addContributor("Bori AndrÃ¡s");
+				this.text_Title = new Text(this.x, this.y, "Külön köszönet:", 14, this.textColorObject.toAlphaString());
+				this.addContributor("Takács Viktor   (TakVik)");
+				this.addContributor("Fehér Marcell");
+				this.addContributor("Bori András");
 				
 				// change state
 				this.textState = 6;
@@ -173,7 +173,7 @@
 				this.text_Contrib = new Array();
 				// create texts
 				
-				this.text_Title = new Text(this.x, this.y, "Eredeti Ã¶tlet:", 14, this.textColorObject.toAlphaString());
+				this.text_Title = new Text(this.x, this.y, "Eredeti ötlet:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("Bomber Run   (Commodore 64)");
 				this.addContributor("");
 				this.addContributor("(c) Les Allan & Angus Ager");
@@ -191,8 +191,9 @@
 				this.text_Contrib = new Array();
 				// create texts
 				
-				this.text_Title = new Text(this.x, this.y, "FelÃºjÃ­tott vÃ¡ltozat:", 14, this.textColorObject.toAlphaString());
+				this.text_Title = new Text(this.x, this.y, "Felújított változat:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("Bomber Troll   (HTML5)");
+				this.addContributor("        facebook.com/BomberTroll");
 				this.addContributor("");
 				this.addContributor("(c) TakRaj / 2013");
 				this.addContributor("        taraj@gmail.com");

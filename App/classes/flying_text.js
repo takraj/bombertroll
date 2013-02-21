@@ -1,4 +1,4 @@
-﻿function FlyingText(obj, str, isRedNotGreen) {
+function FlyingText(obj, str, isRedNotGreen) {
 	this.maxLife = 2000.0 + ((Math.random() - 0.2) * 400.0);		// Life in ms
 	this.life = 0.0;
 	this.txt = new Text(obj.x, obj.y, str, 20, "rgba(255, 255, 255, 0.0)");

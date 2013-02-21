@@ -1,4 +1,4 @@
-﻿function Explosion(obj) {
+function Explosion(obj) {
 	this.maxLife = 1000.0 + ((Math.random() - 0.5) * 350.0);		// Life in ms
 	this.life = 0.0 + (Math.random() * 100.0);
 	this.centerX = (obj.x + (obj.x + obj.width)) / 2.0;
