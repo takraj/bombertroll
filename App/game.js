@@ -64,6 +64,7 @@ function PreloadGame() {
 		jaws.assets.add("images/bomba.png");
 		jaws.assets.add("images/airplane.png");
 		jaws.assets.add("images/cloud-th.png");
+		jaws.assets.add("images/cloud-th-dark.png");
 		
 		// --- Load Sounds ---
 		
@@ -86,14 +87,14 @@ function PreloadGame() {
 		
 		// -------------------
 		
-		backgrounds[backgrounds.length] = new Background("backgrounds/day1.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day2.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day3.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day4.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night1.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night2.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night3.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night4.jpg", false);
+		backgrounds[backgrounds.length] = new Background("backgrounds/day_1.jpg", true);
+		backgrounds[backgrounds.length] = new Background("backgrounds/day_2.jpg", true);
+		backgrounds[backgrounds.length] = new Background("backgrounds/day_3.jpg", true);
+		backgrounds[backgrounds.length] = new Background("backgrounds/day_4.jpg", true);
+		backgrounds[backgrounds.length] = new Background("backgrounds/night_1.jpg", false);
+		backgrounds[backgrounds.length] = new Background("backgrounds/night_2.jpg", false);
+		backgrounds[backgrounds.length] = new Background("backgrounds/night_3.jpg", false);
+		backgrounds[backgrounds.length] = new Background("backgrounds/night_4.jpg", false);
 		
 		jaws.assets.loadAll({onfinish: function() {
 			isLoaded = true;

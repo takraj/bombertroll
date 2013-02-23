@@ -197,7 +197,6 @@ function CreditsWidget(x, y) {
 				this.addContributor("");
 				this.addContributor("(c) TakRaj / 2013");
 				this.addContributor("        taraj@gmail.com");
-				this.addContributor("        facebook.com/takraj");
 				
 				// change state
 				this.textState = 8;

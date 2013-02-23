@@ -207,7 +207,13 @@ function BomberTroll() {
 	
 	/* Called each gametick. Put your gamelogic here. */
 	this.update = function() {
-		if (!this.isActiveScreen || this.isPaused) return;
+		if (!this.isActiveScreen) return;
+		
+		if (this.airplane != null) {
+			this.airplane.stopped = this.isPaused || this.state_nextlevel;
+		}
+		
+		if (this.isPaused) return;
 		
 		var big_diff = jaws.game_loop.tick_duration;
 		var diff = 100;
@@ -391,16 +397,9 @@ function BomberTroll() {
 	/* Called each gametick after update(). Put your drawing here. */
 	this.draw = function() {
 		if (!this.isActiveScreen) return;
-		
-		if (this.airplane != null) {
-			this.airplane.stopped = this.isPaused || this.state_nextlevel;
-		}
 	
 		jaws.clear();
-		
 		this.backgroundSprite.draw();
-		jaws.context.fillStyle = "rgba(183,184,255, 0.5)";
-		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);
 		
 		jaws.context.fillStyle = "rgb(0, 0, 0)";
 		jaws.context.fillRect(0, jaws.context.canvas.height - 20, jaws.context.canvas.width, 20);

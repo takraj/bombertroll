@@ -1,7 +1,7 @@
 function MenuScreen() {
 	this.isActiveScreen = true;
 	this.clouds = new Array();
-	this.versionStr = "v2.1.2";
+	this.versionStr = "v2.1.3";
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
 	this.textVersion = new Text(300, 70, this.versionStr, 12, "rgba(255, 255, 255, 0.5)");
@@ -26,7 +26,7 @@ function MenuScreen() {
 		
 		this.clouds = new Array();
 		for (var i = 0; i < 20; i++) {
-			this.clouds[i] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * jaws.context.canvas.height);
+			this.clouds[i] = new DarkCloud(Math.random() * jaws.context.canvas.width, Math.random() * jaws.context.canvas.height);
 		}
 		
 		$('#game_canvas').unbind('click');
@@ -147,15 +147,12 @@ function MenuScreen() {
 	this.draw = function() {
 		if (!this.isActiveScreen) return;
 		jaws.clear();
-		jaws.context.fillStyle = "rgb(183,184,255)";
+		jaws.context.fillStyle = "rgb(37,37,51)";
 		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);
 		
 		for (var i = 0; i < this.clouds.length; i++) {
 			this.clouds[i].draw();
 		}
-		
-		jaws.context.fillStyle = "rgba(0,0,0, 0.8)";
-		jaws.context.fillRect (0, 0, jaws.context.canvas.width, jaws.context.canvas.height);
 		
 		this.credits.draw();
 		
