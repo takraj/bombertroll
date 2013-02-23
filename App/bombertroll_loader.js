@@ -10,6 +10,17 @@ var enable_engine_log = false;
 // Helper Functions:
 // -----------------
 
+function is_mobile() {
+	var agents = ['android', 'webos', 'iphone', 'ipad', 'blackberry', 'armv7', 'armv6'];
+	for (i in agents) {
+		if (navigator.platform.toLowerCase().indexOf(agents[i]) > -1) {
+			return true;
+		}
+	}
+	return false;
+}
+var isMobileDevice = is_mobile();
+
 function sync_HttpGetRequest(url, success_cb, other_cb) {
 	console_log("Running sync_HttpGetRequest...");
 	var xmlhttp=new XMLHttpRequest();

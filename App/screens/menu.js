@@ -25,7 +25,7 @@ function MenuScreen() {
 		this.credits = new CreditsWidget(115, 300);
 		
 		this.clouds = new Array();
-		for (var i = 0; i < 20; i++) {
+		for (var i = 0; i < (isMobileDevice ? 10 : 20); i++) {
 			this.clouds[i] = new DarkCloud(Math.random() * jaws.context.canvas.width, Math.random() * jaws.context.canvas.height);
 		}
 		
@@ -138,9 +138,11 @@ function MenuScreen() {
 			
 			this.credits.step(diff);
 			
-			this.newGameButton.step(diff);
-			this.helpButton.step(diff);
-			this.highscoresButton.step(diff);
+			if (!isMobileDevice) {
+				this.newGameButton.step(diff);
+				this.helpButton.step(diff);
+				this.highscoresButton.step(diff);
+			}
 		}
 	}
 	

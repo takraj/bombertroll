@@ -76,7 +76,7 @@ function BomberTroll() {
 		} catch (e) {}
 		
 		this.clouds = new Array();
-		for (var i = 0; i < 6; i++) {
+		for (var i = 0; i < (isMobileDevice ? 3 : 6); i++) {
 			this.clouds[i] = new Cloud(Math.random() * jaws.context.canvas.width, Math.random() * 100);
 		}
 		

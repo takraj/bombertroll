@@ -26,8 +26,13 @@ function FlyingText(obj, str, isRedNotGreen) {
 			this.shadowColorObject.alpha = Math.max(0.0, this.colorObject.alpha - 0.5);
 		}
 		
-		this.txt.color = this.colorObject.toAlphaString();
-		this.shadow.color = this.shadowColorObject.toAlphaString();
+		if (isMobileDevice) {
+			this.txt.color = this.colorObject.toString();
+			this.shadow.color = this.shadowColorObject.toString();
+		} else {
+			this.txt.color = this.colorObject.toAlphaString();
+			this.shadow.color = this.shadowColorObject.toAlphaString();
+		}
 	}
 	
 	this.isDead = function() {

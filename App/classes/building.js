@@ -99,7 +99,9 @@ function BaseElement(x, shiftUp, width, color, isDaytime, numberOfFloors, buildi
 	}
 	
 	this.destroy = function(scene) {
-		scene.addExplosion(this);
+		if (!isMobileDevice) {
+			scene.addExplosion(this);
+		}
 		PlaySound("building_collapse");
 		var addpoints = 18;
 		if (isHardMode) {
@@ -197,7 +199,9 @@ function FloorElement(parentElement, generate, numberOfFloors) {
 	}
 	
 	this.destroy = function(scene) {
-		scene.addExplosion(this);
+		if (!isMobileDevice) {
+			scene.addExplosion(this);
+		}
 		var addpoints = 15;
 		if (isHardMode) {
 			addpoints += (this.player.currentLevel-1);
@@ -273,7 +277,9 @@ function RoofElement(parentElement) {
 	}
 	
 	this.destroy = function(scene) {
-		scene.addExplosion(this);
+		if (!isMobileDevice) {
+			scene.addExplosion(this);
+		}
 		var addpoints = 5;
 		if (isHardMode) {
 			addpoints += (this.player.currentLevel-1);
