@@ -950,7 +950,8 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
   }
   
   this.requestFrame = function() {
-	requestAnimFrame(that.loop);
+	//requestAnimFrame(that.loop);
+	that.loop();
   }
   
   /** The core of the game loop. Calculate a mean FPS and call update()/draw() if game loop is not paused */
@@ -970,9 +971,9 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
 		if (that.fps > 100) {
 			if(update_id) clearInterval(update_id);
 			update_id = setInterval(that.requestFrame, (step_delay+=0.001));
-		} else if ((that.fps < (options.fps - 2)) && (step_delay > 0.01)) {
+		} else if ((that.fps < (options.fps - 5)) && (step_delay > 0.001)) {
 			if(update_id) clearInterval(update_id);
-			update_id = setInterval(that.requestFrame, Math.max(0.01,(step_delay-=0.001)));
+			update_id = setInterval(that.requestFrame, Math.max(0.001,(step_delay-=0.001)));
 		}
 	}
     that.last_tick = that.current_tick;
