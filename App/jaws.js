@@ -1,3 +1,14 @@
+/*
+* WARNING: This file has minor modifications compared to the original one.
+*
+* LIST OF MODIFICATIONS:
+* ----------------------
+*    - FPS setup bug fixed in jaws.switchGameState & jaws.GameLoop
+*	 - jaws.GameLoop.requestFrame added
+*	 - Modified FPS limiter in jaws.GameLoop
+*    - console.log & console.warn is replaced by console_log & console_warn due to a bug in IE browsers
+*/
+
 /**
  * @namespace JawsJS core functions. "Field Summary" contains readable properties on the main jaws-object.
  *
@@ -165,6 +176,7 @@ function saveMousePosition(e) {
 jaws.start = function(game_state, options,game_state_setup_options) {
   if(!options) options = {};
   var fps = options.fps || 60
+  console_log("START | Selected FPS: " + fps);
   if (options.loading_screen === undefined)
     options.loading_screen = true
   
@@ -236,7 +248,10 @@ jaws.start = function(game_state, options,game_state_setup_options) {
 *
 */
 jaws.switchGameState = function(game_state, options,game_state_setup_options) {
-  var fps = (options && options.fps) || (jaws.game_loop && jaws.game_loop.fps) || 60
+  var fps = (options && options.fps) || (jaws.game_loop && jaws.game_loop.options && jaws.game_loop.options.fps) || 60
+  console_log("SWITCH | Given FPS 1: " + (options && options.fps));
+  console_log("SWITCH | Given FPS 2: " + (jaws.game_loop && jaws.game_loop.options && jaws.game_loop.options.fps));
+  console_log("SWITCH | Selected FPS: " + fps);
   
   jaws.game_loop && jaws.game_loop.stop()
   jaws.clearKeyCallbacks() // clear out all keyboard callbacks
@@ -896,12 +911,14 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
   this.tick_duration = 0
   this.fps = 0
   this.ticks = 0
+  this.options = options
   
   var update_id
   var paused = false
   var stopped = false
   var that = this
   var mean_value = new MeanValue(20) // let's have a smooth, non-jittery FPS-value
+  var step_delay
 
   /** 
    * returns how game_loop has been active in milliseconds 
@@ -926,15 +943,19 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
       requestAnimFrame(this.loop)
     }
     else {
-      update_id = setInterval(this.loop, step_delay);
+      update_id = setInterval(this.requestFrame, step_delay);
     }
 
     jaws.log("game loop loop", true)
   }
   
+  this.requestFrame = function() {
+	requestAnimFrame(that.loop);
+  }
+  
   /** The core of the game loop. Calculate a mean FPS and call update()/draw() if game loop is not paused */
   this.loop = function() {
-    that.current_tick = (new Date()).getTime();
+	that.current_tick = (new Date()).getTime();
     that.tick_duration = that.current_tick - that.last_tick
     that.fps = mean_value.add(1000/that.tick_duration).get()
 
@@ -944,6 +965,16 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
       that.ticks++
     }
     if(options.fps == 60 && !stopped) requestAnimFrame(that.loop);
+	// FPS limiter:
+	if(options.fps != 60 && !stopped) {
+		if (that.fps > 100) {
+			if(update_id) clearInterval(update_id);
+			update_id = setInterval(that.requestFrame, (step_delay+=0.001));
+		} else if ((that.fps < (options.fps - 2)) && (step_delay > 0.01)) {
+			if(update_id) clearInterval(update_id);
+			update_id = setInterval(that.requestFrame, Math.max(0.01,(step_delay-=0.001)));
+		}
+	}
     that.last_tick = that.current_tick;
   }
   

@@ -182,7 +182,7 @@ var run_ClassicLoader = function() {
 		window.onload = function() {
 			// timeout for Internet Explorer
 			setTimeout(function() {
-				jaws.start(PreloadGame, {fps: 30});
+				jaws.start(PreloadGame, {fps: (isMobileDevice ? 25 : 59)});
 			}, 1000);
 		};
 
