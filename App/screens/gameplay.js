@@ -421,14 +421,14 @@ function BomberTroll() {
 		
 		// kirajzolja a robbanásokat
 		for (var i = 0; i < this.explosions.length; i++) {
-			if (this.explosions[i] != null) {
+			if ((this.explosions[i] != null) && !this.explosions[i].isDead()) {
 				this.explosions[i].draw();
 			}
 		}
 		
 		// kirajzolja a repülõ pontokat
 		for (var i = 0; i < this.flyingTexts.length; i++) {
-			if (this.flyingTexts[i] != null) {
+			if ((this.flyingTexts[i] != null) && !this.flyingTexts[i].isDead()) {
 				this.flyingTexts[i].draw();
 			}
 		}
