@@ -237,28 +237,28 @@ function PlaySound(html_id) {
 		StopSound(html_id);
 		document.getElementById(html_id).play();
 		document.getElementById(html_id).muted = !soundsEnabled;
-		console_log("Playing sound " + document.getElementById(html_id).currentSrc);
+		if (debug_audio) console_log("Playing sound " + document.getElementById(html_id).currentSrc);
 	}
 }
 
 function MuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = true;
-		console_log("Sound " + document.getElementById(html_id).currentSrc + " is muted");
+		if (debug_audio) console_log("Sound " + document.getElementById(html_id).currentSrc + " is muted");
 	}
 }
 
 function UnmuteSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).muted = false;
-		console_log("Sound " + document.getElementById(html_id).currentSrc + " is unmuted");
+		if (debug_audio) console_log("Sound " + document.getElementById(html_id).currentSrc + " is unmuted");
 	}
 }
 
 function StopSound(html_id) {
 	if (soundsLoaded && (!! document.getElementById(html_id))) {
 		document.getElementById(html_id).pause();
-		console_log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
+		if (debug_audio) console_log("Sound " + document.getElementById(html_id).currentSrc + " is stopped");
 	}
 }
 

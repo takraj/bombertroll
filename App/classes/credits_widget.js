@@ -103,8 +103,8 @@ function CreditsWidget(x, y) {
 				
 				this.text_Title = new Text(this.x, this.y, "Rajzok:", 14, this.textColorObject.toAlphaString());
 				this.addContributor("Takács Rajmund   (TakRaj)");
+				this.addContributor("Tim Smith (animationlibrary.com)");
 				this.addContributor("rg1024 (openclipart.org)");
-				this.addContributor("animationbuddy.com");
 				this.addContributor("philipp (clker.com)");
 				
 				// change state

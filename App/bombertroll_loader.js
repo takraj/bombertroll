@@ -6,6 +6,9 @@
 // --------------
 
 var enable_engine_log = false;
+var debug_audio = false;
+var debug_fps_console = false;
+var debug_fps_osd = false;
 
 // Helper Functions:
 // -----------------
@@ -219,6 +222,10 @@ var run_FastLoader = function(code) {
 
 // Init Script
 // -----------
+
+if (debug_fps_console) {
+	setInterval(function() {try {console_log("FPS: " + jaws.game_loop.fps); } catch (e){} }, 2000);
+}
 
 preloadInfo("Letöltés");
 

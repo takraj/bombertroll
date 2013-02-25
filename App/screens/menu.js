@@ -1,11 +1,13 @@
 function MenuScreen() {
 	this.isActiveScreen = true;
 	this.clouds = new Array();
-	this.versionStr = "v2.1.3";
+	this.versionStr = "v2.1.4";
 	
 	this.textTitle = new Text(100, 70, "Bomber Troll", 32, "rgb(255, 255, 255)");
 	this.textVersion = new Text(300, 70, this.versionStr, 12, "rgba(255, 255, 255, 0.5)");
 	this.textAuthor = new Text(150, 90, "by TakRaj", 16, "rgb(255, 255, 255)");
+	
+	this.textFPS = new Text(50, 190, "FPS: 0", 16, "rgb(255, 255, 255)");
 	
 	this.newGameButton = new AnimatedButton(500, 200, 250, 40, "Új játék");
 	this.helpButton = new AnimatedButton(500, 260, 250, 40, "Játékszabályok");
@@ -167,5 +169,12 @@ function MenuScreen() {
 		this.textTitle.draw();
 		this.textVersion.draw();
 		this.textAuthor.draw();
+		
+		if (debug_fps_osd) {
+			try {
+				this.textFPS.str = "FPS: " + jaws.game_loop.fps;
+				this.textFPS.draw();
+			} catch (e) {}
+		}
 	}
 }

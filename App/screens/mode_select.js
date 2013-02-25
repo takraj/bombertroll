@@ -7,6 +7,8 @@ function ModeSelectScreen() {
 	this.textHardModeHint4 = new Text(130, 198, "érnek. Nehéz módban a bónusz a 2. szinttõl kezdve jár akkor, ha a bomba nagyon magasról lett indítva.", 12, "rgb(255, 255, 255)");
 	this.textHardModeHint5 = new Text(130, 214, "A bónusz szorzó értéke ilyenkor az aktuális szint száma.", 12, "rgb(255, 255, 255)");
 	
+	this.textFPS = new Text(50, 190, "FPS: 0", 16, "rgb(255, 255, 255)");
+	
 	this.easyButton = new SolidButton(100, 320, 190, 40, "Könnyût");
 	this.hardButton = new SolidButton(300, 320, 190, 40, "Nehezet");
 	this.cancelButton = new SolidButton(500, 320, 190, 40, "Egyiket sem");
@@ -107,5 +109,12 @@ function ModeSelectScreen() {
 		this.easyButton.draw();
 		this.hardButton.draw();
 		this.cancelButton.draw();
+		
+		if (debug_fps_osd) {
+			try {
+				this.textFPS.str = "FPS: " + jaws.game_loop.fps;
+				this.textFPS.draw();
+			} catch (e) {}
+		}
 	}
 }

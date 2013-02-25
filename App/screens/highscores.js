@@ -6,6 +6,8 @@ function HighScoresScreen() {
 	this.textNegativeRecordItem = new Text(120, 420, "-- még nincs --", 14, "rgb(255, 255, 0)");
 	this.textHSList = new Array();
 
+	this.textFPS = new Text(50, 190, "FPS: 0", 16, "rgb(255, 255, 255)");
+	
 	this.setup = function() {
 		console_log("HighScoresScreen.setup()");
 		var _BomberTrollInstance = this;
@@ -141,5 +143,12 @@ function HighScoresScreen() {
 		
 		this.textNegativeRecord.draw();
 		this.textNegativeRecordItem.draw();
+		
+		if (debug_fps_osd) {
+			try {
+				this.textFPS.str = "FPS: " + jaws.game_loop.fps;
+				this.textFPS.draw();
+			} catch (e) {}
+		}
 	}
 }

@@ -4,7 +4,6 @@
 * LIST OF MODIFICATIONS:
 * ----------------------
 *    - FPS setup bug fixed in jaws.switchGameState & jaws.GameLoop
-*	 - jaws.GameLoop.requestFrame added
 *	 - Modified FPS limiter in jaws.GameLoop
 *    - console.log & console.warn is replaced by console_log & console_warn due to a bug in IE browsers
 */
@@ -912,13 +911,13 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
   this.fps = 0
   this.ticks = 0
   this.options = options
-  
-  var update_id
+
   var paused = false
   var stopped = false
   var that = this
   var mean_value = new MeanValue(20) // let's have a smooth, non-jittery FPS-value
   var step_delay
+  var min_delay
 
   /** 
    * returns how game_loop has been active in milliseconds 
@@ -930,7 +929,7 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
 
   /** Start the game loop by calling setup() once and then loop update()/draw() forever with given FPS */
   this.start = function() {
-    jaws.log("game loop start", true)
+    jaws.log("game loop start", true);
   
     this.first_tick = (new Date()).getTime();
     this.current_tick = (new Date()).getTime();
@@ -938,26 +937,23 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
 
     if(game_object.setup) { game_object.setup(game_state_setup_options) }
     step_delay = 1000 / options.fps;
-   
-    if(options.fps == 60) {
-      requestAnimFrame(this.loop)
-    }
-    else {
-      update_id = setInterval(this.requestFrame, step_delay);
-    }
+	min_delay = step_delay * 0.7;
+    requestAnimFrame(this.loop);
 
     jaws.log("game loop loop", true)
-  }
-  
-  this.requestFrame = function() {
-	//requestAnimFrame(that.loop);
-	that.loop();
   }
   
   /** The core of the game loop. Calculate a mean FPS and call update()/draw() if game loop is not paused */
   this.loop = function() {
 	that.current_tick = (new Date()).getTime();
-    that.tick_duration = that.current_tick - that.last_tick
+    that.tick_duration = that.current_tick - that.last_tick;
+	
+	// FPS limiter:
+	if (that.tick_duration < min_delay) {
+		requestAnimFrame(that.loop);
+		return;
+	}
+	
     that.fps = mean_value.add(1000/that.tick_duration).get()
 
     if(!stopped && !paused) {
@@ -965,18 +961,8 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
       if(game_object.draw)   { game_object.draw() }
       that.ticks++
     }
-    if(options.fps == 60 && !stopped) requestAnimFrame(that.loop);
-	// FPS limiter:
-	if(options.fps != 60 && !stopped) {
-		if (that.fps > 100) {
-			if(update_id) clearInterval(update_id);
-			update_id = setInterval(that.requestFrame, (step_delay+=0.001));
-		} else if ((that.fps < (options.fps - 5)) && (step_delay > 0.001)) {
-			if(update_id) clearInterval(update_id);
-			update_id = setInterval(that.requestFrame, Math.max(0.001,(step_delay-=0.001)));
-		}
-	}
     that.last_tick = that.current_tick;
+    if(!stopped) requestAnimFrame(that.loop);
   }
   
   /** Pause the game loop. loop() will still get called but not update() / draw() */
@@ -986,8 +972,7 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
   this.unpause = function() { paused = false }
 
   /** Stop the game loop */
-  this.stop = function() { 
-    if(update_id) clearInterval(update_id); 
+  this.stop = function() {
     stopped = true;
   }
 }

@@ -24,6 +24,8 @@ function HelpScreen() {
 	this.rules[this.rules.length] = "M vagy kattintás az ikonon        : némítás be / ki";
 	this.rules[this.rules.length] = "ESC vagy kattintás az ikonon      : vissza a fõmenübe";
 	
+	this.textFPS = new Text(50, 190, "FPS: 0", 16, "rgb(255, 255, 255)");
+	
 	for (var i = 0; i < this.rules.length; i++) {
 		this.rules[i] = new Text(150, 110 + (i*16), this.rules[i], 12, "rgb(255, 255, 255)");
 	}
@@ -59,5 +61,12 @@ function HelpScreen() {
 		}
 		
 		this.textClickToContinue.draw();
+		
+		if (debug_fps_osd) {
+			try {
+				this.textFPS.str = "FPS: " + jaws.game_loop.fps;
+				this.textFPS.draw();
+			} catch (e) {}
+		}
 	}
 }

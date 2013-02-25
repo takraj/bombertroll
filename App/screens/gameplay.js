@@ -33,6 +33,8 @@ function BomberTroll() {
 	
 	this.hardModeHint = new Text(jaws.context.canvas.width / 2.0 - 30, jaws.context.canvas.height - 5, "-- nehéz mód --", 12, "rgba(255, 255, 255, 0.5)");
 	
+	this.textFPS = new Text(50, 190, "FPS: 0", 16, "rgb(255, 255, 255)");
+	
 	// other
 	
 	this.clouds = new Array();
@@ -84,6 +86,11 @@ function BomberTroll() {
 		this.buildings = new Array();
 		this.explosions = new Array();
 		this.flyingTexts = new Array();
+		
+		for (var i = 0; i < 20; i++) {
+			this.explosions[i] = null;
+			this.flyingTexts[i] = null;
+		}
 		
 		for (var i = 0; i < 16; i++) {
 			// az épület max magassága 16 egység, max szórása lefelé 6 egység
@@ -328,8 +335,6 @@ function BomberTroll() {
 				if (this.explosions[i] != null) {
 					if (!this.explosions[i].isDead()) {
 						this.explosions[i].step(diff);
-					} else {
-						this.explosions[i] = null;
 					}
 				}
 			}
@@ -339,8 +344,6 @@ function BomberTroll() {
 				if (this.flyingTexts[i] != null) {
 					if (!this.flyingTexts[i].isDead()) {
 						this.flyingTexts[i].step(diff);
-					} else {
-						this.flyingTexts[i] = null;
 					}
 				}
 			}
@@ -484,6 +487,13 @@ function BomberTroll() {
 			this.scoreText.drawWithColor("rgb(200, 200, 200)");
 			this.levelText.drawWithColor("rgb(200, 200, 200)");
 		}
+		
+		if (debug_fps_osd) {
+			try {
+				this.textFPS.str = "FPS: " + jaws.game_loop.fps;
+				this.textFPS.draw();
+			} catch (e) {}
+		}
 	}
 	
 	this.endgame = function() {
@@ -518,6 +528,9 @@ function BomberTroll() {
 			if (this.explosions[i] == null) {
 				this.explosions[i] = new Explosion(obj);
 				return;
+			} else if (this.explosions[i].isDead()) {
+				this.explosions[i].init(obj);
+				return;
 			}
 		}
 		this.explosions[this.explosions.length] = new Explosion(obj);
@@ -528,6 +541,9 @@ function BomberTroll() {
 		for (i=0; i<this.flyingTexts.length; i++) {
 			if (this.flyingTexts[i] == null) {
 				this.flyingTexts[i] = new FlyingText(obj, str, isRedNotGreen);
+				return;
+			} else if (this.flyingTexts[i].isDead()) {
+				this.flyingTexts[i].init(obj, str, isRedNotGreen);
 				return;
 			}
 		}
