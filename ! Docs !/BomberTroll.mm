@@ -114,11 +114,17 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node CREATED="1348929094614" ID="ID_924562645" MODIFIED="1348929098757" TEXT="LocalStorage">
+<node CREATED="1348929094614" ID="ID_924562645" MODIFIED="1361872469135" TEXT="LocalStorage">
+<icon BUILTIN="button_ok"/>
 <node CREATED="1348929102251" ID="ID_419458588" MODIFIED="1361475737930" TEXT="High Scores t&#xe1;bla">
 <icon BUILTIN="button_ok"/>
 </node>
-<node CREATED="1348929112865" ID="ID_124674821" MODIFIED="1348929116900" TEXT="J&#xe1;t&#xe9;kos neve"/>
+<node CREATED="1348929112865" ID="ID_124674821" MODIFIED="1361872463834" TEXT="J&#xe1;t&#xe9;kos neve">
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1361872472402" ID="ID_1060261142" MODIFIED="1361872481335" TEXT="N&#xe9;m&#xed;t&#xe1;s &#xe1;llapota">
+<icon BUILTIN="button_ok"/>
+</node>
 </node>
 <node CREATED="1348929133625" ID="ID_1848994943" MODIFIED="1348929162665" TEXT="Esem&#xe9;nykezel&#x151;k">
 <node CREATED="1348929163305" ID="ID_1064236136" MODIFIED="1348929171865" TEXT="Billenty&#x171;zet">
@@ -203,8 +209,7 @@
       A bomba nem semmis&#252;l meg,<br />hanem letarolja az &#250;tj&#225;ba es&#337; &#233;p&#252;leteket.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -219,8 +224,7 @@
       1 vagy 2 &#233;p&#252;letet teljesen letarol<br />a rep&#252;l&#337;g&#233;ppel f&#252;gg&#337;legesen egy vonalban.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -251,8 +255,7 @@
       akkor az el&#233;rhet&#337;v&#233; v&#225;lik v&#233;gtelen m&#243;dban is.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -302,8 +305,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -344,8 +346,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -383,8 +384,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>
@@ -411,8 +411,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <cloud/>
 </node>
 </node>

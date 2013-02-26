@@ -14,7 +14,7 @@ function HighScoresScreen() {
 		var asks = 0;
 		
 		if (player.currentScore > player.getLowestHighscore().score) {
-			answer = window.prompt("Mi a neved?", "");
+			answer = window.prompt("Mi a neved?", player.getPlayerName());
 			
 			if (answer != null) {
 				asks++;
@@ -25,12 +25,13 @@ function HighScoresScreen() {
 						continue;
 					}
 					if (answer.length > 30) {
-						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
+						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", answer);
 					} else {
 						answer = window.prompt("Biztos van...\nMi a neved?", "");
 					}
 				}
 				
+				player.setPlayerName(answer);
 				player.addHighScore(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
 				
 				try {
@@ -48,7 +49,7 @@ function HighScoresScreen() {
 				} catch (e) {}
 			}
 		} else if (player.currentScore < player.getNegativeRecord().score) {
-			answer = window.prompt("NEGATÍV REKORD!! Mi a neved?", "");
+			answer = window.prompt("NEGATÍV REKORD!! Mi a neved?", player.getPlayerName());
 			
 			if (answer != null) {
 				asks++;
@@ -59,12 +60,13 @@ function HighScoresScreen() {
 						continue;
 					}
 					if (answer.length > 30) {
-						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", "");
+						answer = window.prompt("Túl hosszú...\nMi a (rövidebb) neved? MAX 30 karakter legyen!", answer);
 					} else {
 						answer = window.prompt("Pedig híres is lehetnél...\nMi a neved?", "");
 					}
 				}
 				
+				player.setPlayerName(answer);
 				player.setNegativeRecord(new HighScoreItem(answer, player.currentScore, player.currentLevel, isHardMode));
 				
 				try {

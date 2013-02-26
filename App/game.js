@@ -18,10 +18,10 @@ var ls_prefix = ns_prefix + "lsData.";
 var ls_highscores = ls_prefix + "highscores";
 var ls_neg_record = ls_prefix + "negativeRecord";
 var ls_mutestate = ls_prefix + "muteState";
+var ls_playername = ls_prefix + "playerName";
 
 // variables
 var backgrounds = new Array();
-var isLoaded = false;
 var soundsLoaded = false;
 var soundsEnabled = true;
 var isHardMode = false;
@@ -51,69 +51,44 @@ function getStorage(key) {
 	}
 }
 
-/*
-*	Game Code
-*/
-
-function PreloadGame() {
-	this.isActiveScreen = true;
+function setupAssets() {
+	jaws.assets.add("images/bomba.png");
+	jaws.assets.add("images/airplane.png");
+	jaws.assets.add("images/cloud-th.png");
+	jaws.assets.add("images/cloud-th-dark.png");
 	
-	this.setup = function() {
-		console_log("PreloadGame.setup()");
-		
-		jaws.assets.add("images/bomba.png");
-		jaws.assets.add("images/airplane.png");
-		jaws.assets.add("images/cloud-th.png");
-		jaws.assets.add("images/cloud-th-dark.png");
-		
-		// --- Load Sounds ---
-		
-		console_log("Loading sounds...");
-		soundsLoaded = true;		// this will become false if any of the sounds below cannot be loaded
-		InitSound("menu_music");
-		InitSound("ingame_music");
-		InitSound("landing_music");
-		InitSound("crashed_music");
-		
-		InitSound("bomb_explosion");
-		InitSound("bomb_falling");
-		InitSound("building_collapse");
-		InitSound("plane_crash");
-		InitSound("plane_explosion");
-		
-		$("audio").bind("pause", function() {
-			this.currentTime = 0;
-		});
-		
-		// -------------------
-		
-		backgrounds[backgrounds.length] = new Background("backgrounds/day_1.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day_2.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day_3.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/day_4.jpg", true);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night_1.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night_2.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night_3.jpg", false);
-		backgrounds[backgrounds.length] = new Background("backgrounds/night_4.jpg", false);
-		
-		jaws.assets.loadAll({onfinish: function() {
-			isLoaded = true;
-		}});
-	}
+	// --- Load Sounds ---
 	
-	this.update = function() {
-		if (!this.isActiveScreen) return;
-		if (isLoaded && this.isActiveScreen) {
-			this.isActiveScreen = false;
-			player = new Player();
-			LoadMuteState();
-			jaws.switchGameState(MenuScreen);
-		}
-	}
+	console_log("Loading sounds...");
+	soundsLoaded = true;		// this will become false if any of the sounds below cannot be loaded
+	InitSound("menu_music");
+	InitSound("ingame_music");
+	InitSound("landing_music");
+	InitSound("crashed_music");
 	
-	this.draw = function() {
-		if (!this.isActiveScreen) return;
-	}
+	InitSound("bomb_explosion");
+	InitSound("bomb_falling");
+	InitSound("building_collapse");
+	InitSound("plane_crash");
+	InitSound("plane_explosion");
+	
+	$("audio").bind("pause", function() {
+		this.currentTime = 0;
+	});
+	
+	// -------------------
+	
+	backgrounds[backgrounds.length] = new Background("backgrounds/day_1.jpg", true);
+	backgrounds[backgrounds.length] = new Background("backgrounds/day_2.jpg", true);
+	backgrounds[backgrounds.length] = new Background("backgrounds/day_3.jpg", true);
+	backgrounds[backgrounds.length] = new Background("backgrounds/day_4.jpg", true);
+	backgrounds[backgrounds.length] = new Background("backgrounds/night_1.jpg", false);
+	backgrounds[backgrounds.length] = new Background("backgrounds/night_2.jpg", false);
+	backgrounds[backgrounds.length] = new Background("backgrounds/night_3.jpg", false);
+	backgrounds[backgrounds.length] = new Background("backgrounds/night_4.jpg", false);
+	
+	player = new Player();
+	LoadMuteState();
 }
 
 function Player() {
@@ -123,6 +98,7 @@ function Player() {
 	this.negativeRecord = new HighScoreItem("-- Mr. Maﬂ --", -3000, 1, false);
 	this.scoretimer = 0;
 	this.multiplier = 1;
+	this.playername = "";
 	
 	for (var i = 0; i < 10; i++) {
 		this.highscores[i] = new HighScoreItem("-- Bomber Troll --", 3000 * (10-i), 1, false);
@@ -138,6 +114,21 @@ function Player() {
 		setStorage(ls_neg_record, JSON.stringify(this.negativeRecord));
 	} else {
 		this.negativeRecord = JSON.parse(getStorage(ls_neg_record));
+	}
+	
+	if (getStorage(ls_playername) == null) {
+		setStorage(ls_playername, JSON.stringify(this.playername));
+	} else {
+		this.playername = JSON.parse(getStorage(ls_playername));
+	}
+	
+	this.getPlayerName = function() {
+		return this.playername;
+	}
+	
+	this.setPlayerName = function(name) {
+		this.playername = name;
+		setStorage(ls_playername, JSON.stringify(this.playername));
 	}
 	
 	this.getNegativeRecord = function() {

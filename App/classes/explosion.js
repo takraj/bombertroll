@@ -8,6 +8,8 @@ function Explosion(obj) {
 		this.centerY = (obj.y + (obj.y + obj.height)) / 2.0;
 		this.minRadius = 10;
 		this.maxRadius = 100 + Math.round(Math.random() * 20);
+		
+		return this;
 	}
 	
 	// call init
@@ -19,6 +21,10 @@ function Explosion(obj) {
 	
 	this.isDead = function() {
 		return (this.life >= this.maxLife);
+	}
+	
+	this.kill = function() {
+		this.life = this.maxLife;
 	}
 	
 	this.draw = function() {

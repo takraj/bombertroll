@@ -87,9 +87,10 @@ function BomberTroll() {
 		this.explosions = new Array();
 		this.flyingTexts = new Array();
 		
+		// Predefine some dead effects for smoother gameplay
 		for (var i = 0; i < 20; i++) {
-			this.explosions[i] = null;
-			this.flyingTexts[i] = null;
+			this.explosions[i] = (new Explosion({x:0,y:0})).kill();
+			this.flyingTexts[i] = (new FlyingText({x:0,y:0}, "", false)).kill();
 		}
 		
 		for (var i = 0; i < 16; i++) {

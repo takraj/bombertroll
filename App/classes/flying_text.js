@@ -17,6 +17,8 @@ function FlyingText(obj, str, isRedNotGreen) {
 		
 		this.shadowColorObject = new ColorString(0, 0, 0);
 		this.shadowColorObject.alpha = 0.5;
+		
+		return this;
 	}
 	
 	// call init
@@ -44,6 +46,10 @@ function FlyingText(obj, str, isRedNotGreen) {
 	
 	this.isDead = function() {
 		return (this.life >= this.maxLife);
+	}
+	
+	this.kill = function() {
+		this.life = this.maxLife;
 	}
 	
 	this.draw = function() {

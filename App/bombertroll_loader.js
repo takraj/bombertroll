@@ -9,6 +9,7 @@ var enable_engine_log = false;
 var debug_audio = false;
 var debug_fps_console = false;
 var debug_fps_osd = false;
+var fastloader_file = "bombertroll_loader.php";
 
 // Helper Functions:
 // -----------------
@@ -185,7 +186,8 @@ var run_ClassicLoader = function() {
 		window.onload = function() {
 			// timeout for Internet Explorer
 			setTimeout(function() {
-				jaws.start(PreloadGame, {fps: (isMobileDevice ? 25 : 59)});
+				setupAssets();
+				jaws.start(MenuScreen, {fps: (isMobileDevice ? 25 : 59)});
 			}, 1000);
 		};
 
@@ -234,9 +236,10 @@ if (enable_engine_log) {
 }
 
 try {
-	var url = "bombertroll_loader.php";
 	// Try twice
-	sync_HttpGetRequest(url, run_FastLoader, function() { sync_HttpGetRequest(url, run_FastLoader, run_ClassicLoader) });
+	sync_HttpGetRequest(fastloader_file, run_FastLoader, function() {
+		sync_HttpGetRequest(fastloader_file, run_FastLoader, run_ClassicLoader)
+	});
 } catch (e) {
 	console_warn("Server Error: Failed to download scripts.");
 	run_ClassicLoader();
