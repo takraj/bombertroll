@@ -359,7 +359,7 @@ function BomberTroll() {
 				noExplosionsRunning = true;
 				
 				for (var i = 0; i < this.explosions.length; i++) {
-					if (this.explosions[i] != null) {
+					if ((this.explosions[i] != null) && !this.explosions[i].isDead()) {
 						noExplosionsRunning = false;
 					}
 				}
