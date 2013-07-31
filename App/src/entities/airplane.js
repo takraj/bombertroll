@@ -14,9 +14,9 @@ function Airplane(x, y, velocity, player, scene) {
 	this.stopped = false;
 	this.bomb = null;
 	
-	this.spritesheet = new jaws.SpriteSheet({image: "images/airplane.png", frame_size: [this.pictureW,this.pictureH] });
+	this.spritesheet = new jaws.SpriteSheet({image: "art/images/airplane.png", frame_size: [this.pictureW,this.pictureH] });
 	this.anim = new jaws.Animation({frames: this.spritesheet.frames, frame_duration: 80});
-	this.sprite = new jaws.Sprite({image: "images/airplane.png", x: 0, y: 0, scale: 1, anchor: "top_left"});
+	this.sprite = new jaws.Sprite({image: "art/images/airplane.png", x: 0, y: 0, scale: 1, anchor: "top_left"});
 	this.sprite.flip();
 	
 	this.dropBomb = function() {
@@ -109,7 +109,7 @@ function Airplane(x, y, velocity, player, scene) {
 }
 
 function Bomb(x, y, airplane) {
-	this.sprite = new jaws.Sprite({image: "images/bomba.png", x: 0, y: 0, scale: 1, anchor: "center"});
+	this.sprite = new jaws.Sprite({image: "art/images/bomba.png", x: 0, y: 0, scale: 1, anchor: "center"});
 	this.x = x;
 	this.y = y;
 	this.go_right = airplane.go_right;

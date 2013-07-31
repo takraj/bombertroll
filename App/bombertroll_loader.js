@@ -56,11 +56,11 @@ function include_audio(name, isMusic, loop) {
 	
 	var subtag1 = document.createElement("source");
 	subtag1.setAttribute("type", "audio/mpeg");
-	subtag1.setAttribute("src", (isMusic ? "music/" : "sfx/") + name + ".mp3");
+	subtag1.setAttribute("src", (isMusic ? "art/music/" : "art/sfx/") + name + ".mp3");
 	
 	var subtag2 = document.createElement("source");
 	subtag2.setAttribute("type", "audio/ogg");
-	subtag2.setAttribute("src", (isMusic ? "music/" : "sfx/") + name + ".ogg");
+	subtag2.setAttribute("src", (isMusic ? "art/music/" : "art/sfx/") + name + ".ogg");
 	
 	try {
 		try {
@@ -154,34 +154,34 @@ var run_ClassicLoader = function() {
 			include_sfx("plane_crash");
 			include_sfx("plane_explosion");
 		preloadInfo("20%");
-			include_js("jquery");
-			include_js("jaws");
+			include_js("lib/jquery");
+			include_js("lib/jaws");
 		preloadInfo("30%");
-			include_js("classes/colorstring");
-			include_js("classes/text");
-			include_js("classes/flying_text");
+			include_js("src/classes/colorstring");
+			include_js("src/classes/text");
+			include_js("src/entities/flying_text");
 		preloadInfo("40%");
-			include_js("classes/airplane");
-			include_js("classes/building");
+			include_js("src/entities/airplane");
+			include_js("src/entities/building");
 		preloadInfo("50%");
-			include_js("classes/explosion");
-			include_js("classes/cloud");
+			include_js("src/entities/explosion");
+			include_js("src/entities/cloud");
 		preloadInfo("60%");
-			include_js("classes/solid_button");
-			include_js("classes/anim_button");
-			include_js("classes/pause_button");
-			include_js("classes/back_button");
-			include_js("classes/mute_button");
+			include_js("src/widgets/solid_button");
+			include_js("src/widgets/anim_button");
+			include_js("src/widgets/pause_button");
+			include_js("src/widgets/back_button");
+			include_js("src/widgets/mute_button");
 		preloadInfo("70%");
-			include_js("classes/credits_widget");
-			include_js("screens/menu");
-			include_js("screens/gameplay");
+			include_js("src/widgets/credits_widget");
+			include_js("src/screens/menu");
+			include_js("src/screens/gameplay");
 		preloadInfo("80%");
-			include_js("screens/help");
-			include_js("screens/highscores");
-			include_js("screens/mode_select");
+			include_js("src/screens/help");
+			include_js("src/screens/highscores");
+			include_js("src/screens/mode_select");
 		preloadInfo("90%");
-			include_js("game");
+			include_js("src/core/game");
 		preloadInfo("100%");
 		window.onload = function() {
 			// timeout for Internet Explorer

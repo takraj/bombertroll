@@ -52,10 +52,10 @@ function getStorage(key) {
 }
 
 function setupAssets() {
-	jaws.assets.add("images/bomba.png");
-	jaws.assets.add("images/airplane.png");
-	jaws.assets.add("images/cloud-th.png");
-	jaws.assets.add("images/cloud-th-dark.png");
+	jaws.assets.add("art/images/bomba.png");
+	jaws.assets.add("art/images/airplane.png");
+	jaws.assets.add("art/images/cloud-th.png");
+	jaws.assets.add("art/images/cloud-th-dark.png");
 	
 	// --- Load Sounds ---
 	
@@ -78,14 +78,14 @@ function setupAssets() {
 	
 	// -------------------
 	
-	backgrounds[backgrounds.length] = new Background("backgrounds/day_1.jpg", true);
-	backgrounds[backgrounds.length] = new Background("backgrounds/day_2.jpg", true);
-	backgrounds[backgrounds.length] = new Background("backgrounds/day_3.jpg", true);
-	backgrounds[backgrounds.length] = new Background("backgrounds/day_4.jpg", true);
-	backgrounds[backgrounds.length] = new Background("backgrounds/night_1.jpg", false);
-	backgrounds[backgrounds.length] = new Background("backgrounds/night_2.jpg", false);
-	backgrounds[backgrounds.length] = new Background("backgrounds/night_3.jpg", false);
-	backgrounds[backgrounds.length] = new Background("backgrounds/night_4.jpg", false);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/day_1.jpg", true);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/day_2.jpg", true);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/day_3.jpg", true);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/day_4.jpg", true);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/night_1.jpg", false);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/night_2.jpg", false);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/night_3.jpg", false);
+	backgrounds[backgrounds.length] = new Background("art/backgrounds/night_4.jpg", false);
 	
 	player = new Player();
 	LoadMuteState();
