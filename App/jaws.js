@@ -3,11 +3,10 @@
 *
 * LIST OF MODIFICATIONS:
 * ----------------------
-*    - FPS setup bug fixed in jaws.switchGameState & jaws.GameLoop
-*	 - Modified FPS limiter in jaws.GameLoop
 *    - console.log & console.warn is replaced by console_log & console_warn due to a bug in IE browsers
 */
 
+/* Built at 2013-06-23 15:01:41 +0200 */
 /**
  * @namespace JawsJS core functions. "Field Summary" contains readable properties on the main jaws-object.
  *
@@ -79,6 +78,7 @@ jaws.log = function(msg, append) {
   }
 }
 
+
 /**
  * @example
  * Initializes / creates:
@@ -127,7 +127,9 @@ jaws.init = function(options) {
     document.body.appendChild(jaws.canvas)
   }
 
-  
+  /* Let's scale sprites retro-style by default */
+  if(jaws.context)  jaws.useCrispScaling();
+ 
   jaws.width = jaws.canvas ? jaws.canvas.width : jaws.dom.offsetWidth
   jaws.height = jaws.canvas ? jaws.canvas.height  : jaws.dom.offsetHeight
 
@@ -136,13 +138,32 @@ jaws.init = function(options) {
   window.addEventListener("mousemove", saveMousePosition)
 }
 /**
+ * Use 'retro' crisp scaling when drawing sprites through the canvas API, this is the default
+ */
+jaws.useCrispScaling = function() {
+  jaws.context.imageSmoothingEnabled = false
+  jaws.context.webkitImageSmoothingEnabled = false
+  jaws.context.mozImageSmoothingEnabled = false 
+}
+
+/**
+ * Use smooth antialiased scaling when drawing sprites through the canvas API
+ */
+jaws.useSmoothScaling = function() {
+  jaws.context.imageSmoothingEnabled = true
+  jaws.context.webkitImageSmoothingEnabled = true
+  jaws.context.mozImageSmoothingEnabled = true
+}
+
+
+/**
  * @private
  * Keeps updated mouse coordinates in jaws.mouse_x / jaws.mouse_y
  * This is called each time event "mousemove" triggers.
  */
 function saveMousePosition(e) {
   jaws.mouse_x = (e.pageX || e.clientX)
-  jaws.mouse_y = (e.pageY || e.clientX)
+  jaws.mouse_y = (e.pageY || e.clientY)
   
   var game_area = jaws.canvas ? jaws.canvas : jaws.dom
   jaws.mouse_x -= game_area.offsetLeft
@@ -175,36 +196,20 @@ function saveMousePosition(e) {
 jaws.start = function(game_state, options,game_state_setup_options) {
   if(!options) options = {};
   var fps = options.fps || 60
-  console_log("START | Selected FPS: " + fps);
-  if (options.loading_screen === undefined)
-    options.loading_screen = true
-  
-  if(!options.width) options.width = 500; 
-  if(!options.height) options.height = 300;
+  if(options.loading_screen === undefined)  options.loading_screen = true;
+  if(!options.width)                        options.width = 500; 
+  if(!options.height)                       options.height = 300;
   jaws.init(options)
 
-  displayProgress(0)
+  if(options.loading_screen) { jaws.assets.displayProgress(0) }
+
   jaws.log("setupInput()", true)
   jaws.setupInput()
 
-  function displayProgress(percent_done) {
-    if(jaws.context && options.loading_screen) {
-      jaws.context.save()
-      jaws.context.fillStyle  = "black"
-      jaws.context.fillRect(0, 0, jaws.width, jaws.height);
-      jaws.context.textAlign  = "center"
-      jaws.context.fillStyle  = "white"
-      jaws.context.font       = "15px terminal";
-      jaws.context.fillText("Loading", jaws.width/2, jaws.height/2-30);
-      jaws.context.font       = "bold 30px terminal";
-      jaws.context.fillText(percent_done + "%", jaws.width/2, jaws.height/2);
-      jaws.context.restore()
-    }
-  }
   /* Callback for when one single assets has been loaded */
   function assetLoaded(src, percent_done) {
-    jaws.log( percent_done + "%: " + src, true)    
-    displayProgress(percent_done)
+    jaws.log(percent_done + "%: " + src, true)
+    if(options.loading_screen) { jaws.assets.displayProgress(percent_done) }
   }
 
   /* Callback for when an asset can't be loaded*/
@@ -215,7 +220,7 @@ jaws.start = function(game_state, options,game_state_setup_options) {
   /* Callback for when all assets are loaded */
   function assetsLoaded() {
     jaws.log("all assets loaded", true)
-    jaws.switchGameState(game_state||window, {fps: fps},game_state_setup_options)
+    jaws.switchGameState(game_state||window, {fps: fps}, game_state_setup_options)
   }
 
   jaws.log("assets.loadAll()", true)
@@ -247,10 +252,7 @@ jaws.start = function(game_state, options,game_state_setup_options) {
 *
 */
 jaws.switchGameState = function(game_state, options,game_state_setup_options) {
-  var fps = (options && options.fps) || (jaws.game_loop && jaws.game_loop.options && jaws.game_loop.options.fps) || 60
-  console_log("SWITCH | Given FPS 1: " + (options && options.fps));
-  console_log("SWITCH | Given FPS 2: " + (jaws.game_loop && jaws.game_loop.options && jaws.game_loop.options.fps));
-  console_log("SWITCH | Selected FPS: " + fps);
+  var fps = (options && options.fps) || (jaws.game_loop && jaws.game_loop.fps) || 60
   
   jaws.game_loop && jaws.game_loop.stop()
   jaws.clearKeyCallbacks() // clear out all keyboard callbacks
@@ -363,6 +365,22 @@ jaws.getUrlParameters = function() {
   }
   return vars;
 }
+/**
+ * Check for bad options/catch typos and init object with defaults options.
+ * Used in all major constructors like Sprite() and so on.
+ */
+jaws.parseOptions = function(object, options, defaults) {
+  object["options"] = options;
+
+  for(option in options) {
+    if(defaults[option] === undefined) {
+      throw("Unsupported option '" + option + "' sent to constructor");
+    }
+  }
+  for(option in defaults) {
+    object[option] = (options[option] !== undefined) ? options[option] : defaults[option];
+  }
+};
 
 return jaws;
 })(jaws || {});
@@ -370,6 +388,7 @@ return jaws;
 var jaws = (function(jaws) {
 
   var pressed_keys = {}
+  var previously_pressed_keys = {}
   var keycode_to_string = []
   var on_keydown_callbacks = []
   var on_keyup_callbacks = []
@@ -403,28 +422,28 @@ jaws.setupInput = function() {
   k[45] = "insert"
   k[46] = "delete"
   
-  k[91] = "leftwindowkey"
-  k[92] = "rightwindowkey"
-  k[93] = "selectkey"
-  k[106] = "multiply"
-  k[107] = "add"
-  k[109] = "subtract"
+  k[91] = "left_window_key leftwindowkey"
+  k[92] = "right_window_key rightwindowkey"
+  k[93] = "select_key selectkey"
+  k[106] = "multiply *"
+  k[107] = "add plus +"
+  k[109] = "subtract minus -"
   k[110] = "decimalpoint"
-  k[111] = "divide"
+  k[111] = "divide /"
   
   k[144] = "numlock"
   k[145] = "scrollock"
-  k[186] = "semicolon"
-  k[187] = "equalsign"
-  k[188] = "comma"
-  k[189] = "dash"
-  k[190] = "period"
-  k[191] = "forwardslash"
-  k[192] = "graveaccent"
-  k[219] = "openbracket"
-  k[220] = "backslash"
-  k[221] = "closebracket"
-  k[222] = "singlequote"
+  k[186] = "semicolon ;"
+  k[187] = "equalsign ="
+  k[188] = "comma ,"
+  k[189] = "dash -"
+  k[190] = "period ."
+  k[191] = "forwardslash /"
+  k[192] = "graveaccent `"
+  k[219] = "openbracket ["
+  k[220] = "backslash \\"
+  k[221] = "closebracket ]"
+  k[222] = "singlequote '"
   
   var m = []
   
@@ -441,7 +460,7 @@ jaws.setupInput = function() {
   ie_mousebuttoncode_to_string = ie_m;
 
 
-  var numpadkeys = ["numpad1","numpad2","numpad3","numpad4","numpad5","numpad6","numpad7","numpad8","numpad9"]
+  var numpadkeys = ["numpad0","numpad1","numpad2","numpad3","numpad4","numpad5","numpad6","numpad7","numpad8","numpad9"]
   var fkeys = ["f1","f2","f3","f4","f5","f6","f7","f8","f9"]
   var numbers = ["0","1","2","3","4","5","6","7","8","9"]
   var letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
@@ -454,10 +473,13 @@ jaws.setupInput = function() {
 
   window.addEventListener("keydown", handleKeyDown)
   window.addEventListener("keyup", handleKeyUp)
-  window.addEventListener("mousedown", handleMouseDown, false);
-  window.addEventListener("mouseup", handleMouseUp, false);
-  window.addEventListener("touchstart", handleTouchStart, false);
-  window.addEventListener("touchend", handleTouchEnd, false);
+
+  var jawswindow = jaws.canvas || jaws.dom
+  jawswindow.addEventListener("mousedown", handleMouseDown, false);
+  jawswindow.addEventListener("mouseup", handleMouseUp, false);
+  jawswindow.addEventListener("touchstart", handleTouchStart, false);
+  jawswindow.addEventListener("touchend", handleTouchEnd, false);
+
   window.addEventListener("blur", resetPressedKeys, false);
 
   // this turns off the right click context menu which screws up the mouseup event for button 2
@@ -476,13 +498,15 @@ function resetPressedKeys(e) {
  */
 function handleKeyUp(e) {
   event = (e) ? e : window.event
-  var human_name = keycode_to_string[event.keyCode]
-  pressed_keys[human_name] = false
-  if(on_keyup_callbacks[human_name]) { 
-    on_keyup_callbacks[human_name](human_name)
-    e.preventDefault()
-  }
-  if(prevent_default_keys[human_name]) { e.preventDefault() }
+  var human_names = keycode_to_string[event.keyCode].split(" ")
+  human_names.forEach( function(human_name) {
+   pressed_keys[human_name] = false
+    if(on_keyup_callbacks[human_name]) { 
+      on_keyup_callbacks[human_name](human_name)
+      e.preventDefault()
+    }
+    if(prevent_default_keys[human_name]) { e.preventDefault() }
+  });
 }
 
 /** @private
@@ -490,13 +514,15 @@ function handleKeyUp(e) {
  */
 function handleKeyDown(e) {
   event = (e) ? e : window.event  
-  var human_name = keycode_to_string[event.keyCode]
-  pressed_keys[human_name] = true
-  if(on_keydown_callbacks[human_name]) { 
-    on_keydown_callbacks[human_name](human_name)
-    e.preventDefault()
-  }
-  if(prevent_default_keys[human_name]) { e.preventDefault() }
+  var human_names = keycode_to_string[event.keyCode].split(" ")
+  human_names.forEach( function(human_name) {
+    pressed_keys[human_name] = true
+    if(on_keydown_callbacks[human_name]) { 
+      on_keydown_callbacks[human_name](human_name)
+      e.preventDefault()
+    }
+    if(prevent_default_keys[human_name]) { e.preventDefault() }
+  });
 }
 /** @private
  * handle event "onmousedown" by remembering what button was pressed
@@ -567,13 +593,35 @@ jaws.preventDefaultKeys = function(array_of_strings) {
 }
 
 /**
- * Returns true if *key* is currently pressed down
+ * Check if *keys* are pressed. Second argument specifies use of logical AND when checking multiple keys.
  * @example
- * jaws.pressed("left");  // returns true if arrow key is pressed
- * jaws.pressed("a");     // returns true if key "a" is pressed
+ * jaws.pressed("left a");          // returns true if left arrow key OR a is pressed
+ * jaws.pressed("ctrl c", true);    // returns true if ctrl AND a is pressed
  */
-jaws.pressed = function(key) {
-  return pressed_keys[key]
+jaws.pressed = function(keys, logical_and) {
+  if(jaws.isString(keys)) { keys = keys.split(" ") }
+  if(logical_and) { return  keys.every( function(key) { return pressed_keys[key] } ) }
+  else            { return  keys.some( function(key) { return pressed_keys[key] } ) }
+}
+
+/**
+ * Check if *keys* are pressed, but only return true Once for any given keys. Once keys have been released, pressedWithoutRepeat can return true again when keys are pressed.
+ * Second argument specifies use of logical AND when checking multiple keys.
+ * @example
+ * jaws.pressed("left a");          // returns true if left arrow key OR a is pressed
+ * jaws.pressed("ctrl c", true);    // returns true if ctrl AND a is pressed
+ */
+jaws.pressedWithoutRepeat = function(keys, logical_and) {
+  if( jaws.pressed(keys, logical_and) ) {
+    if(!previously_pressed_keys[keys]) { 
+      previously_pressed_keys[keys] = true
+      return true 
+    }
+  }
+  else {
+    previously_pressed_keys[keys] = false
+    return false
+  }
 }
 
 /** 
@@ -626,6 +674,12 @@ var jaws = (function(jaws) {
 /**
  * @class Loads and processes assets as images, sound, video, json
  * Used internally by JawsJS to create <b>jaws.assets</b>
+ *
+ * @property {bool} bust_cache              Add a random argument-string to assets-urls when loading to bypass any cache
+ * @property {bool} fuchia_to_transparent   Convert the color fuchia to transparent when loading .bmp-files
+ * @proparty {bool} image_to_canvas         Convert all image assets to canvas internally
+ * @proparty {string} root                  Rootdir from where all assets are loaded
+ *
  */
 jaws.Assets = function Assets() {
   if( !(this instanceof arguments.callee) ) return new arguments.callee();
@@ -701,7 +755,7 @@ jaws.Assets = function Assets() {
    *
    * jaws.assets.add("player.png")
    * jaws.assets.add(["media/bullet1.png", "media/bullet2.png"])
-   * jaws.loadAll({onfinish: start_game})
+   * jaws.assets.loadAll({onfinish: start_game})
    *
    */
   this.add = function(src) {
@@ -843,6 +897,39 @@ jaws.Assets = function Assets() {
       that.onfinish = null
     }
   }
+
+  /*
+   * This is called when assets are loaded, for example by using jaws.start().
+   * It's called once per finished asset with a single argument, percect (0-100) of the total assets finished.
+   *
+   * If you want to paint your own loading screen:
+   *   jaws.assets.displayProgress = function(percent_done) { ... your elite code ... }
+   */
+  this.displayProgress = function(percent_done) {
+    if(!jaws.context) return;
+    
+    jaws.context.save()
+    jaws.context.fillStyle  = "black"
+    jaws.context.fillRect(0, 0, jaws.width, jaws.height)
+
+    jaws.context.fillStyle  = "white"
+    jaws.context.strokeStyle  = "white"
+    jaws.context.textAlign  = "center"
+    
+    jaws.context.strokeRect(50-1, (jaws.height/2)-30-1, jaws.width-100+2, 60+2)
+    jaws.context.fillRect(50, (jaws.height/2)-30, ((jaws.width-100)/100)*percent_done, 60)
+   
+    jaws.context.font       = "11px verdana"
+    jaws.context.fillText("Loading game ... " + percent_done + "%", jaws.width/2, jaws.height/2-35)
+
+    jaws.context.font       = "11px verdana"
+    jaws.context.fillStyle = "#ccc"
+    jaws.context.textBaseline = "bottom"
+    jaws.context.fillText("powered by www.jawsjs.com", jaws.width/2, jaws.height-1)
+
+    jaws.context.restore()
+  }
+
 }
 
 /** @private
@@ -904,20 +991,18 @@ window.requestAnimFrame = (function(){
  * jaws.start(MyGameState, {fps: 30})
  *
  */
-jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options) {
+jaws.GameLoop = function GameLoop(game_object, options, game_state_setup_options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( game_object, options );
 
   this.tick_duration = 0
   this.fps = 0
   this.ticks = 0
-  this.options = options
-
+  
+  var update_id
   var paused = false
   var stopped = false
   var that = this
   var mean_value = new MeanValue(20) // let's have a smooth, non-jittery FPS-value
-  var step_delay
-  var min_delay
 
   /** 
    * returns how game_loop has been active in milliseconds 
@@ -929,7 +1014,7 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
 
   /** Start the game loop by calling setup() once and then loop update()/draw() forever with given FPS */
   this.start = function() {
-    jaws.log("game loop start", true);
+    jaws.log("game loop start", true)
   
     this.first_tick = (new Date()).getTime();
     this.current_tick = (new Date()).getTime();
@@ -937,23 +1022,21 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
 
     if(game_object.setup) { game_object.setup(game_state_setup_options) }
     step_delay = 1000 / options.fps;
-	min_delay = step_delay * 0.7;
-    requestAnimFrame(this.loop);
+   
+    if(options.fps == 60) {
+      requestAnimFrame(this.loop)
+    }
+    else {
+      update_id = setInterval(this.loop, step_delay);
+    }
 
     jaws.log("game loop loop", true)
   }
   
   /** The core of the game loop. Calculate a mean FPS and call update()/draw() if game loop is not paused */
   this.loop = function() {
-	that.current_tick = (new Date()).getTime();
-    that.tick_duration = that.current_tick - that.last_tick;
-	
-	// FPS limiter:
-	if (that.tick_duration < min_delay) {
-		requestAnimFrame(that.loop);
-		return;
-	}
-	
+    that.current_tick = (new Date()).getTime();
+    that.tick_duration = that.current_tick - that.last_tick
     that.fps = mean_value.add(1000/that.tick_duration).get()
 
     if(!stopped && !paused) {
@@ -961,8 +1044,8 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
       if(game_object.draw)   { game_object.draw() }
       that.ticks++
     }
+    if(options.fps == 60 && !stopped) requestAnimFrame(that.loop);
     that.last_tick = that.current_tick;
-    if(!stopped) requestAnimFrame(that.loop);
   }
   
   /** Pause the game loop. loop() will still get called but not update() / draw() */
@@ -972,7 +1055,8 @@ jaws.GameLoop = function GameLoop(game_object, options,game_state_setup_options)
   this.unpause = function() { paused = false }
 
   /** Stop the game loop */
-  this.stop = function() {
+  this.stop = function() { 
+    if(update_id) clearInterval(update_id); 
     stopped = true;
   }
 }
@@ -1037,7 +1121,7 @@ jaws.Rect.prototype.getPosition = function() {
 }
 
 /** Move rect x pixels horizontally and y pixels vertically */
-jaws.Rect.prototype.move = function(x,y) {
+jaws.Rect.prototype.move = function(x, y) {
   this.x += x
   this.y += y
   this.right += x
@@ -1046,7 +1130,7 @@ jaws.Rect.prototype.move = function(x,y) {
 }
 
 /** Set rects x/y */
-jaws.Rect.prototype.moveTo = function(x,y) {
+jaws.Rect.prototype.moveTo = function(x, y) {
   this.x = x
   this.y = y
   this.right = this.x + this.width
@@ -1054,7 +1138,7 @@ jaws.Rect.prototype.moveTo = function(x,y) {
   return this
 }
 /** Modify width and height */
-jaws.Rect.prototype.resize = function(width,height) {
+jaws.Rect.prototype.resize = function(width, height) {
   this.width += width
   this.height += height
   this.right = this.x + this.width
@@ -1062,7 +1146,7 @@ jaws.Rect.prototype.resize = function(width,height) {
   return this
 }
 /** Set width and height */
-jaws.Rect.prototype.resizeTo = function(width,height) {
+jaws.Rect.prototype.resizeTo = function(width, height) {
   this.width = width
   this.height = height
   this.right = this.x + this.width
@@ -1118,6 +1202,7 @@ var jaws = (function(jaws) {
 * @property {bool} flipped    Flip sprite horizontally, usefull for sidescrollers
 * @property {string} anchor   String stating how to anchor the sprite to canvas, @see Sprite#anchor ("top_left", "center" etc)
 * @property {int} scale_image Scale the sprite by this factor
+* @property {string,gradient} color If set, draws a rectangle of dimensions rect() with specified color or gradient (linear or radial)
 *
 * @example
 * // create new sprite at top left of the screen, will use jaws.assets.get("foo.png")
@@ -1130,7 +1215,6 @@ var jaws = (function(jaws) {
 jaws.Sprite = function Sprite(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
 
-  this.options = options
   this.set(options)  
   
   if(options.context) { 
@@ -1149,23 +1233,50 @@ jaws.Sprite = function Sprite(options) {
   }
 }
 
+jaws.Sprite.prototype.default_options = {
+  x: 0, 
+  y: 0, 
+  alpha: 1,
+  angle: 0,
+  flipped: false,
+  anchor_x: 0,
+  anchor_y: 0,
+  image: null,
+  image_path: null,
+  anchor: null,
+  scale_image: null,
+  damping: 1,
+  scale_x: 1,
+  scale_y: 1,
+  scale: 1,
+  color: null,
+  width: null,
+  height: null,
+  _constructor: null,
+  dom: null,
+  context: null
+}
+
 /** 
  * @private
  * Call setters from JSON object. Used to parse options.
  */
 jaws.Sprite.prototype.set = function(options) {
-  this.scale_x = this.scale_y = (options.scale || 1)
-  this.x = options.x || 0
-  this.y = options.y || 0
-  this.alpha = (options.alpha === undefined) ? 1 : options.alpha
-  this.angle = options.angle || 0
-  this.flipped = options.flipped || false
-  this.anchor(options.anchor || "top_left");
-  if(options.anchor_x !== undefined) this.anchor_x = options.anchor_x;
-  if(options.anchor_y !== undefined) this.anchor_y = options.anchor_y; 
-  options.image && this.setImage(options.image);
-  this.image_path = options.image;
-  if(options.scale_image) this.scaleImage(options.scale_image);
+  jaws.parseOptions(this, options, this.default_options);
+
+  if(this.scale)        this.scale_x = this.scale_y = this.scale;
+  if(this.image)        this.setImage(this.image);
+  if(this.scale_image)  this.scaleImage(this.scale_image);
+  if(this.anchor)       this.setAnchor(this.anchor);
+  
+  if(!this.image && this.color && this.width && this.height) {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.fillStyle = this.color;
+    context.fillRect(0, 0, this.width, this.height);
+    this.image = context.getImageData(0, 0, this.width, this.height);
+  }
+
   this.cacheOffsets()
 
   return this
@@ -1204,7 +1315,10 @@ jaws.Sprite.prototype.setImage =      function(value) {
     if(jaws.assets.isLoaded(value)) { this.image = jaws.assets.get(value); this.cacheOffsets(); }
 
     // Not loaded? Load it with callback to set image.
-    else { jaws.assets.load(value, function() { that.image = jaws.assets.get(value); that.cacheOffsets(); }) }
+    else {
+      console_log("WARNING: Image '" + value + "' not preloaded with jaws.assets.add(). Image and a working sprite.rect() will be delayed.")
+      jaws.assets.load(value, function() { that.image = jaws.assets.get(value); that.cacheOffsets(); }) 
+    }
   }
   return this
 }
@@ -1224,7 +1338,7 @@ jaws.Sprite.prototype.move =          function(x,y)   { if(x) this.x += x;  if(y
 * scale sprite by given factor. 1=don't scale. <1 = scale down.  1>: scale up.
 * Modifies width/height. 
 **/
-jaws.Sprite.prototype.scale =         function(value) { this.scale_x *= value; this.scale_y *= value; return this.cacheOffsets() }
+jaws.Sprite.prototype.scaleAll =      function(value) { this.scale_x *= value; this.scale_y *= value; return this.cacheOffsets() }
 /** set scale factor. ie. 2 means a doubling if sprite in both directions. */
 jaws.Sprite.prototype.scaleTo =       function(value) { this.scale_x = this.scale_y = value; return this.cacheOffsets() }
 /** scale sprite horizontally by scale_factor. Modifies width. */
@@ -1270,10 +1384,10 @@ jaws.Sprite.prototype.resizeTo =      function(width, height) {
 * or "when rotating, what point of the of the sprite will it rotate round"
 *
 * @example
-* For example, a topdown shooter could use anchor("center") --> Place middle of the ship on x/y
-* .. and a sidescroller would probably use anchor("center_bottom") --> Place "feet" at x/y
+* For example, a topdown shooter could use setAnchor("center") --> Place middle of the ship on x/y
+* .. and a sidescroller would probably use setAnchor("center_bottom") --> Place "feet" at x/y
 */
-jaws.Sprite.prototype.anchor = function(value) {
+jaws.Sprite.prototype.setAnchor = function(value) {
   var anchors = {
     top_left: [0,0],
     left_top: [0,0],
@@ -1320,8 +1434,8 @@ jaws.Sprite.prototype.cacheOffsets = function() {
 
 /** Returns a jaws.Rect() perfectly surrouning sprite. Also cache rect in this.cached_rect. */
 jaws.Sprite.prototype.rect = function() {
-  if(!this.cached_rect) this.cached_rect = new jaws.Rect(this.x, this.top, this.width, this.height)
-  this.cached_rect.moveTo(this.x - this.left_offset, this.y - this.top_offset)
+  if(!this.cached_rect && this.width)   this.cached_rect = new jaws.Rect(this.x, this.y, this.width, this.height);
+  if(this.cached_rect)                  this.cached_rect.moveTo(this.x - this.left_offset, this.y - this.top_offset);
   return this.cached_rect
 } 
 
@@ -1826,19 +1940,6 @@ return jaws;
 
 var jaws = (function(jaws) {
 
-/** @private
- * Cut out a rectangular piece of a an image, returns as canvas-element 
- */
-function cutImage(image, x, y, width, height) {
-  var cut = document.createElement("canvas")
-  cut.width = width
-  cut.height = height
-  
-  var ctx = cut.getContext("2d")
-  ctx.drawImage(image, x, y, width, height, 0, 0, cut.width, cut.height)
-  
-  return cut
-};
 
 /** 
  * @class Cut out invidual frames (images) from a larger spritesheet-image. "Field Summary" contains options for the SpriteSheet()-constructor.
@@ -1854,20 +1955,27 @@ function cutImage(image, x, y, width, height) {
 jaws.SpriteSheet = function SpriteSheet(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
 
-  this.image = jaws.isDrawable(options.image) ? options.image : jaws.assets.data[options.image]
-  this.orientation = options.orientation || "down"
-  this.frame_size = options.frame_size || [32,32]
-  this.frames = []
-  this.offset = options.offset || 0
-  
-  if(options.scale_image) {
-    var image = (jaws.isDrawable(options.image) ? options.image : jaws.assets.get(options.image))
-    this.frame_size[0] *= options.scale_image
-    this.frame_size[1] *= options.scale_image
-    options.image = jaws.gfx.retroScaleImage(image, options.scale_image)
+  jaws.parseOptions(this, options, this.default_options);
+
+  /* Detect framesize from filename, example: droid_10x16.png means each frame is 10px high and 16px wide */
+  if(jaws.isString(this.image) && !options.frame_size) {
+    var regexp = new RegExp("_(\\d+)x(\\d+)", "g");
+    var sizes = regexp.exec(this.image)
+    this.frame_size = []
+    this.frame_size[0] = parseInt(sizes[1])
+    this.frame_size[1] = parseInt(sizes[2])
+  }
+
+  this.image = jaws.isDrawable(this.image) ? this.image : jaws.assets.data[this.image]
+  if(this.scale_image) {
+    var image = (jaws.isDrawable(this.image) ? this.image : jaws.assets.get(this.image))
+    this.frame_size[0] *= this.scale_image
+    this.frame_size[1] *= this.scale_image
+    this.image = jaws.gfx.retroScaleImage(image, this.scale_image)
   }
 
   var index = 0
+  this.frames = []
 
   // Cut out tiles from Top -> Bottom
   if(this.orientation == "down") {  
@@ -1887,12 +1995,35 @@ jaws.SpriteSheet = function SpriteSheet(options) {
   }
 }
 
+jaws.SpriteSheet.prototype.default_options = {
+  image: null,
+  orientation: "down",
+  frame_size: [32,32],
+  offset: 0,
+  scale_image: null
+}
+
+/** @private
+ * Cut out a rectangular piece of a an image, returns as canvas-element 
+ */
+function cutImage(image, x, y, width, height) {
+  var cut = document.createElement("canvas")
+  cut.width = width
+  cut.height = height
+  
+  var ctx = cut.getContext("2d")
+  ctx.drawImage(image, x, y, width, height, 0, 0, cut.width, cut.height)
+  
+  return cut
+};
+
 jaws.SpriteSheet.prototype.toString = function() { return "[SpriteSheet " + this.frames.length + " frames]" }
 
 return jaws;
 })(jaws || {});
 
 var jaws = (function(jaws) {
+
 
 /** 
 * @class Manage a parallax scroller with different layers. "Field Summary" contains options for the Parallax()-constructor.
@@ -1914,57 +2045,70 @@ var jaws = (function(jaws) {
 */
 jaws.Parallax = function Parallax(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
+  jaws.parseOptions(this, options, this.default_options)
+  
+  this.width = options.width || jaws.width;
+  this.height = options.height || jaws.height;
+  
+}
 
-  this.scale = options.scale || 1
-  this.repeat_x = options.repeat_x
-  this.repeat_y = options.repeat_y
-  this.camera_x = options.camera_x || 0
-  this.camera_y = options.camera_y || 0
-  this.layers = []
+jaws.Parallax.prototype.default_options = {
+  scale: 1,
+  repeat_x: null,
+  repeat_y: null,
+  camera_x: 0,
+  camera_y: 0,
+  width: null,
+  height: null,
+  layers: []
 }
 
 /** Draw all layers in parallax scroller */
 jaws.Parallax.prototype.draw = function(options) {
-    var layer, numx, numy, initx;
+  var layer, numx, numy, initx;
 
-    for(var i=0; i < this.layers.length; i++) {
-        layer = this.layers[i]
+  for(var i=0; i < this.layers.length; i++) {
+    layer = this.layers[i]
 
-		if (this.repeat_x) {
-			initx = -((this.camera_x / layer.damping) % layer.width);
-		} else {
-			initx = -(this.camera_x / layer.damping) 
-		}		
+  	if(this.repeat_x) {
+  	  initx = -((this.camera_x / layer.damping) % layer.width);
+  	} 
+    else {
+  	  initx = -(this.camera_x / layer.damping)
+  	}		
+          
+  	if (this.repeat_y) {
+  	  layer.y = -((this.camera_y / layer.damping) % layer.height);
+  	}
+    else {
+  		layer.y = -(this.camera_y / layer.damping);
+  	}
+  
+  	layer.x = initx;
+    while (layer.y < this.height) {
+      while (layer.x < this.width) {
+  		  if (layer.x + layer.width >= 0 && layer.y + layer.height >= 0) { //Make sure it's on screen
+  			  layer.draw(); //Draw only if actually on screen, for performance reasons
+  			}
+        layer.x = layer.x + layer.width;      
+  				
+        if (!this.repeat_x) {
+  				break;
+  			}
+      }
         
-		if (this.repeat_y) {
-			layer.y = -((this.camera_y / layer.damping) % layer.height);
-		} else {
-			layer.y = -(this.camera_y / layer.damping);
-		}
-
-		layer.x = initx;
-        while (layer.y < jaws.height) {
-            while (layer.x < jaws.width) {
-				if (layer.x + layer.width >= 0 && layer.y + layer.height >= 0) { //Make sure it's on screen
-					layer.draw(); //Draw only if actually on screen, for performance reasons
-				}
-                layer.x = layer.x + layer.width;      
-				if (!this.repeat_x) {
-					break;
-				}
-            }
-            layer.y = layer.y + layer.height;
-            layer.x = initx;
-			if (!this.repeat_y) {
-				break;
-			}
-        }
+      layer.y = layer.y + layer.height;
+      layer.x = initx;
+  		if (!this.repeat_y) {
+  			break;
+  		}
     }
+  }
 }
 /** Add a new layer to the parallax scroller */
 jaws.Parallax.prototype.addLayer = function(options) {
   var layer = new jaws.ParallaxLayer(options)
-  layer.scale(this.scale)
+  layer.scaleAll(this.scale)
   this.layers.push(layer)
 }
 /** Debugstring for Parallax() */
@@ -2007,6 +2151,7 @@ var jaws = (function(jaws) {
  * @property {int} offset           When cutting out frames from a sprite sheet, start at this frame
  * @property {string} orientation   How to cut out frames frmo sprite sheet, possible values are "down" or "right"
  * @property {function} on_end      Function to call when animation ends. triggers only on non-looping, non-bouncing animations
+ * @property {object} subsets       Name specific frames-intervals for easy access later, i.e. {move: [2,4], fire: [4,6]}. Access with animation.subset[name]
  *
  * @example
  * // in setup()
@@ -2023,17 +2168,13 @@ var jaws = (function(jaws) {
 jaws.Animation = function Animation(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
 
-  this.options = options
-  this.frames = options.frames || []
-  this.frame_duration = options.frame_duration || 100   // default: 100ms between each frameswitch
-  this.index = options.index || 0                       // default: start with the very first frame
-  this.loop = (options.loop==undefined) ? 1 : options.loop
-  this.bounce = options.bounce || 0
-  this.frame_direction = 1
-  this.frame_size = options.frame_size
-  this.orientation = options.orientation || "down"
-  this.on_end = options.on_end || null
-  this.offset = options.offset || 0
+  jaws.parseOptions(this, options, this.default_options);
+
+  if(options.sprite_sheet) {
+    var sprite_sheet = new jaws.SpriteSheet({image: options.sprite_sheet, scale_image: this.scale_image, frame_size: this.frame_size, orientation: this.orientation, offset: this.offset})
+    this.frames = sprite_sheet.frames
+    this.frame_size = sprite_sheet.frame_size
+  }
 
   if(options.scale_image) {
     var image = (jaws.isDrawable(options.sprite_sheet) ? options.sprite_sheet : jaws.assets.get(options.sprite_sheet))
@@ -2042,16 +2183,42 @@ jaws.Animation = function Animation(options) {
     options.sprite_sheet = jaws.gfx.retroScaleImage(image, options.scale_image)
   }
 
-  if(options.sprite_sheet) {
-    var image = (jaws.isDrawable(options.sprite_sheet) ? options.sprite_sheet : jaws.assets.get(options.sprite_sheet))
-    var sprite_sheet = new jaws.SpriteSheet({image: image, frame_size: this.frame_size, orientation: this.orientation, offset: this.offset})
-    this.frames = sprite_sheet.frames
-  }
-
   /* Initializing timer-stuff */
   this.current_tick = (new Date()).getTime();
   this.last_tick = (new Date()).getTime();
   this.sum_tick = 0
+
+  if(options.subsets) {
+    this.subsets = {}
+    for(subset in options.subsets) {
+      start_stop = options.subsets[subset]
+      this.subsets[subset] = this.slice(start_stop[0], start_stop[1])
+    }
+  }
+}
+
+jaws.Animation.prototype.default_options = {
+  frames: [],
+  subsets: [],
+  frame_duration: 100,  // default: 100ms between each frameswitch
+  index: 0,             // default: start with the very first frame
+  loop: 1,
+  bounce: 0,
+  frame_direction: 1,
+  frame_size: null,
+  orientation: "down",
+  on_end: null,
+  offset: 0,
+  scale_image: null,
+  sprite_sheet: null
+}
+
+/**
+ * Return a special animationsubset created with "subset"-parameter when initializing
+ *
+ */
+jaws.Animation.prototype.subset = function(subset) {
+  return this.subsets[subset]
 }
 
 /**
@@ -2073,7 +2240,11 @@ jaws.Animation.prototype.update = function() {
       this.index += this.frame_direction * 2
     }
     else if(this.loop) {
-      this.index = 0
+      if(this.frame_direction < 0) { 
+        this.index = this.frames.length -1; 
+      } else { 
+        this.index = 0; 
+      }
     }
     else {
       this.index -= this.frame_direction
@@ -2162,17 +2333,20 @@ var jaws = (function(jaws) {
  * });
  *
  */
+
+
 jaws.Viewport = function ViewPort(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
 
-  this.options = options
-  this.context = options.context || jaws.context
-  this.width = options.width || jaws.width
-  this.height = options.height || jaws.height
-  this.max_x = options.max_x || jaws.width 
-  this.max_y = options.max_y || jaws.height
-  this.x = options.x || 0
-  this.y = options.y || 0
+  jaws.parseOptions(this, options, this.default_options)
+ 
+  /* This is needed cause default_options is set loadtime, we need to get width etc runtime */
+  if(!this.context) this.context = jaws.context;
+  if(!this.width)   this.width = jaws.width;
+  if(!this.height)  this.height = jaws.height;
+  if(!this.max_x)   this.max_x = jaws.width;
+  if(!this.max_y)   this.max_y = jaws.height;
+
   var that = this
 
   /** Move viewport x pixels horizontally and y pixels vertically */
@@ -2234,9 +2408,9 @@ jaws.Viewport = function ViewPort(options) {
    * Usefull for sidescrollers when you wan't to keep the player in the center of the screen no matter how he moves.
    */
   this.centerAround = function(item) {
-    this.x = (item.x - this.width / 2)
-    this.y = (item.y - this.height / 2)
-    this.verifyPosition()
+    this.x = Math.floor(item.x - this.width / 2);
+    this.y = Math.floor(item.y - this.height / 2);
+    this.verifyPosition();
   };
 
   /**
@@ -2329,6 +2503,16 @@ jaws.Viewport = function ViewPort(options) {
   this.moveTo(options.x||0, options.y||0)
 }
 
+jaws.Viewport.prototype.default_options = {
+  context: null,
+  width: null,
+  height: null,
+  max_x: null,
+  max_y: null,
+  x: 0,
+  y: 0
+};
+
 jaws.Viewport.prototype.toString = function() { return "[Viewport " + this.x.toFixed(2) + ", " + this.y.toFixed(2) + ", " + this.width + ", " + this.height + "]" }
 
 return jaws;
@@ -2358,9 +2542,7 @@ var jaws = (function(jaws) {
 jaws.TileMap = function TileMap(options) {
   if( !(this instanceof arguments.callee) ) return new arguments.callee( options );
 
-  this.cell_size = options.cell_size || [32,32]
-  this.size = options.size || [100,100]
-  this.sortFunction = options.sortFunction
+  jaws.parseOptions(this, options, this.default_options);
   this.cells = new Array(this.size[0])
 
   for(var col=0; col < this.size[0]; col++) {
@@ -2369,6 +2551,12 @@ jaws.TileMap = function TileMap(options) {
       this.cells[col][row] = [] // populate each cell with an empty array
     }
   }
+}
+
+jaws.TileMap.prototype.default_options = {
+  cell_size: [32,32],
+  size: [100,100],
+  sortFunction: null
 }
 
 /** Clear all cells in tile map */
@@ -2521,6 +2709,181 @@ jaws.TileMap.prototype.cell = function(col, row) {
   return this.cells[col][row]
 }
 
+/**
+ * A-Star pathfinding
+ *
+ *  Takes starting and ending x,y co-ordinates (from a mouse-click for example),
+ *  which are then translated onto the TileMap grid. 
+ *  
+ *  Does not allow for Diagonal movements
+ *
+ *  Uses a very simple Heuristic [see crowFlies()] for calculating node scores.
+ *
+ *  Very lightly optimised for speed over memory usage.
+ *
+ *  Returns a list of [col, row] pairs that define a valid path. Due to the simple Heuristic
+ *  the path is not guaranteed to be the best path.
+ */
+jaws.TileMap.prototype.findPath = function(start_position, end_position, inverted) {
+  
+  if (typeof inverted == 'undefined') { inverted = false }
+  
+  var start_col = parseInt(start_position[0] / this.cell_size[0])
+  var start_row = parseInt(start_position[1] / this.cell_size[1])
+  
+  var end_col = parseInt(end_position[0] / this.cell_size[0])
+  var end_row = parseInt(end_position[1] / this.cell_size[1])
+  
+  if (start_col === end_col && start_row === end_row) {
+    return [{x: start_position[0], y:start_position[1]}]
+  }
+  
+  var col = start_col
+  var row = start_row
+  var step = 0
+  var score = 0
+  //travel corner-to-corner, through every square, plus one, just to make sure
+  var max_distance = (this.size[0]*this.size[1] * 2)+1
+  
+  var open_nodes = new Array(this.size[0])
+  for(var i=0; i < this.size[0]; i++) {
+    open_nodes[i] = new Array(this.size[1])
+    for(var j=0; j < this.size[1]; j++) {
+      open_nodes[i][j] = false
+    }
+  }
+  open_nodes[col][row] = {parent: [], G: 0, score: max_distance}
+  
+  var closed_nodes = new Array(this.size[0])
+  for(var i=0; i < this.size[0]; i++) {
+    closed_nodes[i] = new Array(this.size[1])
+    for(var j=0; j < this.size[1]; j++) {
+      closed_nodes[i][j] = false
+    }
+  }
+
+  var crowFlies = function(from_node, to_node) {
+    return Math.abs(to_node[0]-from_node[0]) + Math.abs(to_node[1]-from_node[1]);
+  }
+  
+  var findInClosed = function(col, row) {
+    if (closed_nodes[col][row])
+    {
+      return true
+    }
+    else {return false}
+  }
+  
+  while ( !(col === end_col && row === end_row) ) {
+    /**
+     *  add the nodes above, below, to the left and right of the current node
+     *  if it doesn't have a sprite in it, and it hasn't already been added
+     *  to the closed list, recalculate its score from the current node and
+     *  update it if it's already in the open list.
+     */
+    var left_right_up_down = []
+    if (col > 0) { left_right_up_down.push([col-1, row]) }
+    if (col < this.size[0]-1) { left_right_up_down.push([col+1, row]) }
+    if (row > 0) {left_right_up_down.push([col, row-1])}
+    if (row < this.size[1]-1) { left_right_up_down.push([col, row+1]) }
+    
+    for (var i=0 ; i<left_right_up_down.length ; i++) {
+        var c = left_right_up_down[i][0]
+        var r = left_right_up_down[i][1]
+        if ( ( (this.cell(c, r).length === 0 && !inverted) || 
+               (this.cell(c, r).length  >  0 &&  inverted)    ) && 
+               !findInClosed(c, r) ) 
+        {
+            score = step+1+crowFlies([c, r] , [end_col, end_row])
+            if (!open_nodes[c][r] || (open_nodes[c][r] && open_nodes[c][r].score > score)) {
+                open_nodes[c][r] = {parent: [col, row], G: step+1, score: score}
+            }
+        }
+    }
+    
+    /**
+     *  find the lowest scoring open node
+     */
+    var best_node = {node: [], parent: [], score: max_distance, G: 0}
+    for (var i=0 ; i<this.size[0] ; i++) {
+      for(var j=0 ; j<this.size[1] ; j++) {
+        if (open_nodes[i][j] && open_nodes[i][j].score < best_node.score) {
+          best_node.node = [i, j]
+          best_node.parent = open_nodes[i][j].parent
+          best_node.score = open_nodes[i][j].score
+          best_node.G = open_nodes[i][j].G
+        }
+      }
+    }
+    if (best_node.node.length === 0) { //open_nodes is empty, no route found to end node
+      return []
+    }
+    
+    //This doesn't stop the node being added again, but it doesn't seem to matter
+    open_nodes[best_node.node[0]][best_node.node[1]] = false
+    
+    col = best_node.node[0]
+    row = best_node.node[1]
+    step = best_node.G
+    
+    closed_nodes[col][row] = {parent: best_node.parent}
+  }
+  
+  /**
+   *  a path has been found, construct it by working backwards from the
+   *  end node, using the closed list
+   */
+  var path = []
+  var current_node = closed_nodes[col][row]
+  path.unshift({x: col*this.cell_size[0], y: row*this.cell_size[1]})
+  while(! (col === start_col && row === start_row) ) {
+    col = current_node.parent[0]
+    row = current_node.parent[1]
+    path.unshift({x: col*this.cell_size[0], y: row*this.cell_size[1]})
+    current_node = closed_nodes[col][row]
+  }
+  return path
+  
+}
+
+jaws.TileMap.prototype.lineOfSight = function(start_position, end_position, inverted) {
+  if (typeof inverted == 'undefined') { inverted = false }
+  
+  var x0 = start_position[0]
+  var x1 = end_position[0]
+  var y0 = start_position[1]
+  var y1 = end_position[1]
+  
+  var dx = Math.abs(x1-x0)
+  var dy = Math.abs(y1-y0)
+
+  var sx, sy
+  if (x0 < x1) {sx = 1} else {sx = -1}
+  if (y0 < y1) {sy = 1} else {sy = -1}
+  
+  var err = dx-dy
+  var e2
+  
+  while(! (x0 === x1 && y0 === y1) )
+  {
+    if (inverted) { if (this.at(x0,y0).length === 0) {return false} }
+    else { if (this.at(x0,y0).length > 0) {return false} }
+    e2 = 2 * err
+    if (e2 > -dy)
+    {
+      err = err - dy
+      x0 = x0 + sx
+    }
+    if (e2 < dx)
+    {
+      err = err + dx
+      y0 = y0 + sy
+    }
+  }
+  
+  return true
+}
+
 /** Debugstring for TileMap() */
 jaws.TileMap.prototype.toString = function() { return "[TileMap " + this.size[0] + " cols, " + this.size[1] + " rows]" }
 
@@ -2554,13 +2917,25 @@ jaws.collideOneWithOne = function(object1, object2) {
 }
 
 /**
- * collide one single object 'object' with a list of objects 'list'.
- * returns an array of items from 'list' that collided with 'object'.
+ * collide one single object 'object' with a list of objects 'list'. 
+ *
+ * if 'callback' is given it will be called for each collision with the two colliding objects as arguments.
+ *
+ * leaving out 'callback' argument it will return an array of items from 'list' that collided with 'object'.
  * returns empty array of no collisions are found.
  * will never collide objects with themselves.
  */
-jaws.collideOneWithMany = function(object, list) {
-  return list.filter( function(item) { return jaws.collideOneWithOne(object, item) } ) 
+jaws.collideOneWithMany = function(object, list, callback) {
+  if(callback) {
+    for(var i=0; i < list.length; i++)  {
+      if( jaws.collideOneWithOne(object, list[i]) ) { 
+        callback(object, list[i]) 
+      }
+    }
+  }
+  else {
+    return list.filter( function(item) { return jaws.collideOneWithOne(object, item) } ) 
+  }
 }
 
 /**
@@ -2573,18 +2948,24 @@ jaws.collideOneWithMany = function(object, list) {
  *   jaws.collideManyWithMany(bullets, enemies) // --> [[bullet, enemy], [bullet, enemy]]
  *
  */
-jaws.collideManyWithMany = function(list1, list2) {
+jaws.collideManyWithMany = function(list1, list2, callback) {
   var a = []
 
   if(list1 === list2) {
     combinations(list1, 2).forEach( function(pair) {
-      if( jaws.collideOneWithOne(pair[0], pair[1]) ) a.push([pair[0], pair[1]]);
+      if( jaws.collideOneWithOne(pair[0], pair[1]) ) {
+        if(callback)  { callback(pair[0], pair[1]) }
+        else          { a.push([pair[0], pair[1]]) }
+      }
     });
   }
   else {
     list1.forEach( function(item1) { 
       list2.forEach( function(item2) { 
-        if(jaws.collideOneWithOne(item1, item2)) a.push([item1, item2])
+        if(jaws.collideOneWithOne(item1, item2)) {
+          if(callback)  { callback(item1, item2) }
+          else          { a.push([item1, item2]) }
+        }
       });
     });
   }
@@ -2643,33 +3024,26 @@ function combinations(list, n) {
 /** @private */
 function hasItems(array) { return (array && array.length > 0) }
 
-
 /*
- * @deprecated
+ * Collides 2 objects or list of objects with eachother. 
+ * For each collision callback is executed with the 2 objects as arguments.
  *
- * Collides 2 objects or list with objects.
- * Returns empty array if no collision took place
- * Returns array of array with object-pairs that collided
+ * The upside of using collide() instead of the more specialised collideOneWithMany() and collideManyWithMany()
+ * is that you can call it withour knowing if you're sending in single objects or lists of objects. 
+ * If there's collisions you'll always get your callback executed with the two colliding objects as arguments.
  *
  * @examples
- *   jaws.collide(player, enemy)     // --> [player, enemy]
- *   jaws.collide(player, enemies)   // --> [[player, enemies[2]]
- *   jaws.collide(bullets, enemies)  // [ [bullet1, enemy1], [bullet2, ememy3] ]
+ *   jaws.collide(player, enemy, function(player, enemy) { ... } )  
+ *   jaws.collide(player, enemies, function(player, enemy) { ... } ) 
+ *   jaws.collide(bullets, enemies, function(bullet, enemy) { ... } )
  *
  */
-/*
-jaws.collide = function(object1, object2) {
-  var a = []
-  if(object1.radius && object2.radius && object1 !== object2 && jaws.collideCircles(object1, object2))  { return [object1, object2]; }
-  if(object1.rect && object2.rect && object1 !== object2 && jaws.collideRects( object1.rect(), object2.rect())) { return [object1, object2]; }
-  if(object1.forEach) a = object1.map( function(item1) { return jaws.collide(item1, object2) } ).filter(hasItems);
-  if(object2.forEach) a = object2.map( function(item2) { return jaws.collide(item2, object1) } ).filter(hasItems);
-
-  // Convert [[[1,2],[2,2]]] -> [[1,1],[2,2]] (flatten one outer array wrapper)
-  if(a[0] && a[0].length == 1)  return a[0];
-  else                          return a;
+jaws.collide = function(x, x2, callback) {
+  if(x.rect     && x2.forEach)  return jaws.collideOneWithMany(x, x2, callback);
+  if(x.forEach  && x2.forEach)  return jaws.collideManyWithMany(x, x2, callback);
+  if(x.forEach  && x2.rect)     return jaws.collideOneWithMany(x2, x, callback);
+  if(x.rect && x2.rect && jaws.collideOneWithOne(x,x2)) callback(x, x2);
 }
-*/
 
 return jaws;
 })(jaws || {});
